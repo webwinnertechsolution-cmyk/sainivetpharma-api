@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /product-tag/
+Disallow: /product-category/
+
+Sitemap: https://www.red-labs.com.au/sitemap.xml
