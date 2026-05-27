@@ -4531,7 +4531,7 @@ public function productStore(Request $request)
     if (!Session::has('user_id')) {
         return redirect()->route('login')->with('error', 'Please login first');
     }
- 
+
     $request->validate([
         'title'              => 'required|string|max:255',
         'slug'               => 'required|string|max:255|unique:products,slug',
@@ -4554,9 +4554,8 @@ public function productStore(Request $request)
         'tab_titles.*'       => 'nullable|string|max:255',
         'tab_contents'       => 'nullable|array',
         'tab_contents.*'     => 'nullable|string',
-        'variant_images.*'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
     ]);
- 
+
     try {
         // ── Featured Image ──
         $featuredImageName = null;
@@ -4567,7 +4566,7 @@ public function productStore(Request $request)
             if (!file_exists($path)) mkdir($path, 0755, true);
             $image->move($path, $featuredImageName);
         }
- 
+
         // ── OG Image ──
         $ogImageName = null;
         if ($request->hasFile('og_image')) {
@@ -4577,12 +4576,12 @@ public function productStore(Request $request)
             if (!file_exists($ogPath)) mkdir($ogPath, 0755, true);
             $og->move($ogPath, $ogImageName);
         }
- 
+
         // ── Extra Tabs ──
-        $extraTabs   = [];
-        $tabTitles   = $request->input('tab_titles', []);
+        $extraTabs = [];
+        $tabTitles = $request->input('tab_titles', []);
         $tabContents = $request->input('tab_contents', []);
- 
+
         if (!empty($tabTitles) && is_array($tabTitles)) {
             foreach ($tabTitles as $i => $title) {
                 $title = trim($title ?? '');
@@ -4594,7 +4593,7 @@ public function productStore(Request $request)
                 }
             }
         }
- 
+
         // ── Create Product ──
         $product = Product::create([
             'title'              => $request->title,
@@ -4620,24 +4619,24 @@ public function productStore(Request $request)
             'cta_button'         => $request->cta_button ?? 'add_to_cart',
             'published_at'       => $request->status === 'published' ? now() : null,
         ]);
- 
+
         // ── Categories & Tags ──
         if ($request->has('categories')) $product->categories()->attach($request->categories);
-        if ($request->has('tags'))       $product->tags()->attach($request->tags);
- 
+        if ($request->has('tags')) $product->tags()->attach($request->tags);
+
         // ── Gallery Images ──
         if ($request->hasFile('gallery_images')) {
             $galleryPath = public_path('uploads/products/gallery');
             if (!file_exists($galleryPath)) mkdir($galleryPath, 0755, true);
- 
+
             $videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
- 
+
             foreach ($request->file('gallery_images') as $i => $file) {
-                $ext  = strtolower($file->getClientOriginalExtension());
+                $ext = strtolower($file->getClientOriginalExtension());
                 $type = in_array($ext, $videoExtensions) ? 'video' : 'image';
                 $name = time() . '_gallery_' . $i . '_' . uniqid() . '.' . $ext;
                 $file->move($galleryPath, $name);
- 
+
                 ProductImage::create([
                     'product_id' => $product->id,
                     'image'      => $name,
@@ -4647,48 +4646,45 @@ public function productStore(Request $request)
                 ]);
             }
         }
- 
-        // ── Variants with Image ──
+
+        // ── VARIANTS (CREATE) ──
         if ($request->has('variant_names') && is_array($request->variant_names)) {
             $variantImagePath = public_path('uploads/products/variants');
             if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
- 
+            $videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
+
             foreach ($request->variant_names as $idx => $name) {
                 if (empty(trim($name))) continue;
- 
+
                 $attrRaw = $request->variant_attributes[$idx] ?? '{}';
-                $attrs   = json_decode($attrRaw, true);
+                $attrs = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
- 
-                // ── Variant Image Upload ──
+
+                // ✅ Variant Image Upload - ONLY if file exists
                 $variantImageName = null;
                 $variantImages = $request->file('variant_images');
                 
-                if (!empty($variantImages) && isset($variantImages[$idx])) {
+                if (!empty($variantImages) && isset($variantImages[$idx]) && $variantImages[$idx] instanceof \Illuminate\Http\UploadedFile) {
                     $vImg = $variantImages[$idx];
-                    
-                    // ✅ Real file check - sirf UploadedFile objects process karo
-                    if ($vImg instanceof \Illuminate\Http\UploadedFile) {
-                        $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
-                        $vImg->move($variantImagePath, $variantImageName);
-                    }
+                    $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
+                    $vImg->move($variantImagePath, $variantImageName);
                 }
- 
+
                 ProductVariant::create([
                     'product_id'     => $product->id,
                     'name'           => trim($name),
-                    'sku'            => $request->variant_skus[$idx]           ?? null,
-                    'price'          => $request->variant_prices[$idx]         ?? null,
+                    'sku'            => $request->variant_skus[$idx] ?? null,
+                    'price'          => $request->variant_prices[$idx] ?? null,
                     'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
-                    'stock_quantity' => $request->variant_stocks[$idx]         ?? 0,
+                    'stock_quantity' => $request->variant_stocks[$idx] ?? 0,
                     'attributes'     => $attrs,
                     'image'          => $variantImageName,
                 ]);
             }
         }
- 
+
         return redirect()->route('product')->with('success', 'Product created successfully!');
- 
+
     } catch (\Exception $e) {
         \Log::error('Product creation failed: ' . $e->getMessage());
         return redirect()->route('product')->with('error', 'Failed: ' . $e->getMessage());
@@ -4701,69 +4697,77 @@ public function productUpdate(Request $request, $id)
     if (!Session::has('user_id')) {
         return redirect()->route('login')->with('error', 'Please login first');
     }
- 
+
     $request->validate([
-        'title'          => 'required|string|max:255',
-        'slug'           => 'required|string|max:255|unique:products,slug,' . $id,
-        'description'    => 'required|string',
-        'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        'price'          => 'nullable|numeric|min:0',
-        'sale_price'     => 'nullable|numeric|min:0',
-        'status'         => 'required|in:draft,published',
-        'og_image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        'tab_titles'     => 'nullable|array',
-        'tab_titles.*'   => 'nullable|string|max:255',
-        'tab_contents'   => 'nullable|array',
-        'tab_contents.*' => 'nullable|string',
-        'variant_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'title'              => 'required|string|max:255',
+        'slug'               => 'required|string|max:255|unique:products,slug,' . $id,
+        'overview'           => 'nullable|string',
+        'description'        => 'required|string',
+        'featured_image'     => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'featured_image_alt' => 'nullable|string|max:255',
+        'price'              => 'nullable|numeric|min:0',
+        'sale_price'         => 'nullable|numeric|min:0',
+        'sku'                => 'nullable|string|max:100',
+        'stock_quantity'     => 'nullable|integer|min:0',
+        'status'             => 'required|in:draft,published',
+        'gallery_images.*'   => 'nullable|max:102400',
+        'categories'         => 'nullable|array',
+        'categories.*'       => 'exists:product_categories,id',
+        'tags'               => 'nullable|array',
+        'tags.*'             => 'exists:product_tags,id',
+        'og_image'           => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'tab_titles'         => 'nullable|array',
+        'tab_titles.*'       => 'nullable|string|max:255',
+        'tab_contents'       => 'nullable|array',
+        'tab_contents.*'     => 'nullable|string',
     ]);
- 
+
     try {
         $product = Product::findOrFail($id);
- 
+
         // ── Featured Image ──
         if ($request->hasFile('featured_image')) {
             if ($product->featured_image && file_exists(public_path('uploads/products/' . $product->featured_image))) {
                 unlink(public_path('uploads/products/' . $product->featured_image));
             }
-            $img  = $request->file('featured_image');
+            $img = $request->file('featured_image');
             $name = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
             $img->move(public_path('uploads/products'), $name);
             $product->featured_image = $name;
         }
- 
+
         if ($request->remove_featured_image == '1') {
             if ($product->featured_image && file_exists(public_path('uploads/products/' . $product->featured_image))) {
                 unlink(public_path('uploads/products/' . $product->featured_image));
             }
             $product->featured_image = null;
         }
- 
+
         // ── OG Image ──
         if ($request->hasFile('og_image')) {
             if ($product->og_image && file_exists(public_path('uploads/products/og/' . $product->og_image))) {
                 unlink(public_path('uploads/products/og/' . $product->og_image));
             }
-            $og   = $request->file('og_image');
+            $og = $request->file('og_image');
             $name = time() . '_og_' . uniqid() . '.' . $og->getClientOriginalExtension();
             $ogPath = public_path('uploads/products/og');
             if (!file_exists($ogPath)) mkdir($ogPath, 0755, true);
             $og->move($ogPath, $name);
             $product->og_image = $name;
         }
- 
+
         if ($request->remove_og_image == '1') {
             if ($product->og_image && file_exists(public_path('uploads/products/og/' . $product->og_image))) {
                 unlink(public_path('uploads/products/og/' . $product->og_image));
             }
             $product->og_image = null;
         }
- 
+
         // ── Extra Tabs ──
-        $extraTabs   = [];
-        $tabTitles   = $request->input('tab_titles', []);
+        $extraTabs = [];
+        $tabTitles = $request->input('tab_titles', []);
         $tabContents = $request->input('tab_contents', []);
- 
+
         if (!empty($tabTitles) && is_array($tabTitles)) {
             foreach ($tabTitles as $i => $title) {
                 $title = trim($title ?? '');
@@ -4775,51 +4779,50 @@ public function productUpdate(Request $request, $id)
                 }
             }
         }
- 
+
         // ── Update Product Fields ──
-        $product->title              = $request->title;
-        $product->slug               = $request->slug;
-        $product->overview           = $request->overview;
-        $product->description        = $request->description;
+        $product->title = $request->title;
+        $product->slug = $request->slug;
+        $product->overview = $request->overview;
+        $product->description = $request->description;
         $product->featured_image_alt = $request->featured_image_alt;
-        $product->price              = $request->price;
-        $product->sale_price         = $request->sale_price;
-        $product->sku                = $request->sku;
-        $product->stock_quantity     = $request->stock_quantity ?? 0;
-        $product->status             = $request->status;
-        $product->is_featured        = $request->has('is_featured') ? 1 : 0;
-        $product->meta_title         = $request->meta_title;
-        $product->meta_description   = $request->meta_description;
-        $product->meta_keywords      = $request->meta_keywords;
-        $product->og_title           = $request->og_title;
-        $product->og_description     = $request->og_description;
-        $product->og_image_alt       = $request->og_image_alt;
-        $product->extra_tabs         = !empty($extraTabs) ? json_encode($extraTabs) : null;
-        $product->cta_button         = $request->cta_button ?? 'add_to_cart';
- 
+        $product->price = $request->price;
+        $product->sale_price = $request->sale_price;
+        $product->sku = $request->sku;
+        $product->stock_quantity = $request->stock_quantity ?? 0;
+        $product->status = $request->status;
+        $product->is_featured = $request->has('is_featured') ? 1 : 0;
+        $product->meta_title = $request->meta_title;
+        $product->meta_description = $request->meta_description;
+        $product->meta_keywords = $request->meta_keywords;
+        $product->og_title = $request->og_title;
+        $product->og_description = $request->og_description;
+        $product->og_image_alt = $request->og_image_alt;
+        $product->extra_tabs = !empty($extraTabs) ? json_encode($extraTabs) : null;
+        $product->cta_button = $request->cta_button ?? 'add_to_cart';
+
         if ($request->status === 'published' && !$product->published_at) {
             $product->published_at = now();
         }
- 
+
         $product->save();
- 
+
         // ── Categories & Tags ──
         $product->categories()->sync($request->categories ?? []);
         $product->tags()->sync($request->tags ?? []);
- 
+
         // ── New Gallery Images ──
         if ($request->hasFile('gallery_images')) {
             $galleryPath = public_path('uploads/products/gallery');
             if (!file_exists($galleryPath)) mkdir($galleryPath, 0755, true);
- 
             $videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
- 
+
             foreach ($request->file('gallery_images') as $i => $file) {
-                $ext  = strtolower($file->getClientOriginalExtension());
+                $ext = strtolower($file->getClientOriginalExtension());
                 $type = in_array($ext, $videoExtensions) ? 'video' : 'image';
                 $name = time() . '_gallery_' . $i . '_' . uniqid() . '.' . $ext;
                 $file->move($galleryPath, $name);
- 
+
                 ProductImage::create([
                     'product_id' => $product->id,
                     'image'      => $name,
@@ -4829,56 +4832,85 @@ public function productUpdate(Request $request, $id)
                 ]);
             }
         }
- 
-        // ── Variants with Image (delete old, recreate) ──
-        // Pehle old variant images delete karo
-        foreach ($product->variants as $oldVariant) {
-            if ($oldVariant->image && file_exists(public_path('uploads/products/variants/' . $oldVariant->image))) {
-                unlink(public_path('uploads/products/variants/' . $oldVariant->image));
-            }
-        }
-        $product->variants()->delete();
- 
+
+        // ── VARIANTS (UPDATE - NO DELETION) ──
+        $existingVariantNames = [];
+
         if ($request->has('variant_names') && is_array($request->variant_names)) {
             $variantImagePath = public_path('uploads/products/variants');
             if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
- 
+
             foreach ($request->variant_names as $idx => $name) {
                 if (empty(trim($name))) continue;
- 
+
                 $attrRaw = $request->variant_attributes[$idx] ?? '{}';
-                $attrs   = json_decode($attrRaw, true);
+                $attrs = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
- 
-                // ── Variant Image Upload ──
+
+                // Check if variant already exists
+                $existingVariant = ProductVariant::where('product_id', $product->id)
+                                                  ->where('name', trim($name))
+                                                  ->first();
+
                 $variantImageName = null;
                 $variantImages = $request->file('variant_images');
-                
-                if (!empty($variantImages) && isset($variantImages[$idx])) {
+
+                // ✅ ONLY process if an actual file is uploaded for THIS variant
+                if (!empty($variantImages) && isset($variantImages[$idx]) && $variantImages[$idx] instanceof \Illuminate\Http\UploadedFile) {
                     $vImg = $variantImages[$idx];
-                    
-                    // ✅ Real file check - sirf UploadedFile objects process karo
-                    if ($vImg instanceof \Illuminate\Http\UploadedFile) {
-                        $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
-                        $vImg->move($variantImagePath, $variantImageName);
+
+                    // Delete old image if exists
+                    if ($existingVariant && $existingVariant->image && file_exists(public_path('uploads/products/variants/' . $existingVariant->image))) {
+                        unlink(public_path('uploads/products/variants/' . $existingVariant->image));
+                    }
+
+                    $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
+                    $vImg->move($variantImagePath, $variantImageName);
+                } else {
+                    // ✅ KEEP existing image if no new file uploaded
+                    if ($existingVariant && $existingVariant->image) {
+                        $variantImageName = $existingVariant->image;
                     }
                 }
- 
-                ProductVariant::create([
-                    'product_id'     => $product->id,
-                    'name'           => trim($name),
-                    'sku'            => $request->variant_skus[$idx]           ?? null,
-                    'price'          => $request->variant_prices[$idx]         ?? null,
-                    'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
-                    'stock_quantity' => $request->variant_stocks[$idx]         ?? 0,
-                    'attributes'     => $attrs,
-                    'image'          => $variantImageName,
-                ]);
+
+                if ($existingVariant) {
+                    // UPDATE existing variant
+                    $existingVariant->update([
+                        'sku'            => $request->variant_skus[$idx] ?? null,
+                        'price'          => $request->variant_prices[$idx] ?? null,
+                        'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
+                        'stock_quantity' => $request->variant_stocks[$idx] ?? 0,
+                        'attributes'     => $attrs,
+                        'image'          => $variantImageName,
+                    ]);
+                    $existingVariantNames[] = trim($name);
+                } else {
+                    // INSERT new variant
+                    ProductVariant::create([
+                        'product_id'     => $product->id,
+                        'name'           => trim($name),
+                        'sku'            => $request->variant_skus[$idx] ?? null,
+                        'price'          => $request->variant_prices[$idx] ?? null,
+                        'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
+                        'stock_quantity' => $request->variant_stocks[$idx] ?? 0,
+                        'attributes'     => $attrs,
+                        'image'          => $variantImageName,
+                    ]);
+                    $existingVariantNames[] = trim($name);
+                }
             }
         }
- 
+
+        // ✅ Delete ONLY those variants that were removed from the form
+        $product->variants()->whereNotIn('name', $existingVariantNames)->each(function($variant) {
+            if ($variant->image && file_exists(public_path('uploads/products/variants/' . $variant->image))) {
+                unlink(public_path('uploads/products/variants/' . $variant->image));
+            }
+            $variant->delete();
+        });
+
         return redirect()->route('product')->with('success', 'Product updated successfully!');
- 
+
     } catch (\Exception $e) {
         \Log::error('Product update failed: ' . $e->getMessage());
         return redirect()->route('product')->with('error', 'Failed: ' . $e->getMessage());
