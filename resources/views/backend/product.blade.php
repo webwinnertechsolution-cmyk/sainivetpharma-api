@@ -248,6 +248,47 @@
     font-size: 13px;
 }
 
+/* ── Variant Image Cell ── */
+.variant-img-cell { min-width: 130px; }
+.variant-img-existing {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border: 1.5px solid #c5caf5;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    display: block;
+}
+.variant-img-input {
+    border: 1.5px dashed #c5caf5 !important;
+    background: #f9faff !important;
+    padding: 3px 6px !important;
+    font-size: 11px !important;
+    cursor: pointer;
+}
+.variant-img-input:hover { border-color: #5c6ac4 !important; }
+.variant-img-preview {
+    margin-top: 5px;
+    display: none;
+}
+.variant-img-preview img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border: 1.5px solid #20c997;
+    border-radius: 6px;
+    display: block;
+}
+.variant-img-new-badge {
+    font-size: 9px;
+    color: #fff;
+    background: #20c997;
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-top: 3px;
+    display: inline-block;
+}
+
 /* =============================================
    EXTRA TABS STYLES
    ============================================= */
@@ -338,16 +379,13 @@
 }
 .no-tabs-msg i { font-size: 28px; margin-bottom: 8px; display: block; color: #c5e8df; }
 
-/* CKEditor container styling */
 .tab-ck-container {
     border: 1.5px solid #dde1e9;
     border-radius: 7px;
     min-height: 150px;
     overflow: hidden;
 }
-.tab-ck-container .ck-editor__editable {
-    min-height: 150px;
-}
+.tab-ck-container .ck-editor__editable { min-height: 150px; }
 
 /* General */
 .table td { vertical-align: middle; }
@@ -438,7 +476,7 @@
                         </div>
 
                         <!-- ══════════════════════════════════════════
-                             EXTRA TABS — FIXED VERSION
+                             EXTRA TABS
                              ══════════════════════════════════════════ -->
                         <div class="card mb-3">
                             <div class="card-header bg-light d-flex justify-content-between align-items-center">
@@ -450,7 +488,6 @@
                                 </button>
                             </div>
                             <div class="card-body">
-
                                 <div id="tabs-container">
                                     @php
                                         $existingTabs = [];
@@ -471,8 +508,6 @@
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </div>
-
-                                        {{-- Tab Title --}}
                                         <div class="mb-3">
                                             <label class="form-label fw-semibold">
                                                 <i class="fas fa-heading me-1 text-primary"></i> Tab Title
@@ -483,18 +518,14 @@
                                                    value="{{ $tab['title'] ?? '' }}"
                                                    placeholder="e.g. Specifications, Features">
                                         </div>
-
-                                        {{-- Tab Content - FIXED: hidden input + div container --}}
                                         <div>
                                             <label class="form-label fw-semibold">
                                                 <i class="fas fa-align-left me-1 text-primary"></i> Tab Content
                                             </label>
-                                            {{-- Hidden input: ye actually form submit hogi --}}
                                             <input type="hidden"
-       name="tab_contents[]"
-       id="tab-hidden-{{ $ti }}"
-       value="{{ $tab['content'] ?? '' }}">
-                                            {{-- CKEditor yahan mount hoga --}}
+                                                   name="tab_contents[]"
+                                                   id="tab-hidden-{{ $ti }}"
+                                                   value="{{ $tab['content'] ?? '' }}">
                                             <div id="tab-editor-{{ $ti }}"
                                                  class="tab-ck-container"
                                                  data-hidden-id="tab-hidden-{{ $ti }}"></div>
@@ -503,7 +534,6 @@
                                     @endforeach
                                 </div>
 
-                                <!-- Empty state -->
                                 <div id="no-tabs-msg" class="no-tabs-msg"
                                      style="{{ count($existingTabs) > 0 ? 'display:none;' : '' }}">
                                     <i class="fas fa-layer-group"></i>
@@ -516,7 +546,6 @@
                                 </button>
                             </div>
                         </div>
-                        <!-- ══════════════════════════════════════════ -->
 
                         <!-- ── Images ── -->
                         <div class="card mb-3">
@@ -630,7 +659,7 @@
                                 <p class="text-muted small mb-3">
                                     <i class="fas fa-lightbulb text-warning me-1"></i>
                                     First add a <strong>Variant Type</strong> (such as Size, Color), then add <strong>Options</strong>.
-                                    The combinations will be automatically generated below.
+                                    Combinations will be auto-generated below with individual image upload per variant.
                                 </p>
 
                                 <div id="vg-container">
@@ -692,6 +721,7 @@
                                     <i class="fas fa-plus-circle"></i> Add Variant Type (Size, Color, etc.)
                                 </button>
 
+                                <!-- Generated Variants Table -->
                                 <div id="gen-wrap" class="gen-wrap" style="display:none;">
                                     <div class="gen-head">
                                         <h6><i class="fas fa-th me-2"></i>Generated Variant Combinations</h6>
@@ -706,6 +736,9 @@
                                                     <th style="min-width:110px;">Price (₹)</th>
                                                     <th style="min-width:130px;">Compare Price (₹)</th>
                                                     <th style="min-width:90px;">Stock</th>
+                                                    <th style="min-width:140px;">
+                                                        <i class="fas fa-image me-1"></i>Image
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody id="gen-tbody"></tbody>
@@ -714,6 +747,9 @@
                                     <div style="padding:8px 14px;background:#fff8e1;border-top:1px solid #d5daf5;font-size:11.5px;color:#b07d00;">
                                         <i class="fas fa-info-circle me-1"></i>
                                         <strong>Compare Price</strong> = Original/MRP price (shown strikethrough). Should be higher than sale price.
+                                        &nbsp;|&nbsp;
+                                        <i class="fas fa-image me-1 text-primary"></i>
+                                        <strong>Variant Image</strong> = Upload a unique image per variant (e.g. different color photos).
                                     </div>
                                 </div>
 
@@ -724,7 +760,10 @@
                                                 'sku'           => $v->sku ?? '',
                                                 'price'         => $v->price ?? '',
                                                 'compare_price' => $v->compare_price ?? '',
-                                                'stock'         => $v->stock_quantity ?? 0
+                                                'stock'         => $v->stock_quantity ?? 0,
+                                                'image'         => $v->image
+                                                                    ? asset('uploads/products/variants/'.$v->image)
+                                                                    : ''
                                             ]];
                                         })) !!}
                                     </script>
@@ -770,36 +809,27 @@
                                             <option value="published" {{ old('status', $editProduct->status ?? '') == 'published' ? 'selected' : '' }}>Published</option>
                                         </select>
                                     </div>
-									{{-- ✅ NEW: CTA Button Selection --}}
-<div class="col-md-4 mb-3">
-    <label class="form-label fw-bold">
-        <i class="fas fa-mouse-pointer me-1 text-primary"></i>
-        CTA Button (Frontend)
-    </label>
-    @php
-        $ctaVal = old('cta_button', $editProduct->cta_button ?? 'add_to_cart');
-    @endphp
-    <div class="d-flex gap-3 mt-2">
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="cta_button"
-                   id="cta_add_to_cart" value="add_to_cart"
-                   {{ $ctaVal === 'add_to_cart' ? 'checked' : '' }}>
-            <label class="form-check-label" for="cta_add_to_cart">
-                🛒 Add to Cart
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="cta_button"
-                   id="cta_enquire_now" value="enquire_now"
-                   {{ $ctaVal === 'enquire_now' ? 'checked' : '' }}>
-            <label class="form-check-label" for="cta_enquire_now">
-                ✉️ Enquire Now
-            </label>
-        </div>
-    </div>
-    <small class="text-muted">Frontend pe sirf yahi button dikhega</small>
-</div>
-
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">
+                                            <i class="fas fa-mouse-pointer me-1 text-primary"></i>CTA Button (Frontend)
+                                        </label>
+                                        @php $ctaVal = old('cta_button', $editProduct->cta_button ?? 'add_to_cart'); @endphp
+                                        <div class="d-flex gap-3 mt-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="cta_button"
+                                                       id="cta_add_to_cart" value="add_to_cart"
+                                                       {{ $ctaVal === 'add_to_cart' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="cta_add_to_cart">🛒 Add to Cart</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="cta_button"
+                                                       id="cta_enquire_now" value="enquire_now"
+                                                       {{ $ctaVal === 'enquire_now' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="cta_enquire_now">✉️ Enquire Now</label>
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">Frontend pe sirf yahi button dikhega</small>
+                                    </div>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label d-block">Featured</label>
                                         <div class="form-check form-switch mt-2">
@@ -822,12 +852,14 @@
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Meta Title</label>
                                         <input type="text" class="form-control" name="meta_title"
-                                               value="{{ old('meta_title', $editProduct->meta_title ?? '') }}" placeholder="Leave empty to use product title">
+                                               value="{{ old('meta_title', $editProduct->meta_title ?? '') }}"
+                                               placeholder="Leave empty to use product title">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Meta Keywords</label>
                                         <input type="text" class="form-control" name="meta_keywords"
-                                               value="{{ old('meta_keywords', $editProduct->meta_keywords ?? '') }}" placeholder="keyword1, keyword2">
+                                               value="{{ old('meta_keywords', $editProduct->meta_keywords ?? '') }}"
+                                               placeholder="keyword1, keyword2">
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Meta Description</label>
@@ -847,11 +879,13 @@
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">OG Title</label>
                                         <input type="text" class="form-control" name="og_title"
-                                               value="{{ old('og_title', $editProduct->og_title ?? '') }}" placeholder="Title for social media sharing">
+                                               value="{{ old('og_title', $editProduct->og_title ?? '') }}"
+                                               placeholder="Title for social media sharing">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">OG Image</label>
-                                        <input type="file" class="form-control" name="og_image" accept="image/*" onchange="previewImage(event,'og')">
+                                        <input type="file" class="form-control" name="og_image"
+                                               accept="image/*" onchange="previewImage(event,'og')">
                                         <small class="text-muted">1200x630px recommended</small>
                                         @if(isset($editProduct) && $editProduct->og_image)
                                             <div class="mt-2 position-relative d-inline-block" id="og-current-wrap">
@@ -931,9 +965,15 @@
                                     </td>
                                     <td>
                                         {{ Str::limit($product->title, 40) }}
-                                        @if($product->is_featured)<span class="badge bg-warning text-dark ms-1">Featured</span>@endif
+                                        @if($product->is_featured)
+                                            <span class="badge bg-warning text-dark ms-1">Featured</span>
+                                        @endif
                                         @php
-                                            $tabsArr = $product->extra_tabs ? (is_array($product->extra_tabs) ? $product->extra_tabs : json_decode($product->extra_tabs, true)) : [];
+                                            $tabsArr = $product->extra_tabs
+                                                ? (is_array($product->extra_tabs)
+                                                    ? $product->extra_tabs
+                                                    : json_decode($product->extra_tabs, true))
+                                                : [];
                                         @endphp
                                         @if(!empty($tabsArr))
                                             <span class="badge bg-info text-dark ms-1">
@@ -960,7 +1000,9 @@
                                         @foreach($product->categories as $cat)
                                             <span class="badge bg-primary mb-1">{{ $cat->name }}</span><br>
                                         @endforeach
-                                        @if($product->categories->count() === 0)<span class="text-muted">-</span>@endif
+                                        @if($product->categories->count() === 0)
+                                            <span class="text-muted">-</span>
+                                        @endif
                                     </td>
                                     <td>
                                         <span class="badge {{ $product->status === 'published' ? 'bg-success' : 'bg-secondary' }}">
@@ -1011,9 +1053,10 @@ let tabCount = {{ isset($editProduct) && $editProduct->extra_tabs
     ? count(is_array($editProduct->extra_tabs) ? $editProduct->extra_tabs : (json_decode($editProduct->extra_tabs, true) ?: []))
     : 0 }};
 
-// KEY FIX: tabEditors stores { 'tab-editor-0': CKEditorInstance, ... }
+// tabEditors stores { 'tab-editor-0': CKEditorInstance, ... }
 const tabEditors = {};
 
+// Load existing variant data (edit mode)
 const existingVariantData = (() => {
     const el = document.getElementById('existing-variants-data');
     if (!el) return {};
@@ -1030,15 +1073,14 @@ ClassicEditor.create(document.querySelector('#editor'), {
 }).catch(console.error);
 
 // ==============================================
-// EXISTING TAB EDITORS (edit mode mein)
-// KEY FIX: textarea ki jagah div container use karo
-// aur content hidden input se load karo
+// EXISTING TAB EDITORS (edit mode)
 // ==============================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Har existing tab ke liye CKEditor initialize karo
+
+    // Initialize CKEditor on every existing tab container
     document.querySelectorAll('.tab-ck-container').forEach(function(container) {
-        const divId    = container.id;                            // e.g. "tab-editor-0"
-        const hiddenId = container.getAttribute('data-hidden-id'); // e.g. "tab-hidden-0"
+        const divId    = container.id;
+        const hiddenId = container.getAttribute('data-hidden-id');
         const hidden   = document.getElementById(hiddenId);
         const content  = hidden ? hidden.value : '';
 
@@ -1046,24 +1088,25 @@ document.addEventListener('DOMContentLoaded', function() {
             toolbar: ['heading','|','bold','italic','link','bulletedList','numberedList','blockQuote']
         }).then(function(editor) {
             tabEditors[divId] = editor;
-            // Hidden input ki value set karo editor mein
             if (content && content.trim() !== '') {
                 editor.setData(content);
             }
         }).catch(console.error);
     });
 
-    // Variants regenerate karo agar existing hain
+    // Re-generate variants if editing an existing product
     const existing = document.querySelectorAll('#vg-container .vg-card');
     gid = existing.length;
     if (existing.length > 0) regenerate();
 });
 
 // ==============================================
-// SLUG
+// SLUG AUTO-GENERATE
 // ==============================================
 document.getElementById('title').addEventListener('input', function() {
-    const slug = this.value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    const slug = this.value.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
     const si = document.getElementById('slug');
     if (!si.value || si.dataset.auto === 'true') {
         si.value = slug;
@@ -1076,7 +1119,9 @@ document.getElementById('title').addEventListener('input', function() {
 document.getElementById('slug').addEventListener('input', function() {
     this.dataset.auto = 'false';
     document.getElementById('slug-text').textContent =
-        this.value ? window.location.origin + '/product/' + this.value : 'Will generate from title';
+        this.value
+            ? window.location.origin + '/product/' + this.value
+            : 'Will generate from title';
 });
 
 // ==============================================
@@ -1129,6 +1174,31 @@ function previewGalleryImages(ev) {
     });
 }
 
+function previewVariantImg(input) {
+    // Find the preview div right after this input
+    const preview = input.nextElementSibling;
+    if (!preview || !preview.classList.contains('variant-img-preview')) return;
+
+    if (input.files && input.files[0]) {
+        const r = new FileReader();
+        r.onload = function(e) {
+            preview.style.display = 'block';
+            preview.querySelector('img').src = e.target.result;
+            // Show "New" badge
+            let badge = preview.querySelector('.variant-img-new-badge');
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'variant-img-new-badge';
+                badge.textContent = '✓ New image selected';
+                preview.appendChild(badge);
+            }
+        };
+        r.readAsDataURL(input.files[0]);
+    } else {
+        preview.style.display = 'none';
+    }
+}
+
 function removeFeaturedImage() {
     if (!confirm('Remove featured image?')) return;
     document.getElementById('featured-current-wrap').style.display = 'none';
@@ -1149,7 +1219,9 @@ function deleteGalleryImage(id) {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Content-Type': 'application/json'
         }
-    }).then(r => r.json()).then(d => {
+    })
+    .then(r => r.json())
+    .then(d => {
         if (d.success) {
             const el = document.getElementById('gallery-img-' + id);
             if (el) {
@@ -1160,18 +1232,18 @@ function deleteGalleryImage(id) {
         } else {
             alert('Error: ' + d.error);
         }
-    }).catch(() => alert('Failed'));
+    })
+    .catch(() => alert('Failed to delete image'));
 }
 
 // ==============================================
-// EXTRA TABS — FIXED VERSION
+// EXTRA TABS
 // ==============================================
 function addTab() {
     const noMsg = document.getElementById('no-tabs-msg');
     if (noMsg) noMsg.style.display = 'none';
 
     const num      = document.querySelectorAll('#tabs-container .tab-item').length + 1;
-    // Unique IDs
     const uid      = tabCount;
     const divId    = 'tab-editor-' + uid;
     const hiddenId = 'tab-hidden-' + uid;
@@ -1187,7 +1259,6 @@ function addTab() {
                 <i class="fas fa-trash-alt"></i>
             </button>
         </div>
-
         <div class="mb-3">
             <label class="form-label fw-semibold">
                 <i class="fas fa-heading me-1 text-primary"></i> Tab Title
@@ -1197,7 +1268,6 @@ function addTab() {
                    name="tab_titles[]"
                    placeholder="e.g. Specifications, Features, How to Use">
         </div>
-
         <div>
             <label class="form-label fw-semibold">
                 <i class="fas fa-align-left me-1 text-primary"></i> Tab Content
@@ -1209,12 +1279,11 @@ function addTab() {
 
     document.getElementById('tabs-container').appendChild(div);
 
-    // CKEditor initialize karo naye div container pe
+    // Initialize CKEditor on the new div
     ClassicEditor.create(document.getElementById(divId), {
         toolbar: ['heading','|','bold','italic','link','bulletedList','numberedList','blockQuote']
     }).then(function(editor) {
         tabEditors[divId] = editor;
-        console.log('Tab editor created:', divId);
     }).catch(console.error);
 
     div.querySelector('input[name="tab_titles[]"]').focus();
@@ -1225,7 +1294,7 @@ function removeTab(btn) {
     const item  = btn.closest('.tab-item');
     const edDiv = item.querySelector('.tab-ck-container');
 
-    // CKEditor destroy karo
+    // Destroy the CKEditor instance for this tab
     if (edDiv && edDiv.id && tabEditors[edDiv.id]) {
         tabEditors[edDiv.id].destroy().catch(console.error);
         delete tabEditors[edDiv.id];
@@ -1254,7 +1323,7 @@ function renumberTabs() {
 }
 
 function resetTabsForm() {
-    // Reset pe saare tab editors destroy karo
+    // Destroy all tab editors
     Object.keys(tabEditors).forEach(id => {
         if (tabEditors[id]) {
             tabEditors[id].destroy().catch(console.error);
@@ -1270,6 +1339,7 @@ function resetTabsForm() {
 // ==============================================
 // SHOPIFY VARIANT BUILDER
 // ==============================================
+
 function getGroups() {
     const groups = [];
     document.querySelectorAll('#vg-container .vg-card').forEach(card => {
@@ -1314,7 +1384,18 @@ function regenerate() {
         const attrObj = {};
         combo.forEach(c => { attrObj[c.type.toLowerCase()] = c.val; });
         const attrJson = JSON.stringify(attrObj);
-        const ex       = existingVariantData[label] || {};
+
+        // Pull existing data (edit mode)
+        const ex = existingVariantData[label] || {};
+
+        // Existing image HTML — show current image if editing
+        const existingImgHtml = ex.image
+            ? `<img src="${esc(ex.image)}"
+                    class="variant-img-existing"
+                    title="Current image for: ${esc(label)}">`
+            : `<div style="width:56px;height:56px;background:#f0f2fd;border:1.5px dashed #c5caf5;
+                           border-radius:6px;display:flex;align-items:center;justify-content:center;
+                           margin-bottom:5px;font-size:18px;">🖼️</div>`;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -1324,33 +1405,57 @@ function regenerate() {
                 <input type="hidden" name="variant_attributes[]" value='${esc(attrJson)}'>
             </td>
             <td>
-                <input type="text" class="gen-input" name="variant_skus[]"
-                       value="${esc(ex.sku || '')}" placeholder="SKU">
+                <input type="text"   class="gen-input"
+                       name="variant_skus[]"
+                       value="${esc(ex.sku || '')}"
+                       placeholder="SKU">
             </td>
             <td>
-                <input type="number" class="gen-input" name="variant_prices[]"
-                       value="${esc(ex.price || '')}" placeholder="0.00" step="0.01" min="0">
+                <input type="number" class="gen-input"
+                       name="variant_prices[]"
+                       value="${esc(ex.price || '')}"
+                       placeholder="0.00" step="0.01" min="0">
             </td>
             <td>
-                <input type="number" class="gen-input compare-price-input" name="variant_compare_prices[]"
-                       value="${esc(ex.compare_price || '')}" placeholder="0.00" step="0.01" min="0">
+                <input type="number" class="gen-input compare-price-input"
+                       name="variant_compare_prices[]"
+                       value="${esc(ex.compare_price || '')}"
+                       placeholder="0.00" step="0.01" min="0">
                 <span class="compare-price-hint">MRP / Original price</span>
             </td>
             <td>
-                <input type="number" class="gen-input" name="variant_stocks[]"
-                       value="${esc(ex.stock ?? 0)}" placeholder="0" min="0">
+                <input type="number" class="gen-input"
+                       name="variant_stocks[]"
+                       value="${esc(ex.stock ?? 0)}"
+                       placeholder="0" min="0">
+            </td>
+            <td class="variant-img-cell">
+                ${existingImgHtml}
+                <input type="file"
+                       class="gen-input variant-img-input"
+                       name="variant_images[]"
+                       accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
+                       onchange="previewVariantImg(this)"
+                       title="Upload image for: ${esc(label)}">
+                <div class="variant-img-preview">
+                    <img src="" alt="New image preview">
+                </div>
+                <small style="font-size:10px;color:#9aa2b4;display:block;margin-top:3px;">
+                    ${ex.image ? 'Upload to replace current' : 'Optional variant image'}
+                </small>
             </td>
         `;
         tbody.appendChild(tr);
     });
 }
 
+// HTML escape helper
 function esc(s) {
     return String(s)
-        .replace(/&/g,'&amp;')
-        .replace(/"/g,'&quot;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;');
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 }
 
 function addGroup() {
@@ -1414,7 +1519,10 @@ function addTag(val, gid) {
     if (!val) return;
     const wrap = document.getElementById('tags-' + gid);
     if (!wrap) return;
-    const existing = Array.from(wrap.querySelectorAll('.vg-tag')).map(t => t.dataset.val.toLowerCase());
+
+    // Prevent duplicate options
+    const existing = Array.from(wrap.querySelectorAll('.vg-tag'))
+                          .map(t => t.dataset.val.toLowerCase());
     if (existing.includes(val.toLowerCase())) return;
 
     const tag = document.createElement('span');
@@ -1437,21 +1545,20 @@ function removeTag(btn) {
 }
 
 // ==============================================
-// FORM SUBMIT — KEY FIX
+// FORM SUBMIT — sync all editors before submit
 // ==============================================
 document.getElementById('productForm').addEventListener('submit', function(e) {
-    // Step 1: Form submit temporarily rok do
+    // Temporarily prevent submit to sync editors first
     e.preventDefault();
 
-    // Step 2: Main description editor sync
+    // Sync main description editor
     if (editorInstance) {
         document.querySelector('#editor').value = editorInstance.getData();
     }
 
-    // Step 3: Saare tab editors ko unke hidden inputs mein sync karo
-    // Yahi asli fix hai — hidden input mein data daalo, textarea mein nahi
+    // Sync every tab editor → its hidden input
     Object.keys(tabEditors).forEach(function(divId) {
-        const editor   = tabEditors[divId];
+        const editor    = tabEditors[divId];
         const container = document.getElementById(divId);
         if (!editor || !container) return;
 
@@ -1460,17 +1567,16 @@ document.getElementById('productForm').addEventListener('submit', function(e) {
             const hidden = document.getElementById(hiddenId);
             if (hidden) {
                 hidden.value = editor.getData();
-                console.log('Synced tab', divId, '→', hiddenId, ':', hidden.value.substring(0, 50));
             }
         }
     });
 
-    // Step 4: Submit button disable karo
+    // Disable submit button to prevent double-submit
     const btn = document.getElementById('submitBtn');
-    btn.disabled    = true;
-    btn.innerHTML   = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    btn.disabled  = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
-    // Step 5: Ab actually submit karo
+    // Now actually submit
     this.submit();
 });
 </script>
