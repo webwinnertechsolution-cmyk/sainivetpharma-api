@@ -4531,7 +4531,7 @@ public function productStore(Request $request)
     if (!Session::has('user_id')) {
         return redirect()->route('login')->with('error', 'Please login first');
     }
-
+ 
     $request->validate([
         'title'              => 'required|string|max:255',
         'slug'               => 'required|string|max:255|unique:products,slug',
@@ -4556,7 +4556,7 @@ public function productStore(Request $request)
         'tab_contents.*'     => 'nullable|string',
         'variant_images.*'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
     ]);
-
+ 
     try {
         // ── Featured Image ──
         $featuredImageName = null;
@@ -4565,10 +4565,9 @@ public function productStore(Request $request)
             $featuredImageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
             $path = public_path('uploads/products');
             if (!file_exists($path)) mkdir($path, 0755, true);
-            if (!is_writable($path)) @chmod($path, 0755);
             $image->move($path, $featuredImageName);
         }
-
+ 
         // ── OG Image ──
         $ogImageName = null;
         if ($request->hasFile('og_image')) {
@@ -4576,15 +4575,14 @@ public function productStore(Request $request)
             $ogImageName = time() . '_og_' . uniqid() . '.' . $og->getClientOriginalExtension();
             $ogPath = public_path('uploads/products/og');
             if (!file_exists($ogPath)) mkdir($ogPath, 0755, true);
-            if (!is_writable($ogPath)) @chmod($ogPath, 0755);
             $og->move($ogPath, $ogImageName);
         }
-
+ 
         // ── Extra Tabs ──
         $extraTabs   = [];
         $tabTitles   = $request->input('tab_titles', []);
         $tabContents = $request->input('tab_contents', []);
-
+ 
         if (!empty($tabTitles) && is_array($tabTitles)) {
             foreach ($tabTitles as $i => $title) {
                 $title = trim($title ?? '');
@@ -4596,7 +4594,7 @@ public function productStore(Request $request)
                 }
             }
         }
-
+ 
         // ── Create Product ──
         $product = Product::create([
             'title'              => $request->title,
@@ -4622,25 +4620,24 @@ public function productStore(Request $request)
             'cta_button'         => $request->cta_button ?? 'add_to_cart',
             'published_at'       => $request->status === 'published' ? now() : null,
         ]);
-
+ 
         // ── Categories & Tags ──
         if ($request->has('categories')) $product->categories()->attach($request->categories);
         if ($request->has('tags'))       $product->tags()->attach($request->tags);
-
+ 
         // ── Gallery Images ──
         if ($request->hasFile('gallery_images')) {
             $galleryPath = public_path('uploads/products/gallery');
             if (!file_exists($galleryPath)) mkdir($galleryPath, 0755, true);
-            if (!is_writable($galleryPath)) @chmod($galleryPath, 0755);
-
+ 
             $videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
-
+ 
             foreach ($request->file('gallery_images') as $i => $file) {
                 $ext  = strtolower($file->getClientOriginalExtension());
                 $type = in_array($ext, $videoExtensions) ? 'video' : 'image';
                 $name = time() . '_gallery_' . $i . '_' . uniqid() . '.' . $ext;
                 $file->move($galleryPath, $name);
-
+ 
                 ProductImage::create([
                     'product_id' => $product->id,
                     'image'      => $name,
@@ -4650,21 +4647,20 @@ public function productStore(Request $request)
                 ]);
             }
         }
-
+ 
         // ── Variants with Image ──
         if ($request->has('variant_names') && is_array($request->variant_names)) {
             $variantImagePath = public_path('uploads/products/variants');
             if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
-            // ✅ Safety check — writable hona chahiye
-            if (!is_writable($variantImagePath)) @chmod($variantImagePath, 0755);
 
             foreach ($request->variant_names as $idx => $name) {
                 if (empty(trim($name))) continue;
-
+ 
                 $attrRaw = $request->variant_attributes[$idx] ?? '{}';
                 $attrs   = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
 
+                // ── Variant Image Upload ──
                 $variantImageName = null;
                 $variantImages = $request->file('variant_images');
                 if (!empty($variantImages) && isset($variantImages[$idx])) {
@@ -4672,7 +4668,7 @@ public function productStore(Request $request)
                     $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
                     $vImg->move($variantImagePath, $variantImageName);
                 }
-
+ 
                 ProductVariant::create([
                     'product_id'     => $product->id,
                     'name'           => trim($name),
@@ -4685,40 +4681,41 @@ public function productStore(Request $request)
                 ]);
             }
         }
-
+ 
         return redirect()->route('product')->with('success', 'Product created successfully!');
-
+ 
     } catch (\Exception $e) {
         \Log::error('Product creation failed: ' . $e->getMessage());
         return redirect()->route('product')->with('error', 'Failed: ' . $e->getMessage());
     }
 }
-
+ 
+ 
 public function productUpdate(Request $request, $id)
 {
     if (!Session::has('user_id')) {
         return redirect()->route('login')->with('error', 'Please login first');
     }
-
+ 
     $request->validate([
-        'title'            => 'required|string|max:255',
-        'slug'             => 'required|string|max:255|unique:products,slug,' . $id,
-        'description'      => 'required|string',
-        'featured_image'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        'price'            => 'nullable|numeric|min:0',
-        'sale_price'       => 'nullable|numeric|min:0',
-        'status'           => 'required|in:draft,published',
-        'og_image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        'tab_titles'       => 'nullable|array',
-        'tab_titles.*'     => 'nullable|string|max:255',
-        'tab_contents'     => 'nullable|array',
-        'tab_contents.*'   => 'nullable|string',
+        'title'          => 'required|string|max:255',
+        'slug'           => 'required|string|max:255|unique:products,slug,' . $id,
+        'description'    => 'required|string',
+        'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'price'          => 'nullable|numeric|min:0',
+        'sale_price'     => 'nullable|numeric|min:0',
+        'status'         => 'required|in:draft,published',
+        'og_image'       => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'tab_titles'     => 'nullable|array',
+        'tab_titles.*'   => 'nullable|string|max:255',
+        'tab_contents'   => 'nullable|array',
+        'tab_contents.*' => 'nullable|string',
         'variant_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
     ]);
-
+ 
     try {
         $product = Product::findOrFail($id);
-
+ 
         // ── Featured Image ──
         if ($request->hasFile('featured_image')) {
             if ($product->featured_image && file_exists(public_path('uploads/products/' . $product->featured_image))) {
@@ -4726,20 +4723,17 @@ public function productUpdate(Request $request, $id)
             }
             $img  = $request->file('featured_image');
             $name = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
-            $featPath = public_path('uploads/products');
-            if (!file_exists($featPath)) mkdir($featPath, 0755, true);
-            if (!is_writable($featPath)) @chmod($featPath, 0755);
-            $img->move($featPath, $name);
+            $img->move(public_path('uploads/products'), $name);
             $product->featured_image = $name;
         }
-
+ 
         if ($request->remove_featured_image == '1') {
             if ($product->featured_image && file_exists(public_path('uploads/products/' . $product->featured_image))) {
                 unlink(public_path('uploads/products/' . $product->featured_image));
             }
             $product->featured_image = null;
         }
-
+ 
         // ── OG Image ──
         if ($request->hasFile('og_image')) {
             if ($product->og_image && file_exists(public_path('uploads/products/og/' . $product->og_image))) {
@@ -4749,23 +4743,22 @@ public function productUpdate(Request $request, $id)
             $name = time() . '_og_' . uniqid() . '.' . $og->getClientOriginalExtension();
             $ogPath = public_path('uploads/products/og');
             if (!file_exists($ogPath)) mkdir($ogPath, 0755, true);
-            if (!is_writable($ogPath)) @chmod($ogPath, 0755);
             $og->move($ogPath, $name);
             $product->og_image = $name;
         }
-
+ 
         if ($request->remove_og_image == '1') {
             if ($product->og_image && file_exists(public_path('uploads/products/og/' . $product->og_image))) {
                 unlink(public_path('uploads/products/og/' . $product->og_image));
             }
             $product->og_image = null;
         }
-
+ 
         // ── Extra Tabs ──
         $extraTabs   = [];
         $tabTitles   = $request->input('tab_titles', []);
         $tabContents = $request->input('tab_contents', []);
-
+ 
         if (!empty($tabTitles) && is_array($tabTitles)) {
             foreach ($tabTitles as $i => $title) {
                 $title = trim($title ?? '');
@@ -4777,7 +4770,7 @@ public function productUpdate(Request $request, $id)
                 }
             }
         }
-
+ 
         // ── Update Product Fields ──
         $product->title              = $request->title;
         $product->slug               = $request->slug;
@@ -4802,27 +4795,26 @@ public function productUpdate(Request $request, $id)
         if ($request->status === 'published' && !$product->published_at) {
             $product->published_at = now();
         }
-
+ 
         $product->save();
-
+ 
         // ── Categories & Tags ──
         $product->categories()->sync($request->categories ?? []);
         $product->tags()->sync($request->tags ?? []);
-
+ 
         // ── New Gallery Images ──
         if ($request->hasFile('gallery_images')) {
             $galleryPath = public_path('uploads/products/gallery');
             if (!file_exists($galleryPath)) mkdir($galleryPath, 0755, true);
-            if (!is_writable($galleryPath)) @chmod($galleryPath, 0755);
-
+ 
             $videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
-
+ 
             foreach ($request->file('gallery_images') as $i => $file) {
                 $ext  = strtolower($file->getClientOriginalExtension());
                 $type = in_array($ext, $videoExtensions) ? 'video' : 'image';
                 $name = time() . '_gallery_' . $i . '_' . uniqid() . '.' . $ext;
                 $file->move($galleryPath, $name);
-
+ 
                 ProductImage::create([
                     'product_id' => $product->id,
                     'image'      => $name,
@@ -4832,28 +4824,28 @@ public function productUpdate(Request $request, $id)
                 ]);
             }
         }
-
-        // ── Variants: Delete Old, Recreate ──
+ 
+        // ── Variants with Image (delete old, recreate) ──
+        // Pehle old variant images delete karo
         foreach ($product->variants as $oldVariant) {
             if ($oldVariant->image && file_exists(public_path('uploads/products/variants/' . $oldVariant->image))) {
                 unlink(public_path('uploads/products/variants/' . $oldVariant->image));
             }
         }
         $product->variants()->delete();
-
+ 
         if ($request->has('variant_names') && is_array($request->variant_names)) {
             $variantImagePath = public_path('uploads/products/variants');
             if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
-            // ✅ Safety check — writable hona chahiye
-            if (!is_writable($variantImagePath)) @chmod($variantImagePath, 0755);
 
             foreach ($request->variant_names as $idx => $name) {
                 if (empty(trim($name))) continue;
-
+ 
                 $attrRaw = $request->variant_attributes[$idx] ?? '{}';
                 $attrs   = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
 
+                // ── Variant Image Upload ──
                 $variantImageName = null;
                 $variantImages = $request->file('variant_images');
                 if (!empty($variantImages) && isset($variantImages[$idx])) {
@@ -4861,7 +4853,7 @@ public function productUpdate(Request $request, $id)
                     $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
                     $vImg->move($variantImagePath, $variantImageName);
                 }
-
+ 
                 ProductVariant::create([
                     'product_id'     => $product->id,
                     'name'           => trim($name),
@@ -4874,15 +4866,14 @@ public function productUpdate(Request $request, $id)
                 ]);
             }
         }
-
+ 
         return redirect()->route('product')->with('success', 'Product updated successfully!');
-
+ 
     } catch (\Exception $e) {
         \Log::error('Product update failed: ' . $e->getMessage());
         return redirect()->route('product')->with('error', 'Failed: ' . $e->getMessage());
     }
 }
-    
 // Delete Gallery Image
 public function productDeleteGalleryImage($id)
 {
