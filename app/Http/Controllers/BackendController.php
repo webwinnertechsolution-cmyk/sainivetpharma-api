@@ -4554,6 +4554,7 @@ public function productStore(Request $request)
         'tab_titles.*'       => 'nullable|string|max:255',
         'tab_contents'       => 'nullable|array',
         'tab_contents.*'     => 'nullable|string',
+        'variant_images.*'   => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
     ]);
  
     try {
@@ -4577,9 +4578,8 @@ public function productStore(Request $request)
             $og->move($ogPath, $ogImageName);
         }
  
-        // ── Extra Tabs (FIXED) ──
-        // tab_titles[] aur tab_contents[] dono hidden inputs se aate hain
-        $extraTabs = [];
+        // ── Extra Tabs ──
+        $extraTabs   = [];
         $tabTitles   = $request->input('tab_titles', []);
         $tabContents = $request->input('tab_contents', []);
  
@@ -4594,8 +4594,6 @@ public function productStore(Request $request)
                 }
             }
         }
- 
-        \Log::info('Extra Tabs being saved:', $extraTabs);
  
         // ── Create Product ──
         $product = Product::create([
@@ -4618,9 +4616,9 @@ public function productStore(Request $request)
             'og_description'     => $request->og_description,
             'og_image'           => $ogImageName,
             'og_image_alt'       => $request->og_image_alt,
-           'extra_tabs'         => !empty($extraTabs) ? json_encode($extraTabs) : null,
-'cta_button'         => $request->cta_button ?? 'add_to_cart',
-'published_at'       => $request->status === 'published' ? now() : null,
+            'extra_tabs'         => !empty($extraTabs) ? json_encode($extraTabs) : null,
+            'cta_button'         => $request->cta_button ?? 'add_to_cart',
+            'published_at'       => $request->status === 'published' ? now() : null,
         ]);
  
         // ── Categories & Tags ──
@@ -4650,14 +4648,26 @@ public function productStore(Request $request)
             }
         }
  
-        // ── Variants ──
+        // ── Variants with Image ──
         if ($request->has('variant_names') && is_array($request->variant_names)) {
+            $variantImagePath = base_path('uploads/products/variants');
+            if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
+
             foreach ($request->variant_names as $idx => $name) {
                 if (empty(trim($name))) continue;
  
                 $attrRaw = $request->variant_attributes[$idx] ?? '{}';
                 $attrs   = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
+
+                // ── Variant Image Upload ──
+                $variantImageName = null;
+                $variantImages = $request->file('variant_images');
+                if (!empty($variantImages) && isset($variantImages[$idx])) {
+                    $vImg = $variantImages[$idx];
+                    $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
+                    $vImg->move($variantImagePath, $variantImageName);
+                }
  
                 ProductVariant::create([
                     'product_id'     => $product->id,
@@ -4667,6 +4677,7 @@ public function productStore(Request $request)
                     'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
                     'stock_quantity' => $request->variant_stocks[$idx]         ?? 0,
                     'attributes'     => $attrs,
+                    'image'          => $variantImageName,
                 ]);
             }
         }
@@ -4699,6 +4710,7 @@ public function productUpdate(Request $request, $id)
         'tab_titles.*'   => 'nullable|string|max:255',
         'tab_contents'   => 'nullable|array',
         'tab_contents.*' => 'nullable|string',
+        'variant_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
     ]);
  
     try {
@@ -4742,7 +4754,7 @@ public function productUpdate(Request $request, $id)
             $product->og_image = null;
         }
  
-        // ── Extra Tabs (FIXED) ──
+        // ── Extra Tabs ──
         $extraTabs   = [];
         $tabTitles   = $request->input('tab_titles', []);
         $tabContents = $request->input('tab_contents', []);
@@ -4759,9 +4771,7 @@ public function productUpdate(Request $request, $id)
             }
         }
  
-        \Log::info('Extra Tabs being updated:', $extraTabs);
- 
-        // ── Update Product ──
+        // ── Update Product Fields ──
         $product->title              = $request->title;
         $product->slug               = $request->slug;
         $product->overview           = $request->overview;
@@ -4780,9 +4790,9 @@ public function productUpdate(Request $request, $id)
         $product->og_description     = $request->og_description;
         $product->og_image_alt       = $request->og_image_alt;
         $product->extra_tabs         = !empty($extraTabs) ? json_encode($extraTabs) : null;
-$product->cta_button         = $request->cta_button ?? 'add_to_cart';
+        $product->cta_button         = $request->cta_button ?? 'add_to_cart';
 
-if ($request->status === 'published' && !$product->published_at) {
+        if ($request->status === 'published' && !$product->published_at) {
             $product->published_at = now();
         }
  
@@ -4815,16 +4825,34 @@ if ($request->status === 'published' && !$product->published_at) {
             }
         }
  
-        // ── Variants (delete old, recreate) ──
+        // ── Variants with Image (delete old, recreate) ──
+        // Pehle old variant images delete karo
+        foreach ($product->variants as $oldVariant) {
+            if ($oldVariant->image && file_exists(base_path('uploads/products/variants/' . $oldVariant->image))) {
+                unlink(base_path('uploads/products/variants/' . $oldVariant->image));
+            }
+        }
         $product->variants()->delete();
  
         if ($request->has('variant_names') && is_array($request->variant_names)) {
+            $variantImagePath = base_path('uploads/products/variants');
+            if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
+
             foreach ($request->variant_names as $idx => $name) {
                 if (empty(trim($name))) continue;
  
                 $attrRaw = $request->variant_attributes[$idx] ?? '{}';
                 $attrs   = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
+
+                // ── Variant Image Upload ──
+                $variantImageName = null;
+                $variantImages = $request->file('variant_images');
+                if (!empty($variantImages) && isset($variantImages[$idx])) {
+                    $vImg = $variantImages[$idx];
+                    $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
+                    $vImg->move($variantImagePath, $variantImageName);
+                }
  
                 ProductVariant::create([
                     'product_id'     => $product->id,
@@ -4834,6 +4862,7 @@ if ($request->status === 'published' && !$product->published_at) {
                     'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
                     'stock_quantity' => $request->variant_stocks[$idx]         ?? 0,
                     'attributes'     => $attrs,
+                    'image'          => $variantImageName,
                 ]);
             }
         }
@@ -4845,7 +4874,6 @@ if ($request->status === 'published' && !$product->published_at) {
         return redirect()->route('product')->with('error', 'Failed: ' . $e->getMessage());
     }
 }
-
 // Delete Gallery Image
 public function productDeleteGalleryImage($id)
 {
