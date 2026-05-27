@@ -9,14 +9,15 @@ class ProductVariant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
-        'name',
-        'sku',
-        'price',
-		'compare_price',
-        'stock_quantity',
-        'attributes',
-    ];
+    'product_id',
+    'name',
+    'sku',
+    'price',
+    'compare_price',
+    'stock_quantity',
+    'image',        // ← YE ADD KARO
+    'attributes',
+];
 
     protected $casts = [
         'attributes' => 'array',
