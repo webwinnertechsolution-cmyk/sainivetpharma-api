@@ -108,7 +108,7 @@ public function logoStore(Request $request)
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_logo.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/logo'), $imageName);
+            $image->move(public_path('uploads/logo'), $imageName);
         }
 
         Logo::create([
@@ -154,13 +154,13 @@ public function logoUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($logo->image && file_exists(base_path('uploads/logo/' . $logo->image))) {
-                unlink(base_path('uploads/logo/' . $logo->image));
+            if ($logo->image && file_exists(public_path('uploads/logo/' . $logo->image))) {
+                unlink(public_path('uploads/logo/' . $logo->image));
             }
             
             $image = $request->file('image');
             $imageName = time() . '_logo.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/logo'), $imageName);
+            $image->move(public_path('uploads/logo'), $imageName);
             $logo->image = $imageName;
         }
 
@@ -182,8 +182,8 @@ public function logoDelete($id)
         $logo = Logo::findOrFail($id);
         
         // Delete image file
-        if ($logo->image && file_exists(base_path('uploads/logo/' . $logo->image))) {
-            unlink(base_path('uploads/logo/' . $logo->image));
+        if ($logo->image && file_exists(public_path('uploads/logo/' . $logo->image))) {
+            unlink(public_path('uploads/logo/' . $logo->image));
         }
         
         $logo->delete();
@@ -599,7 +599,7 @@ private function getDescendantIds($menuId)
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/slider'), $imageName);
+            $image->move(public_path('uploads/slider'), $imageName);
         }
 
         $videoName = null;
@@ -608,7 +608,7 @@ private function getDescendantIds($menuId)
             $videoName = time() . '_' . uniqid() . '.' . $video->getClientOriginalExtension();
             
             // Video folder create karo agar nahi hai
-            $videoPath = base_path('uploads/slider/videos');
+            $videoPath = public_path('uploads/slider/videos');
             if (!file_exists($videoPath)) {
                 mkdir($videoPath, 0755, true);
             }
@@ -673,23 +673,23 @@ private function getDescendantIds($menuId)
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            if ($slider->image && file_exists(base_path('uploads/slider/' . $slider->image))) {
-                unlink(base_path('uploads/slider/' . $slider->image));
+            if ($slider->image && file_exists(public_path('uploads/slider/' . $slider->image))) {
+                unlink(public_path('uploads/slider/' . $slider->image));
             }
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/slider'), $imageName);
+            $image->move(public_path('uploads/slider'), $imageName);
             $slider->image = $imageName;
         }
 
         // Handle video upload
         if ($request->hasFile('video')) {
-            if ($slider->video && file_exists(base_path('uploads/slider/videos/' . $slider->video))) {
-                unlink(base_path('uploads/slider/videos/' . $slider->video));
+            if ($slider->video && file_exists(public_path('uploads/slider/videos/' . $slider->video))) {
+                unlink(public_path('uploads/slider/videos/' . $slider->video));
             }
             $video = $request->file('video');
             $videoName = time() . '_' . uniqid() . '.' . $video->getClientOriginalExtension();
-            $videoPath = base_path('uploads/slider/videos');
+            $videoPath = public_path('uploads/slider/videos');
             if (!file_exists($videoPath)) mkdir($videoPath, 0755, true);
             $video->move($videoPath, $videoName);
             $slider->video = $videoName;
@@ -720,12 +720,12 @@ private function getDescendantIds($menuId)
     try {
         $slider = Slider::findOrFail($id);
         
-        if ($slider->image && file_exists(base_path('uploads/slider/' . $slider->image))) {
-            unlink(base_path('uploads/slider/' . $slider->image));
+        if ($slider->image && file_exists(public_path('uploads/slider/' . $slider->image))) {
+            unlink(public_path('uploads/slider/' . $slider->image));
         }
         // Video bhi delete karo
-        if ($slider->video && file_exists(base_path('uploads/slider/videos/' . $slider->video))) {
-            unlink(base_path('uploads/slider/videos/' . $slider->video));
+        if ($slider->video && file_exists(public_path('uploads/slider/videos/' . $slider->video))) {
+            unlink(public_path('uploads/slider/videos/' . $slider->video));
         }
         
         $slider->delete();
@@ -778,7 +778,7 @@ public function whatWeDoStore(Request $request)
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/whatwedo'), $imageName);
+            $image->move(public_path('uploads/whatwedo'), $imageName);
         }
 
         WhatWeDo::create([
@@ -832,13 +832,13 @@ public function whatWeDoUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($whatWeDo->image && file_exists(base_path('uploads/whatwedo/' . $whatWeDo->image))) {
-                unlink(base_path('uploads/whatwedo/' . $whatWeDo->image));
+            if ($whatWeDo->image && file_exists(public_path('uploads/whatwedo/' . $whatWeDo->image))) {
+                unlink(public_path('uploads/whatwedo/' . $whatWeDo->image));
             }
             
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/whatwedo'), $imageName);
+            $image->move(public_path('uploads/whatwedo'), $imageName);
             $whatWeDo->image = $imageName;
         }
 
@@ -865,8 +865,8 @@ public function whatWeDoDelete($id)
         $whatWeDo = WhatWeDo::findOrFail($id);
         
         // Delete image file
-        if ($whatWeDo->image && file_exists(base_path('uploads/whatwedo/' . $whatWeDo->image))) {
-            unlink(base_path('uploads/whatwedo/' . $whatWeDo->image));
+        if ($whatWeDo->image && file_exists(public_path('uploads/whatwedo/' . $whatWeDo->image))) {
+            unlink(public_path('uploads/whatwedo/' . $whatWeDo->image));
         }
         
         $whatWeDo->delete();
@@ -921,7 +921,7 @@ public function ourServiceMainStore(Request $request)
         if ($request->hasFile('image1')) {
             $image = $request->file('image1');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/ourservice'), $imageName);
+            $image->move(public_path('uploads/ourservice'), $imageName);
         }
 
         OurServiceMain::create([
@@ -969,13 +969,13 @@ public function ourServiceMainUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image1')) {
             // Delete old image
-            if ($ourService->image1 && file_exists(base_path('uploads/ourservice/' . $ourService->image1))) {
-                unlink(base_path('uploads/ourservice/' . $ourService->image1));
+            if ($ourService->image1 && file_exists(public_path('uploads/ourservice/' . $ourService->image1))) {
+                unlink(public_path('uploads/ourservice/' . $ourService->image1));
             }
             
             $image = $request->file('image1');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/ourservice'), $imageName);
+            $image->move(public_path('uploads/ourservice'), $imageName);
             $ourService->image1 = $imageName;
         }
 
@@ -998,8 +998,8 @@ public function ourServiceMainDelete($id)
         $ourService = OurServiceMain::findOrFail($id);
         
         // Delete image file
-        if ($ourService->image1 && file_exists(base_path('uploads/ourservice/' . $ourService->image1))) {
-            unlink(base_path('uploads/ourservice/' . $ourService->image1));
+        if ($ourService->image1 && file_exists(public_path('uploads/ourservice/' . $ourService->image1))) {
+            unlink(public_path('uploads/ourservice/' . $ourService->image1));
         }
         
         $ourService->delete();
@@ -1058,7 +1058,7 @@ public function ourServiceStore(Request $request)
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
             
             // Upload directly to root uploads folder (web-accessible location)
-            $rootUploadPath = base_path('../uploads/ourservice');
+            $rootUploadPath = public_path('../uploads/ourservice');
             if (!file_exists($rootUploadPath)) {
                 mkdir($rootUploadPath, 0755, true);
             }
@@ -1071,7 +1071,7 @@ public function ourServiceStore(Request $request)
             $iconName = time() . '_icon_' . uniqid() . '.' . $icon->getClientOriginalExtension();
             
             // Upload directly to root uploads/icons folder
-            $rootIconPath = base_path('../uploads/ourservice/icons');
+            $rootIconPath = public_path('../uploads/ourservice/icons');
             if (!file_exists($rootIconPath)) {
                 mkdir($rootIconPath, 0755, true);
             }
@@ -1084,7 +1084,7 @@ public function ourServiceStore(Request $request)
             $ogImageName = time() . '_og_' . uniqid() . '.' . $ogImage->getClientOriginalExtension();
             
             // Upload directly to root uploads/ourservice/og folder
-            $rootOgPath = base_path('../uploads/ourservice/og');
+            $rootOgPath = public_path('../uploads/ourservice/og');
             if (!file_exists($rootOgPath)) {
                 mkdir($rootOgPath, 0755, true);
             }
@@ -1157,12 +1157,12 @@ public function ourServiceUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image from both locations
-            $rootUploadPath = base_path('../uploads/ourservice');
+            $rootUploadPath = public_path('../uploads/ourservice');
             if ($ourService->image && file_exists($rootUploadPath . '/' . $ourService->image)) {
                 unlink($rootUploadPath . '/' . $ourService->image);
             }
-            if ($ourService->image && file_exists(base_path('uploads/ourservice/' . $ourService->image))) {
-                unlink(base_path('uploads/ourservice/' . $ourService->image));
+            if ($ourService->image && file_exists(public_path('uploads/ourservice/' . $ourService->image))) {
+                unlink(public_path('uploads/ourservice/' . $ourService->image));
             }
             
             $image = $request->file('image');
@@ -1179,12 +1179,12 @@ public function ourServiceUpdate(Request $request, $id)
         // Handle icon upload
         if ($request->hasFile('icon')) {
             // Delete old icon from both locations
-            $rootIconPath = base_path('../uploads/ourservice/icons');
+            $rootIconPath = public_path('../uploads/ourservice/icons');
             if ($ourService->icon && file_exists($rootIconPath . '/' . $ourService->icon)) {
                 unlink($rootIconPath . '/' . $ourService->icon);
             }
-            if ($ourService->icon && file_exists(base_path('uploads/ourservice/icons/' . $ourService->icon))) {
-                unlink(base_path('uploads/ourservice/icons/' . $ourService->icon));
+            if ($ourService->icon && file_exists(public_path('uploads/ourservice/icons/' . $ourService->icon))) {
+                unlink(public_path('uploads/ourservice/icons/' . $ourService->icon));
             }
             
             $icon = $request->file('icon');
@@ -1200,7 +1200,7 @@ public function ourServiceUpdate(Request $request, $id)
         
         // Handle OG Image upload
         if ($request->hasFile('og_image')) {
-            $rootOgPath = base_path('../uploads/ourservice/og');
+            $rootOgPath = public_path('../uploads/ourservice/og');
             if ($ourService->og_image && file_exists($rootOgPath . '/' . $ourService->og_image)) {
                 unlink($rootOgPath . '/' . $ourService->og_image);
             }
@@ -1246,13 +1246,13 @@ public function ourServiceDelete($id)
         $ourService = OurService::findOrFail($id);
         
         // Delete image file
-        if ($ourService->image && file_exists(base_path('uploads/ourservice/' . $ourService->image))) {
-            unlink(base_path('uploads/ourservice/' . $ourService->image));
+        if ($ourService->image && file_exists(public_path('uploads/ourservice/' . $ourService->image))) {
+            unlink(public_path('uploads/ourservice/' . $ourService->image));
         }
         
         // Delete icon file
-        if ($ourService->icon && file_exists(base_path('uploads/ourservice/icons/' . $ourService->icon))) {
-            unlink(base_path('uploads/ourservice/icons/' . $ourService->icon));
+        if ($ourService->icon && file_exists(public_path('uploads/ourservice/icons/' . $ourService->icon))) {
+            unlink(public_path('uploads/ourservice/icons/' . $ourService->icon));
         }
         
         $ourService->delete();
@@ -1299,7 +1299,7 @@ public function ourWorkProcessMainStore(Request $request)
         if ($request->hasFile('image1')) {
             $image = $request->file('image1');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/workprocess'), $imageName);
+            $image->move(public_path('uploads/workprocess'), $imageName);
         }
 
         OurWorkProcessMain::create([
@@ -1351,13 +1351,13 @@ public function ourWorkProcessMainUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image1')) {
             // Delete old image
-            if ($process->image1 && file_exists(base_path('uploads/workprocess/' . $process->image1))) {
-                unlink(base_path('uploads/workprocess/' . $process->image1));
+            if ($process->image1 && file_exists(public_path('uploads/workprocess/' . $process->image1))) {
+                unlink(public_path('uploads/workprocess/' . $process->image1));
             }
             
             $image = $request->file('image1');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/workprocess'), $imageName);
+            $image->move(public_path('uploads/workprocess'), $imageName);
             $process->image1 = $imageName;
         }
 
@@ -1382,8 +1382,8 @@ public function ourWorkProcessMainDelete($id)
         $process = OurWorkProcessMain::findOrFail($id);
         
         // Delete image file
-        if ($process->image1 && file_exists(base_path('uploads/workprocess/' . $process->image1))) {
-            unlink(base_path('uploads/workprocess/' . $process->image1));
+        if ($process->image1 && file_exists(public_path('uploads/workprocess/' . $process->image1))) {
+            unlink(public_path('uploads/workprocess/' . $process->image1));
         }
         
         $process->delete();
@@ -1431,7 +1431,7 @@ public function ourWorkProcessStore(Request $request)
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/our-work-process'), $imageName);
+            $image->move(public_path('uploads/our-work-process'), $imageName);
         }
 
         OurWorkProcess::create([
@@ -1481,13 +1481,13 @@ public function ourWorkProcessUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($ourWorkProcess->image && file_exists(base_path('uploads/our-work-process/' . $ourWorkProcess->image))) {
-                unlink(base_path('uploads/our-work-process/' . $ourWorkProcess->image));
+            if ($ourWorkProcess->image && file_exists(public_path('uploads/our-work-process/' . $ourWorkProcess->image))) {
+                unlink(public_path('uploads/our-work-process/' . $ourWorkProcess->image));
             }
             
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/our-work-process'), $imageName);
+            $image->move(public_path('uploads/our-work-process'), $imageName);
             $ourWorkProcess->image = $imageName;
         }
 
@@ -1512,8 +1512,8 @@ public function ourWorkProcessDelete($id)
         $ourWorkProcess = OurWorkProcess::findOrFail($id);
         
         // Delete image file
-        if ($ourWorkProcess->image && file_exists(base_path('uploads/our-work-process/' . $ourWorkProcess->image))) {
-            unlink(base_path('uploads/our-work-process/' . $ourWorkProcess->image));
+        if ($ourWorkProcess->image && file_exists(public_path('uploads/our-work-process/' . $ourWorkProcess->image))) {
+            unlink(public_path('uploads/our-work-process/' . $ourWorkProcess->image));
         }
         
         $ourWorkProcess->delete();
@@ -1560,7 +1560,7 @@ public function industriesWeServeMainStore(Request $request)
         if ($request->hasFile('image1')) {
             $image = $request->file('image1');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/industries'), $imageName);
+            $image->move(public_path('uploads/industries'), $imageName);
         }
 
         IndustriesWeServeMain::create([
@@ -1608,13 +1608,13 @@ public function industriesWeServeMainUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image1')) {
             // Delete old image
-            if ($industry->image1 && file_exists(base_path('uploads/industries/' . $industry->image1))) {
-                unlink(base_path('uploads/industries/' . $industry->image1));
+            if ($industry->image1 && file_exists(public_path('uploads/industries/' . $industry->image1))) {
+                unlink(public_path('uploads/industries/' . $industry->image1));
             }
             
             $image = $request->file('image1');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/industries'), $imageName);
+            $image->move(public_path('uploads/industries'), $imageName);
             $industry->image1 = $imageName;
         }
 
@@ -1637,8 +1637,8 @@ public function industriesWeServeMainDelete($id)
         $industry = IndustriesWeServeMain::findOrFail($id);
         
         // Delete image file
-        if ($industry->image1 && file_exists(base_path('uploads/industries/' . $industry->image1))) {
-            unlink(base_path('uploads/industries/' . $industry->image1));
+        if ($industry->image1 && file_exists(public_path('uploads/industries/' . $industry->image1))) {
+            unlink(public_path('uploads/industries/' . $industry->image1));
         }
         
         $industry->delete();
@@ -1688,7 +1688,7 @@ public function industriesWeServeStore(Request $request)
     $image = $request->file('image');
     $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
     
-    $rootUploadPath = base_path('uploads/industries');  // fix
+    $rootUploadPath = public_path('uploads/industries');  // fix
     if (!file_exists($rootUploadPath)) {
         mkdir($rootUploadPath, 0755, true);
     }
@@ -1701,7 +1701,7 @@ public function industriesWeServeStore(Request $request)
             $iconName = time() . '_icon_' . uniqid() . '.' . $icon->getClientOriginalExtension();
             
             // Upload directly to root uploads/industries/icons folder
-            $rootIconPath = base_path('../uploads/industries/icons');
+            $rootIconPath = public_path('../uploads/industries/icons');
             if (!file_exists($rootIconPath)) {
                 mkdir($rootIconPath, 0755, true);
             }
@@ -1757,12 +1757,12 @@ public function industriesWeServeUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image from both locations
-            $rootUploadPath  = base_path('uploads/industries');
+            $rootUploadPath  = public_path('uploads/industries');
             if ($industry->image && file_exists($rootUploadPath . '/' . $industry->image)) {
                 unlink($rootUploadPath . '/' . $industry->image);
             }
-            if ($industry->image && file_exists(base_path('uploads/industries/' . $industry->image))) {
-                unlink(base_path('uploads/industries/' . $industry->image));
+            if ($industry->image && file_exists(public_path('uploads/industries/' . $industry->image))) {
+                unlink(public_path('uploads/industries/' . $industry->image));
             }
             
             $image = $request->file('image');
@@ -1779,12 +1779,12 @@ public function industriesWeServeUpdate(Request $request, $id)
         // Handle icon upload
         if ($request->hasFile('icon')) {
             // Delete old icon from both locations
-            $rootIconPath = base_path('../uploads/industries/icons');
+            $rootIconPath = public_path('../uploads/industries/icons');
             if ($industry->icon && file_exists($rootIconPath . '/' . $industry->icon)) {
                 unlink($rootIconPath . '/' . $industry->icon);
             }
-            if ($industry->icon && file_exists(base_path('uploads/industries/icons/' . $industry->icon))) {
-                unlink(base_path('uploads/industries/icons/' . $industry->icon));
+            if ($industry->icon && file_exists(public_path('uploads/industries/icons/' . $industry->icon))) {
+                unlink(public_path('uploads/industries/icons/' . $industry->icon));
             }
             
             $icon = $request->file('icon');
@@ -1820,8 +1820,8 @@ public function industriesWeServeDelete($id)
         $industry = IndustryWeServe::findOrFail($id);
         
         // Delete image file
-        if ($industry->image && file_exists(base_path('uploads/industries/' . $industry->image))) {
-            unlink(base_path('uploads/industries/' . $industry->image));
+        if ($industry->image && file_exists(public_path('uploads/industries/' . $industry->image))) {
+            unlink(public_path('uploads/industries/' . $industry->image));
         }
         
         $industry->delete();
@@ -1867,7 +1867,7 @@ public function homeContactStore(Request $request)
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/homecontact'), $imageName);
+            $image->move(public_path('uploads/homecontact'), $imageName);
         }
 
         HomeContact::create([
@@ -1921,13 +1921,13 @@ public function homeContactUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($homeContact->image && file_exists(base_path('uploads/homecontact/' . $homeContact->image))) {
-                unlink(base_path('uploads/homecontact/' . $homeContact->image));
+            if ($homeContact->image && file_exists(public_path('uploads/homecontact/' . $homeContact->image))) {
+                unlink(public_path('uploads/homecontact/' . $homeContact->image));
             }
             
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/homecontact'), $imageName);
+            $image->move(public_path('uploads/homecontact'), $imageName);
             $homeContact->image = $imageName;
         }
 
@@ -1953,8 +1953,8 @@ public function homeContactDelete($id)
         $homeContact = HomeContact::findOrFail($id);
         
         // Delete image file
-        if ($homeContact->image && file_exists(base_path('uploads/homecontact/' . $homeContact->image))) {
-            unlink(base_path('uploads/homecontact/' . $homeContact->image));
+        if ($homeContact->image && file_exists(public_path('uploads/homecontact/' . $homeContact->image))) {
+            unlink(public_path('uploads/homecontact/' . $homeContact->image));
         }
         
         $homeContact->delete();
@@ -2179,7 +2179,7 @@ public function offeringStore(Request $request)
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/offering'), $imageName);
+            $image->move(public_path('uploads/offering'), $imageName);
         }
 
         Offering::create([
@@ -2231,13 +2231,13 @@ public function offeringUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($offering->image && file_exists(base_path('uploads/offering/' . $offering->image))) {
-                unlink(base_path('uploads/offering/' . $offering->image));
+            if ($offering->image && file_exists(public_path('uploads/offering/' . $offering->image))) {
+                unlink(public_path('uploads/offering/' . $offering->image));
             }
             
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/offering'), $imageName);
+            $image->move(public_path('uploads/offering'), $imageName);
             $offering->image = $imageName;
         }
 
@@ -2262,8 +2262,8 @@ public function offeringDelete($id)
         $offering = Offering::findOrFail($id);
         
         // Delete image file
-        if ($offering->image && file_exists(base_path('uploads/offering/' . $offering->image))) {
-            unlink(base_path('uploads/offering/' . $offering->image));
+        if ($offering->image && file_exists(public_path('uploads/offering/' . $offering->image))) {
+            unlink(public_path('uploads/offering/' . $offering->image));
         }
         
         $offering->delete();
@@ -2312,7 +2312,7 @@ public function coreValuesStore(Request $request)
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/corevalues'), $imageName);
+            $image->move(public_path('uploads/corevalues'), $imageName);
         }
 
         CoreValue::create([
@@ -2358,13 +2358,13 @@ public function coreValuesUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($coreValue->image && file_exists(base_path('uploads/corevalues/' . $coreValue->image))) {
-                unlink(base_path('uploads/corevalues/' . $coreValue->image));
+            if ($coreValue->image && file_exists(public_path('uploads/corevalues/' . $coreValue->image))) {
+                unlink(public_path('uploads/corevalues/' . $coreValue->image));
             }
             
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/corevalues'), $imageName);
+            $image->move(public_path('uploads/corevalues'), $imageName);
             $coreValue->image = $imageName;
         }
 
@@ -2387,8 +2387,8 @@ public function coreValuesDelete($id)
         $coreValue = CoreValue::findOrFail($id);
         
         // Delete image file
-        if ($coreValue->image && file_exists(base_path('uploads/corevalues/' . $coreValue->image))) {
-            unlink(base_path('uploads/corevalues/' . $coreValue->image));
+        if ($coreValue->image && file_exists(public_path('uploads/corevalues/' . $coreValue->image))) {
+            unlink(public_path('uploads/corevalues/' . $coreValue->image));
         }
         
         $coreValue->delete();
@@ -2432,7 +2432,7 @@ public function coreValuesMainStore(Request $request)
         if ($request->hasFile('image1')) {
             $image = $request->file('image1');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/corevalues'), $imageName);
+            $image->move(public_path('uploads/corevalues'), $imageName);
         }
 
         CoreValueMain::create([
@@ -2480,13 +2480,13 @@ public function coreValuesMainUpdate(Request $request, $id)
         // Handle image upload
         if ($request->hasFile('image1')) {
             // Delete old image
-            if ($coreValueMain->image1 && file_exists(base_path('uploads/corevalues/' . $coreValueMain->image1))) {
-                unlink(base_path('uploads/corevalues/' . $coreValueMain->image1));
+            if ($coreValueMain->image1 && file_exists(public_path('uploads/corevalues/' . $coreValueMain->image1))) {
+                unlink(public_path('uploads/corevalues/' . $coreValueMain->image1));
             }
             
             $image = $request->file('image1');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/corevalues'), $imageName);
+            $image->move(public_path('uploads/corevalues'), $imageName);
             $coreValueMain->image1 = $imageName;
         }
 
@@ -2509,8 +2509,8 @@ public function coreValuesMainDelete($id)
         $coreValueMain = CoreValueMain::findOrFail($id);
         
         // Delete image file
-        if ($coreValueMain->image1 && file_exists(base_path('uploads/corevalues/' . $coreValueMain->image1))) {
-            unlink(base_path('uploads/corevalues/' . $coreValueMain->image1));
+        if ($coreValueMain->image1 && file_exists(public_path('uploads/corevalues/' . $coreValueMain->image1))) {
+            unlink(public_path('uploads/corevalues/' . $coreValueMain->image1));
         }
         
         $coreValueMain->delete();
@@ -2559,7 +2559,7 @@ public function coreValuesMainDelete($id)
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                $image->move(base_path('uploads/experience-the-power'), $imageName);
+                $image->move(public_path('uploads/experience-the-power'), $imageName);
             }
 
             ExperienceThePower::create([
@@ -2615,13 +2615,13 @@ public function coreValuesMainDelete($id)
             // Handle image upload
             if ($request->hasFile('image')) {
                 // Delete old image
-                if ($experience->image && file_exists(base_path('uploads/experience-the-power/' . $experience->image))) {
-                    unlink(base_path('uploads/experience-the-power/' . $experience->image));
+                if ($experience->image && file_exists(public_path('uploads/experience-the-power/' . $experience->image))) {
+                    unlink(public_path('uploads/experience-the-power/' . $experience->image));
                 }
                 
                 $image = $request->file('image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                $image->move(base_path('uploads/experience-the-power'), $imageName);
+                $image->move(public_path('uploads/experience-the-power'), $imageName);
                 $experience->image = $imageName;
             }
 
@@ -2648,8 +2648,8 @@ public function coreValuesMainDelete($id)
             $experience = ExperienceThePower::findOrFail($id);
             
             // Delete image file
-            if ($experience->image && file_exists(base_path('uploads/experience-the-power/' . $experience->image))) {
-                unlink(base_path('uploads/experience-the-power/' . $experience->image));
+            if ($experience->image && file_exists(public_path('uploads/experience-the-power/' . $experience->image))) {
+                unlink(public_path('uploads/experience-the-power/' . $experience->image));
             }
             
             $experience->delete();
@@ -2691,14 +2691,14 @@ public function industryStore(Request $request)
         if ($request->hasFile('background_image')) {
             $bgImage = $request->file('background_image');
             $bgImageName = 'bg_' . time() . '_' . uniqid() . '.' . $bgImage->getClientOriginalExtension();
-            $bgImage->move(base_path('uploads/industry'), $bgImageName);
+            $bgImage->move(public_path('uploads/industry'), $bgImageName);
         }
 
         $imageName = null;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/industry'), $imageName);
+            $image->move(public_path('uploads/industry'), $imageName);
         }
 
         Industry::create([
@@ -2751,25 +2751,25 @@ public function industryUpdate(Request $request, $id)
 
         // Handle background image upload
         if ($request->hasFile('background_image')) {
-            if ($industry->background_image && file_exists(base_path('uploads/industry/' . $industry->background_image))) {
-                unlink(base_path('uploads/industry/' . $industry->background_image));
+            if ($industry->background_image && file_exists(public_path('uploads/industry/' . $industry->background_image))) {
+                unlink(public_path('uploads/industry/' . $industry->background_image));
             }
             
             $bgImage = $request->file('background_image');
             $bgImageName = 'bg_' . time() . '_' . uniqid() . '.' . $bgImage->getClientOriginalExtension();
-            $bgImage->move(base_path('uploads/industry'), $bgImageName);
+            $bgImage->move(public_path('uploads/industry'), $bgImageName);
             $industry->background_image = $bgImageName;
         }
 
         // Handle main image upload
         if ($request->hasFile('image')) {
-            if ($industry->image && file_exists(base_path('uploads/industry/' . $industry->image))) {
-                unlink(base_path('uploads/industry/' . $industry->image));
+            if ($industry->image && file_exists(public_path('uploads/industry/' . $industry->image))) {
+                unlink(public_path('uploads/industry/' . $industry->image));
             }
             
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(base_path('uploads/industry'), $imageName);
+            $image->move(public_path('uploads/industry'), $imageName);
             $industry->image = $imageName;
         }
 
@@ -2795,13 +2795,13 @@ public function industryDelete($id)
         $industry = Industry::findOrFail($id);
         
         // Delete background image file
-        if ($industry->background_image && file_exists(base_path('uploads/industry/' . $industry->background_image))) {
-            unlink(base_path('uploads/industry/' . $industry->background_image));
+        if ($industry->background_image && file_exists(public_path('uploads/industry/' . $industry->background_image))) {
+            unlink(public_path('uploads/industry/' . $industry->background_image));
         }
         
         // Delete main image file
-        if ($industry->image && file_exists(base_path('uploads/industry/' . $industry->image))) {
-            unlink(base_path('uploads/industry/' . $industry->image));
+        if ($industry->image && file_exists(public_path('uploads/industry/' . $industry->image))) {
+            unlink(public_path('uploads/industry/' . $industry->image));
         }
         
         $industry->delete();
@@ -3827,7 +3827,7 @@ public function blogStore(Request $request)
             $image = $request->file('featured_image');
             $featuredImageName = time() . '_featured_' . uniqid() . '.' . $image->getClientOriginalExtension();
             
-            $uploadPath = base_path('uploads/blogs');
+            $uploadPath = public_path('uploads/blogs');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -3841,7 +3841,7 @@ public function blogStore(Request $request)
             $ogImage = $request->file('og_image');
             $ogImageName = time() . '_og_' . uniqid() . '.' . $ogImage->getClientOriginalExtension();
             
-            $ogUploadPath = base_path('uploads/blogs/og');
+            $ogUploadPath = public_path('uploads/blogs/og');
             if (!file_exists($ogUploadPath)) {
                 mkdir($ogUploadPath, 0755, true);
             }
@@ -3954,7 +3954,7 @@ public function blogUpdate(Request $request, $id)
 
         // Handle featured image upload
         if ($request->hasFile('featured_image')) {
-            $oldImagePath = base_path('uploads/blogs/' . $blog->featured_image);
+            $oldImagePath = public_path('uploads/blogs/' . $blog->featured_image);
             if ($blog->featured_image && file_exists($oldImagePath)) {
                 unlink($oldImagePath);
                 \Log::info('Deleted old featured image: ' . $oldImagePath);
@@ -3963,7 +3963,7 @@ public function blogUpdate(Request $request, $id)
             $image = $request->file('featured_image');
             $featuredImageName = time() . '_featured_' . uniqid() . '.' . $image->getClientOriginalExtension();
             
-            $uploadPath = base_path('uploads/blogs');
+            $uploadPath = public_path('uploads/blogs');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -3975,7 +3975,7 @@ public function blogUpdate(Request $request, $id)
 
         // Handle OG image upload
         if ($request->hasFile('og_image')) {
-            $oldOgImagePath = base_path('uploads/blogs/og/' . $blog->og_image);
+            $oldOgImagePath = public_path('uploads/blogs/og/' . $blog->og_image);
             if ($blog->og_image && file_exists($oldOgImagePath)) {
                 unlink($oldOgImagePath);
                 \Log::info('Deleted old OG image: ' . $oldOgImagePath);
@@ -3984,7 +3984,7 @@ public function blogUpdate(Request $request, $id)
             $ogImage = $request->file('og_image');
             $ogImageName = time() . '_og_' . uniqid() . '.' . $ogImage->getClientOriginalExtension();
             
-            $ogUploadPath = base_path('uploads/blogs/og');
+            $ogUploadPath = public_path('uploads/blogs/og');
             if (!file_exists($ogUploadPath)) {
                 mkdir($ogUploadPath, 0755, true);
             }
@@ -4054,12 +4054,12 @@ public function blogDelete($id)
     try {
         $blog = Blog::findOrFail($id);
         
-        if ($blog->featured_image && file_exists(base_path('../uploads/blogs/' . $blog->featured_image))) {
-            unlink(base_path('../uploads/blogs/' . $blog->featured_image));
+        if ($blog->featured_image && file_exists(public_path('../uploads/blogs/' . $blog->featured_image))) {
+            unlink(public_path('../uploads/blogs/' . $blog->featured_image));
         }
         
-        if ($blog->og_image && file_exists(base_path('../uploads/blogs/og/' . $blog->og_image))) {
-            unlink(base_path('../uploads/blogs/og/' . $blog->og_image));
+        if ($blog->og_image && file_exists(public_path('../uploads/blogs/og/' . $blog->og_image))) {
+            unlink(public_path('../uploads/blogs/og/' . $blog->og_image));
         }
         
         $blog->delete();
@@ -4223,7 +4223,7 @@ public function productCategoryStore(Request $request)
     if ($request->hasFile('image')) {
         $img       = $request->file('image');
         $imageName = time() . '_cat_' . uniqid() . '.' . $img->getClientOriginalExtension();
-        $imgPath   = base_path('uploads/product-categories');
+        $imgPath   = public_path('uploads/product-categories');
         if (!file_exists($imgPath)) mkdir($imgPath, 0755, true);
         $img->move($imgPath, $imageName);
     }
@@ -4233,7 +4233,7 @@ public function productCategoryStore(Request $request)
     if ($request->hasFile('og_image')) {
         $ogImg       = $request->file('og_image');
         $ogImageName = time() . '_cat_og_' . uniqid() . '.' . $ogImg->getClientOriginalExtension();
-        $ogPath      = base_path('uploads/product-categories/og');
+        $ogPath      = public_path('uploads/product-categories/og');
         if (!file_exists($ogPath)) mkdir($ogPath, 0755, true);
         $ogImg->move($ogPath, $ogImageName);
     }
@@ -4308,12 +4308,12 @@ public function productCategoryUpdate(Request $request, $id)
     if ($request->hasFile('image')) {
         // Purani image delete karo
         if ($category->image) {
-            $old = base_path('uploads/product-categories/' . $category->image);
+            $old = public_path('uploads/product-categories/' . $category->image);
             if (file_exists($old)) unlink($old);
         }
         $img       = $request->file('image');
         $imageName = time() . '_cat_' . uniqid() . '.' . $img->getClientOriginalExtension();
-        $imgPath   = base_path('uploads/product-categories');
+        $imgPath   = public_path('uploads/product-categories');
         if (!file_exists($imgPath)) mkdir($imgPath, 0755, true);
         $img->move($imgPath, $imageName);
         $category->image = $imageName;
@@ -4323,12 +4323,12 @@ public function productCategoryUpdate(Request $request, $id)
     if ($request->hasFile('og_image')) {
         // Purana OG image delete karo
         if ($category->og_image) {
-            $oldOg = base_path('uploads/product-categories/og/' . $category->og_image);
+            $oldOg = public_path('uploads/product-categories/og/' . $category->og_image);
             if (file_exists($oldOg)) unlink($oldOg);
         }
         $ogImg       = $request->file('og_image');
         $ogImageName = time() . '_cat_og_' . uniqid() . '.' . $ogImg->getClientOriginalExtension();
-        $ogPath      = base_path('uploads/product-categories/og');
+        $ogPath      = public_path('uploads/product-categories/og');
         if (!file_exists($ogPath)) mkdir($ogPath, 0755, true);
         $ogImg->move($ogPath, $ogImageName);
         $category->og_image = $ogImageName;
@@ -4382,8 +4382,8 @@ public function productCategoryDelete($id)
         }
 
         // Image delete karo
-        if ($category->image && file_exists(base_path('uploads/product-categories/' . $category->image))) {
-            unlink(base_path('uploads/product-categories/' . $category->image));
+        if ($category->image && file_exists(public_path('uploads/product-categories/' . $category->image))) {
+            unlink(public_path('uploads/product-categories/' . $category->image));
         }
 
         $category->delete();
@@ -4563,7 +4563,7 @@ public function productStore(Request $request)
         if ($request->hasFile('featured_image')) {
             $image = $request->file('featured_image');
             $featuredImageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $path = base_path('uploads/products');
+            $path = public_path('uploads/products');
             if (!file_exists($path)) mkdir($path, 0755, true);
             $image->move($path, $featuredImageName);
         }
@@ -4573,7 +4573,7 @@ public function productStore(Request $request)
         if ($request->hasFile('og_image')) {
             $og = $request->file('og_image');
             $ogImageName = time() . '_og_' . uniqid() . '.' . $og->getClientOriginalExtension();
-            $ogPath = base_path('uploads/products/og');
+            $ogPath = public_path('uploads/products/og');
             if (!file_exists($ogPath)) mkdir($ogPath, 0755, true);
             $og->move($ogPath, $ogImageName);
         }
@@ -4627,7 +4627,7 @@ public function productStore(Request $request)
  
         // ── Gallery Images ──
         if ($request->hasFile('gallery_images')) {
-            $galleryPath = base_path('uploads/products/gallery');
+            $galleryPath = public_path('uploads/products/gallery');
             if (!file_exists($galleryPath)) mkdir($galleryPath, 0755, true);
  
             $videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
@@ -4650,7 +4650,7 @@ public function productStore(Request $request)
  
         // ── Variants with Image ──
         if ($request->has('variant_names') && is_array($request->variant_names)) {
-            $variantImagePath = base_path('uploads/products/variants');
+            $variantImagePath = public_path('uploads/products/variants');
             if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
 
             foreach ($request->variant_names as $idx => $name) {
@@ -4718,38 +4718,38 @@ public function productUpdate(Request $request, $id)
  
         // ── Featured Image ──
         if ($request->hasFile('featured_image')) {
-            if ($product->featured_image && file_exists(base_path('uploads/products/' . $product->featured_image))) {
-                unlink(base_path('uploads/products/' . $product->featured_image));
+            if ($product->featured_image && file_exists(public_path('uploads/products/' . $product->featured_image))) {
+                unlink(public_path('uploads/products/' . $product->featured_image));
             }
             $img  = $request->file('featured_image');
             $name = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
-            $img->move(base_path('uploads/products'), $name);
+            $img->move(public_path('uploads/products'), $name);
             $product->featured_image = $name;
         }
  
         if ($request->remove_featured_image == '1') {
-            if ($product->featured_image && file_exists(base_path('uploads/products/' . $product->featured_image))) {
-                unlink(base_path('uploads/products/' . $product->featured_image));
+            if ($product->featured_image && file_exists(public_path('uploads/products/' . $product->featured_image))) {
+                unlink(public_path('uploads/products/' . $product->featured_image));
             }
             $product->featured_image = null;
         }
  
         // ── OG Image ──
         if ($request->hasFile('og_image')) {
-            if ($product->og_image && file_exists(base_path('uploads/products/og/' . $product->og_image))) {
-                unlink(base_path('uploads/products/og/' . $product->og_image));
+            if ($product->og_image && file_exists(public_path('uploads/products/og/' . $product->og_image))) {
+                unlink(public_path('uploads/products/og/' . $product->og_image));
             }
             $og   = $request->file('og_image');
             $name = time() . '_og_' . uniqid() . '.' . $og->getClientOriginalExtension();
-            $ogPath = base_path('uploads/products/og');
+            $ogPath = public_path('uploads/products/og');
             if (!file_exists($ogPath)) mkdir($ogPath, 0755, true);
             $og->move($ogPath, $name);
             $product->og_image = $name;
         }
  
         if ($request->remove_og_image == '1') {
-            if ($product->og_image && file_exists(base_path('uploads/products/og/' . $product->og_image))) {
-                unlink(base_path('uploads/products/og/' . $product->og_image));
+            if ($product->og_image && file_exists(public_path('uploads/products/og/' . $product->og_image))) {
+                unlink(public_path('uploads/products/og/' . $product->og_image));
             }
             $product->og_image = null;
         }
@@ -4804,7 +4804,7 @@ public function productUpdate(Request $request, $id)
  
         // ── New Gallery Images ──
         if ($request->hasFile('gallery_images')) {
-            $galleryPath = base_path('uploads/products/gallery');
+            $galleryPath = public_path('uploads/products/gallery');
             if (!file_exists($galleryPath)) mkdir($galleryPath, 0755, true);
  
             $videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
@@ -4828,14 +4828,14 @@ public function productUpdate(Request $request, $id)
         // ── Variants with Image (delete old, recreate) ──
         // Pehle old variant images delete karo
         foreach ($product->variants as $oldVariant) {
-            if ($oldVariant->image && file_exists(base_path('uploads/products/variants/' . $oldVariant->image))) {
-                unlink(base_path('uploads/products/variants/' . $oldVariant->image));
+            if ($oldVariant->image && file_exists(public_path('uploads/products/variants/' . $oldVariant->image))) {
+                unlink(public_path('uploads/products/variants/' . $oldVariant->image));
             }
         }
         $product->variants()->delete();
  
         if ($request->has('variant_names') && is_array($request->variant_names)) {
-            $variantImagePath = base_path('uploads/products/variants');
+            $variantImagePath = public_path('uploads/products/variants');
             if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
 
             foreach ($request->variant_names as $idx => $name) {
@@ -4884,8 +4884,8 @@ public function productDeleteGalleryImage($id)
     try {
         $image = ProductImage::findOrFail($id);
         
-        if (file_exists(base_path('uploads/products/gallery/' . $image->image))) {
-            unlink(base_path('uploads/products/gallery/' . $image->image));
+        if (file_exists(public_path('uploads/products/gallery/' . $image->image))) {
+            unlink(public_path('uploads/products/gallery/' . $image->image));
         }
         
         $image->delete();
@@ -4925,19 +4925,19 @@ public function productDelete($id)
         $product = Product::findOrFail($id);
 
         // Delete featured image
-        if ($product->featured_image && file_exists(base_path('uploads/products/' . $product->featured_image))) {
-            unlink(base_path('uploads/products/' . $product->featured_image));
+        if ($product->featured_image && file_exists(public_path('uploads/products/' . $product->featured_image))) {
+            unlink(public_path('uploads/products/' . $product->featured_image));
         }
 
         // Delete OG image
-        if ($product->og_image && file_exists(base_path('uploads/products/og/' . $product->og_image))) {
-            unlink(base_path('uploads/products/og/' . $product->og_image));
+        if ($product->og_image && file_exists(public_path('uploads/products/og/' . $product->og_image))) {
+            unlink(public_path('uploads/products/og/' . $product->og_image));
         }
 
         // Delete gallery images
         foreach ($product->images as $image) {
-            if (file_exists(base_path('uploads/products/gallery/' . $image->image))) {
-                unlink(base_path('uploads/products/gallery/' . $image->image));
+            if (file_exists(public_path('uploads/products/gallery/' . $image->image))) {
+                unlink(public_path('uploads/products/gallery/' . $image->image));
             }
             $image->delete();
         }
@@ -4989,7 +4989,7 @@ public function homeCategoryStore(Request $request)
         if ($request->hasFile('image')) {
             $image     = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $uploadPath = base_path('uploads/home-categories');
+            $uploadPath = public_path('uploads/home-categories');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -5041,12 +5041,12 @@ public function homeCategoryUpdate(Request $request, $id)
 
         if ($request->hasFile('image')) {
             // Delete old image
-            if ($category->image && file_exists(base_path('uploads/home-categories/' . $category->image))) {
-                unlink(base_path('uploads/home-categories/' . $category->image));
+            if ($category->image && file_exists(public_path('uploads/home-categories/' . $category->image))) {
+                unlink(public_path('uploads/home-categories/' . $category->image));
             }
             $image     = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $uploadPath = base_path('uploads/home-categories');
+            $uploadPath = public_path('uploads/home-categories');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -5075,8 +5075,8 @@ public function homeCategoryDelete($id)
     try {
         $category = HomeCategory::findOrFail($id);
 
-        if ($category->image && file_exists(base_path('uploads/home-categories/' . $category->image))) {
-            unlink(base_path('uploads/home-categories/' . $category->image));
+        if ($category->image && file_exists(public_path('uploads/home-categories/' . $category->image))) {
+            unlink(public_path('uploads/home-categories/' . $category->image));
         }
 
         $category->delete();
@@ -5251,7 +5251,7 @@ public function brandStore(Request $request)
         if ($request->hasFile('image')) {
             $img        = $request->file('image');
             $imageName  = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
-            $uploadPath = base_path('uploads/brands');
+            $uploadPath = public_path('uploads/brands');
             if (!file_exists($uploadPath)) mkdir($uploadPath, 0755, true);
             $img->move($uploadPath, $imageName);
         }
@@ -5293,12 +5293,12 @@ public function brandUpdate(Request $request, $id)
     try {
         $brand = \App\Models\HomeBrand::findOrFail($id);
         if ($request->hasFile('image')) {
-            if ($brand->image && file_exists(base_path('uploads/brands/' . $brand->image))) {
-                unlink(base_path('uploads/brands/' . $brand->image));
+            if ($brand->image && file_exists(public_path('uploads/brands/' . $brand->image))) {
+                unlink(public_path('uploads/brands/' . $brand->image));
             }
             $img       = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
-            $path      = base_path('uploads/brands');
+            $path      = public_path('uploads/brands');
             if (!file_exists($path)) mkdir($path, 0755, true);
             $img->move($path, $imageName);
             $brand->image = $imageName;
@@ -5321,8 +5321,8 @@ public function brandDelete($id)
     }
     try {
         $brand = \App\Models\HomeBrand::findOrFail($id);
-        if ($brand->image && file_exists(base_path('uploads/brands/' . $brand->image))) {
-            unlink(base_path('uploads/brands/' . $brand->image));
+        if ($brand->image && file_exists(public_path('uploads/brands/' . $brand->image))) {
+            unlink(public_path('uploads/brands/' . $brand->image));
         }
         $brand->delete();
         return redirect()->route('brand.section')->with('success', 'Brand deleted!');
@@ -5355,7 +5355,7 @@ public function homeLogoStore(Request $request)
     try {
         $img       = $request->file('image');
         $imageName = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
-        $uploadPath = base_path('uploads/homelogos');
+        $uploadPath = public_path('uploads/homelogos');
         if (!file_exists($uploadPath)) mkdir($uploadPath, 0755, true);
         $img->move($uploadPath, $imageName);
 
@@ -5394,12 +5394,12 @@ public function homeLogoUpdate(Request $request, $id)
     try {
         $logo = \App\Models\HomeLogo::findOrFail($id);
         if ($request->hasFile('image')) {
-            if ($logo->image && file_exists(base_path('uploads/homelogos/' . $logo->image))) {
-                unlink(base_path('uploads/homelogos/' . $logo->image));
+            if ($logo->image && file_exists(public_path('uploads/homelogos/' . $logo->image))) {
+                unlink(public_path('uploads/homelogos/' . $logo->image));
             }
             $img       = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $img->getClientOriginalExtension();
-            $path      = base_path('uploads/homelogos');
+            $path      = public_path('uploads/homelogos');
             if (!file_exists($path)) mkdir($path, 0755, true);
             $img->move($path, $imageName);
             $logo->image = $imageName;
@@ -5421,8 +5421,8 @@ public function homeLogoDelete($id)
     if (!Session::has('user_id')) return redirect()->route('login');
     try {
         $logo = \App\Models\HomeLogo::findOrFail($id);
-        if ($logo->image && file_exists(base_path('uploads/homelogos/' . $logo->image))) {
-            unlink(base_path('uploads/homelogos/' . $logo->image));
+        if ($logo->image && file_exists(public_path('uploads/homelogos/' . $logo->image))) {
+            unlink(public_path('uploads/homelogos/' . $logo->image));
         }
         $logo->delete();
         return redirect()->route('homelogo.index')->with('success', 'Logo deleted!');
@@ -5480,7 +5480,7 @@ public function footerNewStore(Request $request)
         if ($request->hasFile('col1_logo')) {
             $logo     = $request->file('col1_logo');
             $logoName = time() . '_footer_logo.' . $logo->getClientOriginalExtension();
-            $path     = base_path('uploads/footer');
+            $path     = public_path('uploads/footer');
             if (!file_exists($path)) mkdir($path, 0755, true);
             $logo->move($path, $logoName);
         }
@@ -5532,19 +5532,19 @@ public function footerNewUpdate(Request $request, $id)
     try {
         $footer = FooterNew::findOrFail($id);
         if ($request->hasFile('col1_logo')) {
-            if ($footer->col1_logo && file_exists(base_path('uploads/footer/' . $footer->col1_logo))) {
-                unlink(base_path('uploads/footer/' . $footer->col1_logo));
+            if ($footer->col1_logo && file_exists(public_path('uploads/footer/' . $footer->col1_logo))) {
+                unlink(public_path('uploads/footer/' . $footer->col1_logo));
             }
             $logo = $request->file('col1_logo');
             $logoName = time() . '_footer_logo.' . $logo->getClientOriginalExtension();
-            $path = base_path('uploads/footer');
+            $path = public_path('uploads/footer');
             if (!file_exists($path)) mkdir($path, 0755, true);
             $logo->move($path, $logoName);
             $footer->col1_logo = $logoName;
         }
         if ($request->remove_logo == '1') {
-            if ($footer->col1_logo && file_exists(base_path('uploads/footer/' . $footer->col1_logo))) {
-                unlink(base_path('uploads/footer/' . $footer->col1_logo));
+            if ($footer->col1_logo && file_exists(public_path('uploads/footer/' . $footer->col1_logo))) {
+                unlink(public_path('uploads/footer/' . $footer->col1_logo));
             }
             $footer->col1_logo = null;
         }
@@ -5584,8 +5584,8 @@ public function footerNewDelete($id)
     }
     try {
         $footer = FooterNew::findOrFail($id);
-        if ($footer->col1_logo && file_exists(base_path('uploads/footer/' . $footer->col1_logo))) {
-            unlink(base_path('uploads/footer/' . $footer->col1_logo));
+        if ($footer->col1_logo && file_exists(public_path('uploads/footer/' . $footer->col1_logo))) {
+            unlink(public_path('uploads/footer/' . $footer->col1_logo));
         }
         $footer->delete();
         return redirect()->route('footer.new')->with('success', 'Footer deleted!');
@@ -5820,7 +5820,7 @@ public function promotionalBannerStore(Request $request)
         if ($request->hasFile('background_image')) {
             $image = $request->file('background_image');
             $imageName = time() . '_promo_desktop_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $uploadPath = base_path('uploads/promotional-banners');
+            $uploadPath = public_path('uploads/promotional-banners');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -5832,7 +5832,7 @@ public function promotionalBannerStore(Request $request)
         if ($request->hasFile('background_image_mobile')) {
             $mobileImage = $request->file('background_image_mobile');
             $mobileImageName = time() . '_promo_mobile_' . uniqid() . '.' . $mobileImage->getClientOriginalExtension();
-            $uploadPath = base_path('uploads/promotional-banners');
+            $uploadPath = public_path('uploads/promotional-banners');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -5896,13 +5896,13 @@ public function promotionalBannerUpdate(Request $request, $id)
  
         // Handle desktop image upload
         if ($request->hasFile('background_image')) {
-            if ($banner->background_image && file_exists(base_path('uploads/promotional-banners/' . $banner->background_image))) {
-                unlink(base_path('uploads/promotional-banners/' . $banner->background_image));
+            if ($banner->background_image && file_exists(public_path('uploads/promotional-banners/' . $banner->background_image))) {
+                unlink(public_path('uploads/promotional-banners/' . $banner->background_image));
             }
             
             $image = $request->file('background_image');
             $imageName = time() . '_promo_desktop_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $uploadPath = base_path('uploads/promotional-banners');
+            $uploadPath = public_path('uploads/promotional-banners');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -5912,13 +5912,13 @@ public function promotionalBannerUpdate(Request $request, $id)
  
         // ✅ NEW - Handle mobile image upload
         if ($request->hasFile('background_image_mobile')) {
-            if ($banner->background_image_mobile && file_exists(base_path('uploads/promotional-banners/' . $banner->background_image_mobile))) {
-                unlink(base_path('uploads/promotional-banners/' . $banner->background_image_mobile));
+            if ($banner->background_image_mobile && file_exists(public_path('uploads/promotional-banners/' . $banner->background_image_mobile))) {
+                unlink(public_path('uploads/promotional-banners/' . $banner->background_image_mobile));
             }
             
             $mobileImage = $request->file('background_image_mobile');
             $mobileImageName = time() . '_promo_mobile_' . uniqid() . '.' . $mobileImage->getClientOriginalExtension();
-            $uploadPath = base_path('uploads/promotional-banners');
+            $uploadPath = public_path('uploads/promotional-banners');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -5953,13 +5953,13 @@ public function promotionalBannerDelete($id)
         $banner = \App\Models\PromotionalBanner::findOrFail($id);
         
         // Delete desktop image file
-        if ($banner->background_image && file_exists(base_path('uploads/promotional-banners/' . $banner->background_image))) {
-            unlink(base_path('uploads/promotional-banners/' . $banner->background_image));
+        if ($banner->background_image && file_exists(public_path('uploads/promotional-banners/' . $banner->background_image))) {
+            unlink(public_path('uploads/promotional-banners/' . $banner->background_image));
         }
         
         // ✅ NEW - Delete mobile image file
-        if ($banner->background_image_mobile && file_exists(base_path('uploads/promotional-banners/' . $banner->background_image_mobile))) {
-            unlink(base_path('uploads/promotional-banners/' . $banner->background_image_mobile));
+        if ($banner->background_image_mobile && file_exists(public_path('uploads/promotional-banners/' . $banner->background_image_mobile))) {
+            unlink(public_path('uploads/promotional-banners/' . $banner->background_image_mobile));
         }
         
         $banner->delete();
@@ -6004,8 +6004,8 @@ public function homeVideoSectionStore(Request $request)
         $videosData = [];
         
         if ($request->hasFile('videos')) {
-            $videoPath = base_path('uploads/video-sections');
-            $thumbPath = base_path('uploads/video-sections/thumbnails');
+            $videoPath = public_path('uploads/video-sections');
+            $thumbPath = public_path('uploads/video-sections/thumbnails');
             
             // Create directories if they don't exist
             if (!file_exists($videoPath)) {
@@ -6104,7 +6104,7 @@ public function homeVideoSectionUpdate(Request $request, $id)
                 $filteredVideos[] = $vid;
             } else {
                 // Delete video file
-                $vp = base_path('uploads/video-sections/' . $vid['video']);
+                $vp = public_path('uploads/video-sections/' . $vid['video']);
                 if (file_exists($vp)) {
                     unlink($vp);
                     \Log::info('🗑️ Deleted video: ' . $vid['video']);
@@ -6112,7 +6112,7 @@ public function homeVideoSectionUpdate(Request $request, $id)
                 
                 // Delete thumbnail file if exists
                 if (!empty($vid['thumbnail'])) {
-                    $tp = base_path('uploads/video-sections/thumbnails/' . $vid['thumbnail']);
+                    $tp = public_path('uploads/video-sections/thumbnails/' . $vid['thumbnail']);
                     if (file_exists($tp)) {
                         unlink($tp);
                         \Log::info('🗑️ Deleted thumbnail: ' . $vid['thumbnail']);
@@ -6123,8 +6123,8 @@ public function homeVideoSectionUpdate(Request $request, $id)
  
         // Add new videos if provided
         if ($request->hasFile('videos')) {
-            $videoPath = base_path('uploads/video-sections');
-            $thumbPath = base_path('uploads/video-sections/thumbnails');
+            $videoPath = public_path('uploads/video-sections');
+            $thumbPath = public_path('uploads/video-sections/thumbnails');
             
             if (!file_exists($videoPath)) mkdir($videoPath, 0755, true);
             if (!file_exists($thumbPath)) mkdir($thumbPath, 0755, true);
@@ -6188,14 +6188,14 @@ public function homeVideoSectionDelete($id)
         
         // Delete all video and thumbnail files
         foreach ($section->videos ?? [] as $vid) {
-            $vp = base_path('uploads/video-sections/' . $vid['video']);
+            $vp = public_path('uploads/video-sections/' . $vid['video']);
             if (file_exists($vp)) {
                 unlink($vp);
                 \Log::info('🗑️ Deleted video file: ' . $vid['video']);
             }
             
             if (!empty($vid['thumbnail'])) {
-                $tp = base_path('uploads/video-sections/thumbnails/' . $vid['thumbnail']);
+                $tp = public_path('uploads/video-sections/thumbnails/' . $vid['thumbnail']);
                 if (file_exists($tp)) {
                     unlink($tp);
                     \Log::info('🗑️ Deleted thumbnail file: ' . $vid['thumbnail']);
@@ -6995,7 +6995,7 @@ public function contactUsStore(Request $request)
         if ($request->hasFile('image')) {
             $image     = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $uploadPath = base_path('uploads/contact-us');
+            $uploadPath = public_path('uploads/contact-us');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -7042,12 +7042,12 @@ public function contactUsUpdate(Request $request, $id)
         $contactUs = \App\Models\ContactUs::findOrFail($id);
 
         if ($request->hasFile('image')) {
-            if ($contactUs->image && file_exists(base_path('uploads/contact-us/' . $contactUs->image))) {
-                unlink(base_path('uploads/contact-us/' . $contactUs->image));
+            if ($contactUs->image && file_exists(public_path('uploads/contact-us/' . $contactUs->image))) {
+                unlink(public_path('uploads/contact-us/' . $contactUs->image));
             }
             $image     = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $uploadPath = base_path('uploads/contact-us');
+            $uploadPath = public_path('uploads/contact-us');
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0755, true);
             }
@@ -7080,8 +7080,8 @@ public function contactUsDelete($id)
     try {
         $contactUs = \App\Models\ContactUs::findOrFail($id);
         
-        if ($contactUs->image && file_exists(base_path('uploads/contact-us/' . $contactUs->image))) {
-            unlink(base_path('uploads/contact-us/' . $contactUs->image));
+        if ($contactUs->image && file_exists(public_path('uploads/contact-us/' . $contactUs->image))) {
+            unlink(public_path('uploads/contact-us/' . $contactUs->image));
         }
         
         $contactUs->delete();
@@ -7254,8 +7254,8 @@ public function galleryStore(Request $request)
  
         // ✅ Upload Images
         if ($request->media_type === 'image' && $request->hasFile('images')) {
-            $imagesPath     = base_path('uploads/gallery/images');
-            $thumbnailsPath = base_path('uploads/gallery/thumbnails');
+            $imagesPath     = public_path('uploads/gallery/images');
+            $thumbnailsPath = public_path('uploads/gallery/thumbnails');
  
             if (!file_exists($imagesPath))     mkdir($imagesPath,     0755, true);
             if (!file_exists($thumbnailsPath)) mkdir($thumbnailsPath, 0755, true);
@@ -7280,8 +7280,8 @@ public function galleryStore(Request $request)
  
         // ✅ Upload Videos
         if ($request->media_type === 'video' && $request->hasFile('videos')) {
-            $videosPath     = base_path('uploads/gallery/videos');
-            $thumbnailsPath = base_path('uploads/gallery/thumbnails');
+            $videosPath     = public_path('uploads/gallery/videos');
+            $thumbnailsPath = public_path('uploads/gallery/thumbnails');
  
             if (!file_exists($videosPath))     mkdir($videosPath,     0755, true);
             if (!file_exists($thumbnailsPath)) mkdir($thumbnailsPath, 0755, true);
@@ -7373,8 +7373,8 @@ public function galleryUpdate(Request $request, $id)
  
         // ✅ Upload New Images (only if media_type = image)
         if ($request->media_type === 'image' && $request->hasFile('images')) {
-            $imagesPath     = base_path('uploads/gallery/images');
-            $thumbnailsPath = base_path('uploads/gallery/thumbnails');
+            $imagesPath     = public_path('uploads/gallery/images');
+            $thumbnailsPath = public_path('uploads/gallery/thumbnails');
  
             if (!file_exists($imagesPath))     mkdir($imagesPath,     0755, true);
             if (!file_exists($thumbnailsPath)) mkdir($thumbnailsPath, 0755, true);
@@ -7408,8 +7408,8 @@ public function galleryUpdate(Request $request, $id)
  
         // ✅ Upload New Videos (only if media_type = video)
         if ($request->media_type === 'video' && $request->hasFile('videos')) {
-            $videosPath     = base_path('uploads/gallery/videos');
-            $thumbnailsPath = base_path('uploads/gallery/thumbnails');
+            $videosPath     = public_path('uploads/gallery/videos');
+            $thumbnailsPath = public_path('uploads/gallery/thumbnails');
  
             if (!file_exists($videosPath))     mkdir($videosPath,     0755, true);
             if (!file_exists($thumbnailsPath)) mkdir($thumbnailsPath, 0755, true);
@@ -7472,16 +7472,16 @@ public function galleryDeleteMedia($id)
  
         // Delete files
         if ($media->media_type === 'image') {
-            $filePath = base_path('uploads/gallery/images/' . $media->file_name);
+            $filePath = public_path('uploads/gallery/images/' . $media->file_name);
             if (file_exists($filePath)) unlink($filePath);
         } else {
-            $filePath = base_path('uploads/gallery/videos/' . $media->file_name);
+            $filePath = public_path('uploads/gallery/videos/' . $media->file_name);
             if (file_exists($filePath)) unlink($filePath);
         }
  
         // Delete thumbnail
         if ($media->thumbnail) {
-            $thumbPath = base_path('uploads/gallery/thumbnails/' . $media->thumbnail);
+            $thumbPath = public_path('uploads/gallery/thumbnails/' . $media->thumbnail);
             if (file_exists($thumbPath)) unlink($thumbPath);
         }
  
@@ -7517,15 +7517,15 @@ public function galleryDelete($id)
         // Delete all media files
         foreach ($gallery->media as $media) {
             if ($media->media_type === 'image') {
-                $filePath = base_path('uploads/gallery/images/' . $media->file_name);
+                $filePath = public_path('uploads/gallery/images/' . $media->file_name);
                 if (file_exists($filePath)) unlink($filePath);
             } else {
-                $filePath = base_path('uploads/gallery/videos/' . $media->file_name);
+                $filePath = public_path('uploads/gallery/videos/' . $media->file_name);
                 if (file_exists($filePath)) unlink($filePath);
             }
  
             if ($media->thumbnail) {
-                $thumbPath = base_path('uploads/gallery/thumbnails/' . $media->thumbnail);
+                $thumbPath = public_path('uploads/gallery/thumbnails/' . $media->thumbnail);
                 if (file_exists($thumbPath)) unlink($thumbPath);
             }
         }
