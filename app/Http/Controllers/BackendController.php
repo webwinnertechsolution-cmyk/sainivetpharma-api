@@ -4652,21 +4652,26 @@ public function productStore(Request $request)
         if ($request->has('variant_names') && is_array($request->variant_names)) {
             $variantImagePath = public_path('uploads/products/variants');
             if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
-
+ 
             foreach ($request->variant_names as $idx => $name) {
                 if (empty(trim($name))) continue;
  
                 $attrRaw = $request->variant_attributes[$idx] ?? '{}';
                 $attrs   = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
-
+ 
                 // ── Variant Image Upload ──
                 $variantImageName = null;
                 $variantImages = $request->file('variant_images');
+                
                 if (!empty($variantImages) && isset($variantImages[$idx])) {
                     $vImg = $variantImages[$idx];
-                    $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
-                    $vImg->move($variantImagePath, $variantImageName);
+                    
+                    // ✅ Real file check - sirf UploadedFile objects process karo
+                    if ($vImg instanceof \Illuminate\Http\UploadedFile) {
+                        $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
+                        $vImg->move($variantImagePath, $variantImageName);
+                    }
                 }
  
                 ProductVariant::create([
@@ -4791,7 +4796,7 @@ public function productUpdate(Request $request, $id)
         $product->og_image_alt       = $request->og_image_alt;
         $product->extra_tabs         = !empty($extraTabs) ? json_encode($extraTabs) : null;
         $product->cta_button         = $request->cta_button ?? 'add_to_cart';
-
+ 
         if ($request->status === 'published' && !$product->published_at) {
             $product->published_at = now();
         }
@@ -4837,21 +4842,26 @@ public function productUpdate(Request $request, $id)
         if ($request->has('variant_names') && is_array($request->variant_names)) {
             $variantImagePath = public_path('uploads/products/variants');
             if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
-
+ 
             foreach ($request->variant_names as $idx => $name) {
                 if (empty(trim($name))) continue;
  
                 $attrRaw = $request->variant_attributes[$idx] ?? '{}';
                 $attrs   = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
-
+ 
                 // ── Variant Image Upload ──
                 $variantImageName = null;
                 $variantImages = $request->file('variant_images');
+                
                 if (!empty($variantImages) && isset($variantImages[$idx])) {
                     $vImg = $variantImages[$idx];
-                    $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
-                    $vImg->move($variantImagePath, $variantImageName);
+                    
+                    // ✅ Real file check - sirf UploadedFile objects process karo
+                    if ($vImg instanceof \Illuminate\Http\UploadedFile) {
+                        $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
+                        $vImg->move($variantImagePath, $variantImageName);
+                    }
                 }
  
                 ProductVariant::create([
