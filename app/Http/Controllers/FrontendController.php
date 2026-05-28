@@ -929,56 +929,45 @@ public function apiAnnouncementBar()
 // SHOP API - Collections page ke liye
 public function apiShop(Request $request)
 {
-    // CACHE BYPASS - test ke liye
-    \Cache::flush();
-    
-    $query = Product::with(['categories', 'variants', 'images'])
-        ->where('status', 'published');
+    $cacheKey = 'shop_' . md5($request->fullUrl());
 
-    if ($request->filled('category')) {
-        $cat = ProductCategory::where('slug', $request->category)->first();
-        if ($cat) {
-            $query->whereHas('categories', function ($q) use ($cat) {
-                $q->where('product_categories.id', $cat->id);
-            });
+    $data = Cache::remember($cacheKey, 300, function () use ($request) {
+        
+        $query = Product::with(['categories', 'variants', 'images'])
+            ->where('status', 'published');
+
+        if ($request->filled('category')) {
+            $cat = ProductCategory::where('slug', $request->category)->first();
+            if ($cat) {
+                $query->whereHas('categories', function ($q) use ($cat) {
+                    $q->where('product_categories.id', $cat->id);
+                });
+            }
         }
-    }
 
-    $sort = $request->get('sort', 'latest');
-    if ($sort === 'price_low')  $query->orderByRaw("COALESCE(sale_price, price) ASC");
-    elseif ($sort === 'price_high') $query->orderByRaw("COALESCE(sale_price, price) DESC");
-    elseif ($sort === 'name_asc')   $query->orderBy('title', 'asc');
-    else $query->latest('published_at');
+        $sort = $request->get('sort', 'latest');
+        if ($sort === 'price_low')  $query->orderByRaw("COALESCE(sale_price, price) ASC");
+        elseif ($sort === 'price_high') $query->orderByRaw("COALESCE(sale_price, price) DESC");
+        elseif ($sort === 'name_asc')   $query->orderBy('title', 'asc');
+        else $query->latest('published_at');
 
-    $products = $query->paginate(16);
+        $products   = $query->paginate(16);
+        $categories = ProductCategory::withCount([
+            'products' => fn($q) => $q->where('status', 'published')
+        ])->where('is_active', 1)->orderBy('name')->get();
 
-    $categories = ProductCategory::withCount([
-        'products' => fn($q) => $q->where('status', 'published')
-    ])->where('is_active', 1)->orderBy('name')->get();
+        return [
+            'products'   => $products->items(),
+            'categories' => $categories,
+            'pagination' => [
+                'current_page' => $products->currentPage(),
+                'last_page'    => $products->lastPage(),
+                'total'        => $products->total(),
+            ],
+        ];
+    });
 
-    $tags = \App\Models\ProductTag::withCount([
-        'products' => fn($q) => $q->where('status', 'published')
-    ])->orderBy('name')->get();
-
-    $variantsWithCounts = \App\Models\ProductVariant::select('name', 'type')
-        ->selectRaw('COUNT(DISTINCT product_id) as product_count')
-        ->whereHas('product', fn($q) => $q->where('status', 'published'))
-        ->groupBy('name', 'type')
-        ->orderBy('type')
-        ->orderBy('name')
-        ->get();
-
-    return response()->json([
-        'products'   => $products->items(),
-        'categories' => $categories,
-        'tags'       => $tags,
-        'variants'   => $variantsWithCounts,
-        'pagination' => [
-            'current_page' => $products->currentPage(),
-            'last_page'    => $products->lastPage(),
-            'total'        => $products->total(),
-        ],
-    ]);
+    return response()->json($data);
 }
 // CATEGORIES - Sidebar ke liye
 public function apiCategories()
