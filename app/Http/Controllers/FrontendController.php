@@ -929,102 +929,56 @@ public function apiAnnouncementBar()
 // SHOP API - Collections page ke liye
 public function apiShop(Request $request)
 {
-    // Cache band karo jab variants/tags filter active ho
-    $cacheKey = 'shop_' . md5($request->fullUrl());
- 
-    $data = Cache::remember($cacheKey, 300, function () use ($request) {
- 
-        $query = Product::with(['categories', 'variants', 'images'])
-            ->where('status', 'published');
- 
-        // Category filter
-        if ($request->filled('category')) {
-            $cat = ProductCategory::where('slug', $request->category)->first();
-            if ($cat) {
-                $query->whereHas('categories', function ($q) use ($cat) {
-                    $q->where('product_categories.id', $cat->id);
-                });
-            }
+    // CACHE BYPASS - test ke liye
+    \Cache::flush();
+    
+    $query = Product::with(['categories', 'variants', 'images'])
+        ->where('status', 'published');
+
+    if ($request->filled('category')) {
+        $cat = ProductCategory::where('slug', $request->category)->first();
+        if ($cat) {
+            $query->whereHas('categories', function ($q) use ($cat) {
+                $q->where('product_categories.id', $cat->id);
+            });
         }
- 
-        // Tag filter — NEW
-        if ($request->filled('tag')) {
-            $tag = \App\Models\ProductTag::where('slug', $request->tag)->first();
-            if ($tag) {
-                $query->whereHas('tags', function ($q) use ($tag) {
-                    $q->where('product_tags.id', $tag->id);
-                });
-            }
-        }
- 
-        // Variants filter — NEW (comma-separated: ?variants=500ml,1kg)
-        if ($request->filled('variants')) {
-            $selectedVariants = array_filter(array_map('trim', explode(',', $request->variants)));
-            if (!empty($selectedVariants)) {
-                $query->whereHas('variants', function ($q) use ($selectedVariants) {
-                    $q->whereIn('name', $selectedVariants);
-                });
-            }
-        }
- 
-        // Sort
-        $sort = $request->get('sort', 'latest');
-        switch ($sort) {
-            case 'price_low':
-                $query->orderByRaw("CASE WHEN (sale_price IS NULL OR sale_price = 0) AND (price IS NULL OR price = 0) THEN 1 ELSE 0 END ASC, CASE WHEN sale_price IS NOT NULL AND sale_price > 0 THEN sale_price ELSE price END ASC");
-                break;
-            case 'price_high':
-                $query->orderByRaw("CASE WHEN (sale_price IS NULL OR sale_price = 0) AND (price IS NULL OR price = 0) THEN 1 ELSE 0 END ASC, CASE WHEN sale_price IS NOT NULL AND sale_price > 0 THEN sale_price ELSE price END DESC");
-                break;
-            case 'oldest':
-                $query->oldest('published_at');
-                break;
-            case 'name_asc':
-                $query->orderBy('title', 'asc');
-                break;
-            case 'featured':
-                $query->orderBy('is_featured', 'desc')->latest('published_at');
-                break;
-            default:
-                $query->latest('published_at');
-                break;
-        }
- 
-        $products = $query->paginate(16);
- 
-        // Categories with product count
-        $categories = ProductCategory::withCount([
-            'products' => fn($q) => $q->where('status', 'published')
-        ])->where('is_active', 1)->orderBy('name')->get();
- 
-        // Tags with product count — NEW
-        $tags = \App\Models\ProductTag::withCount([
-            'products' => fn($q) => $q->where('status', 'published')
-        ])->orderBy('name')->get();
- 
-        // Variants grouped by type with product count — NEW
-        $variantsWithCounts = \App\Models\ProductVariant::select('name', 'type')
-            ->selectRaw('COUNT(DISTINCT product_id) as product_count')
-            ->whereHas('product', fn($q) => $q->where('status', 'published'))
-            ->groupBy('name', 'type')
-            ->orderBy('type')
-            ->orderBy('name')
-            ->get();
- 
-        return [
-            'products'           => $products->items(),
-            'categories'         => $categories,
-            'tags'               => $tags,               // NEW
-            'variants'           => $variantsWithCounts, // NEW
-            'pagination'         => [
-                'current_page' => $products->currentPage(),
-                'last_page'    => $products->lastPage(),
-                'total'        => $products->total(),
-            ],
-        ];
-    });
- 
-    return response()->json($data);
+    }
+
+    $sort = $request->get('sort', 'latest');
+    if ($sort === 'price_low')  $query->orderByRaw("COALESCE(sale_price, price) ASC");
+    elseif ($sort === 'price_high') $query->orderByRaw("COALESCE(sale_price, price) DESC");
+    elseif ($sort === 'name_asc')   $query->orderBy('title', 'asc');
+    else $query->latest('published_at');
+
+    $products = $query->paginate(16);
+
+    $categories = ProductCategory::withCount([
+        'products' => fn($q) => $q->where('status', 'published')
+    ])->where('is_active', 1)->orderBy('name')->get();
+
+    $tags = \App\Models\ProductTag::withCount([
+        'products' => fn($q) => $q->where('status', 'published')
+    ])->orderBy('name')->get();
+
+    $variantsWithCounts = \App\Models\ProductVariant::select('name', 'type')
+        ->selectRaw('COUNT(DISTINCT product_id) as product_count')
+        ->whereHas('product', fn($q) => $q->where('status', 'published'))
+        ->groupBy('name', 'type')
+        ->orderBy('type')
+        ->orderBy('name')
+        ->get();
+
+    return response()->json([
+        'products'   => $products->items(),
+        'categories' => $categories,
+        'tags'       => $tags,
+        'variants'   => $variantsWithCounts,
+        'pagination' => [
+            'current_page' => $products->currentPage(),
+            'last_page'    => $products->lastPage(),
+            'total'        => $products->total(),
+        ],
+    ]);
 }
 // CATEGORIES - Sidebar ke liye
 public function apiCategories()
