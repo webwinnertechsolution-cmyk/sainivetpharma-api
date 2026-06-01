@@ -244,7 +244,7 @@
         .btn-login {
             width: 100%;
             margin-top: 20px;
-            background: linear-gradient(135deg, var(--green) 0%, #3e9c1a 100%);
+            background: linear-gradient(135deg, var(--green) 0%, #1872b5 100%);
             color: #fff;
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
@@ -268,7 +268,7 @@
             transform: translateX(-100%);
             transition: transform 0.6s;
         }
-        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(93,177,53,0.6); }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 36px #1872B599; }
         .btn-login:hover::before { transform: translateX(100%); }
         .btn-login:active { transform: translateY(0); }
  
