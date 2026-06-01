@@ -13,8 +13,8 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
  
         :root {
-            --green:       #5DB135;
-            --green-light: #7DD455;
+            --green:       #1872b5;
+            --green-light: #1872B5;
             --green-glow:  rgba(93,177,53,0.35);
             --blue:        #1E6BB5;
             --blue-light:  #3A8FDD;
