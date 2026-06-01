@@ -258,7 +258,7 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.2s, box-shadow 0.3s;
-            box-shadow: 0 6px 24px rgba(93,177,53,0.45), 0 2px 0 rgb(24 114 181 / 62%) inset;
+            box-shadow: 0 6px 24px #1872b5b8, 0 2px 0 rgb(24 114 181 / 0%) inset;
         }
  
         .btn-login::before {
