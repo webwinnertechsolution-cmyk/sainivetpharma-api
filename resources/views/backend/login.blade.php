@@ -3,540 +3,544 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Admin Login - Red Labs</title>
-    <!-- CSS -->
+    <title>Admin Login - SainiVet Pharma</title>
     <link rel="stylesheet" href="{{ asset('backend/assets/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/vendors/css/vendor.bundle.base.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/style.css') }}">
     <link rel="shortcut icon" href="{{ asset('backend/assets/images/favicon.png') }}" />
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Lato:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body, html {
-            height: 100%;
-            font-family: 'Lato', sans-serif;
-            overflow: hidden;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+        :root {
+            --green:       #5DB135;
+            --green-light: #7DD455;
+            --green-glow:  rgba(93,177,53,0.35);
+            --blue:        #1E6BB5;
+            --blue-light:  #3A8FDD;
+            --blue-glow:   rgba(30,107,181,0.38);
+            --navy:        #0D1B2A;
+            --navy-mid:    #132436;
+            --card-bg:     rgba(13,27,42,0.82);
+            --white:       #FFFFFF;
+            --off-white:   #EEF5FF;
         }
-
-        /* ── ANIMATED BACKGROUND ── */
-        .agri-bg {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(160deg, #0d2b1a 0%, #1a4a2e 40%, #0f3320 70%, #0a1f12 100%);
-            overflow: hidden;
-            z-index: 0;
+ 
+        body, html { height: 100%; font-family: 'Nunito', sans-serif; overflow: hidden; }
+ 
+        /* ── BACKGROUND ── */
+        .vet-bg {
+            position: fixed; inset: 0;
+            background: radial-gradient(ellipse at 30% 40%, #132d4a 0%, #0D1B2A 50%, #070f18 100%);
+            overflow: hidden; z-index: 0;
         }
-
-        /* Subtle grid lines like farm rows */
-        .agri-bg::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 80px),
-                repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 80px);
-            animation: gridDrift 20s linear infinite;
+ 
+        /* Green orb top-right */
+        .orb-green {
+            position: absolute; top: -140px; right: -100px;
+            width: 480px; height: 480px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(93,177,53,0.18) 0%, transparent 70%);
+            animation: orbPulse 7s ease-in-out infinite;
         }
-
-        @keyframes gridDrift {
-            from { transform: translateY(0); }
-            to   { transform: translateY(80px); }
+        /* Blue orb bottom-left */
+        .orb-blue {
+            position: absolute; bottom: -100px; left: -80px;
+            width: 400px; height: 400px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(30,107,181,0.22) 0%, transparent 70%);
+            animation: orbPulse 9s ease-in-out 2s infinite;
         }
-
-        /* ── FLOATING MOLECULES / DROPLETS ── */
-        .molecules { position: absolute; inset: 0; pointer-events: none; }
-
-        .mol {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0;
-            animation: floatUp var(--dur) ease-in var(--delay) infinite;
+        /* Subtle center glow */
+        .orb-center {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+            width: 600px; height: 300px;
+            background: radial-gradient(ellipse, rgba(30,107,181,0.07) 0%, transparent 70%);
         }
-        .mol.blue  { background: radial-gradient(circle at 35% 35%, #7fd7ff, #0088cc88); box-shadow: 0 0 12px #00aaff55; }
-        .mol.green { background: radial-gradient(circle at 35% 35%, #a8ff78, #22863688); box-shadow: 0 0 12px #44cc6655; }
-        .mol.amber { background: radial-gradient(circle at 35% 35%, #ffe066, #cc880088); box-shadow: 0 0 12px #ffaa0055; }
-
-        @keyframes floatUp {
-            0%   { opacity: 0; transform: translateY(0) scale(0.6); }
-            15%  { opacity: 0.85; }
-            80%  { opacity: 0.5; }
-            100% { opacity: 0; transform: translateY(-420px) scale(1.1); }
+        @keyframes orbPulse {
+            0%,100% { transform: scale(1); opacity:1; }
+            50%      { transform: scale(1.15); opacity:0.7; }
         }
-
-        /* ── SVG ICONS FLOATING ── */
-        .icons-layer { position: absolute; inset: 0; pointer-events: none; }
-
-        .float-icon {
-            position: absolute;
-            opacity: 0;
-            animation: iconFloat var(--idur) ease-in-out var(--idelay) infinite;
-            filter: drop-shadow(0 0 8px var(--iglow));
+ 
+        /* dot grid */
+        .dot-grid {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
-
-        @keyframes iconFloat {
-            0%   { opacity: 0; transform: translateY(20px) rotate(0deg) scale(0.8); }
-            20%  { opacity: var(--iop); }
-            80%  { opacity: var(--iop); }
-            100% { opacity: 0; transform: translateY(-60px) rotate(var(--irot)) scale(1); }
-        }
-
-        /* ── SPRAY LINES ── */
-        .spray-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .spray-line {
-            position: absolute;
-            bottom: -10px;
-            width: 2px;
-            border-radius: 1px;
-            background: linear-gradient(to top, rgba(100,220,160,0.7), transparent);
-            transform-origin: bottom center;
-            animation: sprayShoot var(--sdur) ease-out var(--sdelay) infinite;
-            opacity: 0;
-        }
-
-        @keyframes sprayShoot {
-            0%   { opacity: 0; height: 0; transform: rotate(var(--sang)) scaleX(1); }
-            10%  { opacity: 0.9; }
-            60%  { opacity: 0.4; height: var(--slen); }
-            100% { opacity: 0; height: var(--slen); }
-        }
-
-        /* ── LEAF PARTICLES ── */
-        .leaf {
-            position: absolute;
-            font-size: var(--lsize);
-            opacity: 0;
-            animation: leafDrift var(--ldur) ease-in-out var(--ldelay) infinite;
-        }
-
-        @keyframes leafDrift {
-            0%   { opacity: 0; transform: translateY(-20px) translateX(0) rotate(0deg); }
-            20%  { opacity: 0.7; }
-            80%  { opacity: 0.4; }
-            100% { opacity: 0; transform: translateY(100vh) translateX(var(--ldx)) rotate(360deg); }
-        }
-
-        /* ── SCAN LINE OVERLAY ── */
+ 
+        /* scanlines */
         .scanlines {
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 3px,
-                rgba(0,0,0,0.08) 3px,
-                rgba(0,0,0,0.08) 4px
-            );
+            position: absolute; inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px);
             pointer-events: none;
         }
-
-        /* ── CONTENT WRAPPER ── */
-        .container-scroller { position: relative; z-index: 1; height: 100vh; }
-        .container-fluid.page-body-wrapper { height: 100%; }
-
-        .content-wrapper {
-            background: transparent !important;
-            height: 100vh;
-            display: flex;
-            align-items: center;
+ 
+        /* ── FLOATING ANIMAL SILHOUETTES (SVG) ── */
+        .animal-float {
+            position: absolute;
+            opacity: 0;
+            animation: animalDrift var(--ad) ease-in-out var(--ade) infinite;
         }
-
-        /* ── LOGIN CARD ── */
-        .auth-form-light {
-            background: rgba(255, 255, 255, 0.07) !important;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.15) !important;
-            border-radius: 4px 24px 4px 24px !important;
+        @keyframes animalDrift {
+            0%   { opacity:0; transform: translateY(12px) scale(0.9) rotate(var(--ar)); }
+            25%  { opacity: var(--ao); }
+            75%  { opacity: var(--ao); }
+            100% { opacity:0; transform: translateY(-35px) scale(1.05) rotate(var(--ar)); }
+        }
+ 
+        /* ── FLOATING CROSS MARKS ── */
+        .cross-mark {
+            position: absolute;
+            color: rgba(30,107,181,0.15);
+            font-size: var(--cms);
+            opacity: 0;
+            animation: crossPop var(--cmd) ease-in-out var(--cmde) infinite;
+        }
+        @keyframes crossPop {
+            0%,100% { opacity:0; transform: scale(0.7) rotate(0deg); }
+            40%,60% { opacity:1; transform: scale(1) rotate(10deg); }
+        }
+ 
+        /* ── FLOATING MED PILLS ── */
+        .med-pill {
+            position: absolute;
+            border-radius: 50px;
+            opacity: 0;
+            animation: pillDrift var(--mpd) ease-in-out var(--mpde) infinite;
+        }
+        @keyframes pillDrift {
+            0%   { opacity:0; transform: translateY(20px) rotate(var(--mpr)); }
+            30%  { opacity:0.55; }
+            70%  { opacity:0.3; }
+            100% { opacity:0; transform: translateY(-60px) rotate(calc(var(--mpr) + 50deg)); }
+        }
+ 
+        /* ── CONTENT ── */
+        .page-wrap { position: relative; z-index:1; height:100vh; display:flex; align-items:center; justify-content:center; padding: 20px; }
+ 
+        /* ── CARD ── */
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(30,107,181,0.25);
+            border-radius: 4px 24px 4px 24px;
             box-shadow:
-                0 8px 60px rgba(0,0,0,0.5),
-                0 0 0 1px rgba(100,220,140,0.1) inset !important;
-            animation: cardAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+                0 24px 80px rgba(0,0,0,0.65),
+                0 0 0 1px rgba(93,177,53,0.08) inset,
+                0 1px 0 rgba(255,255,255,0.05) inset;
+            width: 100%;
+            max-width: 420px;
+            padding: 44px 40px 36px;
+            position: relative;
+            overflow: hidden;
+            animation: cardIn 0.85s cubic-bezier(0.16,1,0.3,1) both;
         }
-
-        @keyframes cardAppear {
-            from { opacity: 0; transform: translateY(30px) scale(0.97); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* Top glowing bar */
-        .auth-form-light::before {
+ 
+        /* Top shimmer bar — green → blue → green */
+        .login-card::before {
             content: '';
-            display: block;
-            height: 3px;
-            width: 60%;
-            margin: 0 auto 24px;
-            background: linear-gradient(90deg, transparent, #4cde8a, #7fd7ff, #4cde8a, transparent);
-            border-radius: 2px;
-            animation: barGlow 3s ease-in-out infinite;
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--blue), var(--green), var(--blue-light), var(--green-light), transparent);
+            background-size: 200% 100%;
+            animation: barMove 4s linear infinite;
         }
-
-        @keyframes barGlow {
-            0%, 100% { opacity: 0.6; width: 60%; }
-            50%       { opacity: 1;   width: 75%; }
+ 
+        @keyframes barMove {
+            0%   { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
         }
-
+ 
+        /* Inner card glow on left edge */
+        .login-card::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 0; bottom: 0; width: 2px;
+            background: linear-gradient(to bottom, var(--green), transparent 40%, var(--blue) 80%, transparent);
+            opacity: 0.4;
+        }
+ 
+        @keyframes cardIn {
+            from { opacity:0; transform: translateY(36px) scale(0.96); }
+            to   { opacity:1; transform: translateY(0) scale(1); }
+        }
+ 
         /* ── LOGO ── */
-        .brand-logo img {
-            width: 140px;
-            margin-bottom: 16px;
-            filter: drop-shadow(0 0 12px rgba(100,220,140,0.4));
+        .logo-wrap {
+            text-align: center;
+            margin-bottom: 8px;
         }
-
+        .logo-wrap img {
+            width: 120px; height: 120px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.96);
+            padding: 6px;
+            box-shadow:
+                0 0 0 2px rgba(93,177,53,0.4),
+                0 0 0 5px rgba(30,107,181,0.2),
+                0 8px 30px rgba(0,0,0,0.5);
+            animation: logoSpin 0.9s cubic-bezier(0.16,1,0.3,1) both, logoGlow 4s ease-in-out 1s infinite;
+        }
+        @keyframes logoSpin {
+            from { opacity:0; transform: scale(0.5) rotate(-15deg); }
+            to   { opacity:1; transform: scale(1) rotate(0deg); }
+        }
+        @keyframes logoGlow {
+            0%,100% { box-shadow: 0 0 0 2px rgba(93,177,53,0.4), 0 0 0 5px rgba(30,107,181,0.2), 0 8px 30px rgba(0,0,0,0.5); }
+            50%     { box-shadow: 0 0 0 3px rgba(93,177,53,0.65), 0 0 0 8px rgba(30,107,181,0.3), 0 8px 40px rgba(93,177,53,0.25); }
+        }
+ 
         /* ── HEADINGS ── */
-        .auth-form-light h4 {
-            color: #e8f5ee !important;
-            font-family: 'Merriweather', serif;
-            font-size: 1.3rem;
+        .card-title {
+            text-align: center;
+            margin-top: 14px;
+            margin-bottom: 4px;
+            color: var(--off-white);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
             letter-spacing: 0.5px;
         }
-        .auth-form-light h6 {
-            color: rgba(200,230,210,0.7) !important;
-            font-size: 0.82rem;
-            letter-spacing: 0.3px;
+        .card-title span { color: var(--green); }
+        .card-subtitle {
+            text-align: center;
+            color: rgba(160,195,230,0.6);
+            font-size: 0.78rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 0;
         }
-
+ 
+        /* ── DIVIDER ── */
+        .divider {
+            display: flex; align-items: center; gap: 10px;
+            margin: 16px 0 20px;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex:1; height:1px;
+            background: linear-gradient(90deg, transparent, rgba(30,107,181,0.35), transparent);
+        }
+        .divider-icon { font-size: 1.1rem; opacity: 0.7; }
+ 
         /* ── INPUTS ── */
-        .form-control {
-            background: rgba(255,255,255,0.08) !important;
-            border: 1px solid rgba(100,200,140,0.3) !important;
-            color: #e8f5ee !important;
-            border-radius: 6px;
-            transition: border-color 0.3s, box-shadow 0.3s;
+        .field-wrap {
+            position: relative;
+            margin-bottom: 14px;
         }
-        .form-control::placeholder { color: rgba(180,210,190,0.5) !important; }
-        .form-control:focus {
-            border-color: #4cde8a !important;
-            box-shadow: 0 0 0 3px rgba(76,222,138,0.15) !important;
-            background: rgba(255,255,255,0.12) !important;
+        .field-icon {
+            position: absolute;
+            left: 13px; top: 50%; transform: translateY(-50%);
+            font-size: 1rem; z-index: 2;
+            color: rgba(30,107,181,0.6);
+            transition: color 0.3s;
+            pointer-events: none;
+        }
+        .field-wrap:focus-within .field-icon { color: var(--green); }
+ 
+        input.field-input {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(30,107,181,0.28);
+            color: var(--off-white);
+            border-radius: 10px;
+            padding: 13px 16px 13px 42px;
+            font-size: 0.88rem;
+            font-family: 'Nunito', sans-serif;
             outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
         }
-
+        input.field-input::placeholder { color: rgba(160,195,230,0.35); }
+        input.field-input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(93,177,53,0.15), 0 0 18px rgba(93,177,53,0.07);
+            background: rgba(255,255,255,0.09);
+        }
+ 
         /* ── BUTTON ── */
-        .btn-brand {
-            background: linear-gradient(135deg, #30674D, #1d8a4e) !important;
-            color: #fff !important;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            font-size: 0.85rem;
+        .btn-login {
+            width: 100%;
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--green) 0%, #3d9e1a 100%);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
             border: none;
-            border-radius: 6px;
-            padding: 14px;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
             position: relative;
             overflow: hidden;
             transition: transform 0.2s, box-shadow 0.3s;
-            box-shadow: 0 4px 20px rgba(48,103,77,0.5);
+            box-shadow: 0 6px 24px rgba(93,177,53,0.45), 0 2px 0 rgba(255,255,255,0.12) inset;
         }
-        .btn-brand::after {
+        .btn-login::before {
             content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
             transform: translateX(-100%);
-            transition: transform 0.5s;
+            transition: transform 0.6s;
         }
-        .btn-brand:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(48,103,77,0.7); }
-        .btn-brand:hover::after { transform: translateX(100%); }
-
-        /* ── LINKS & LABELS ── */
-        .form-check-label, .text-muted { color: rgba(200,230,210,0.65) !important; }
-        .auth-link { color: #6ddea0 !important; font-size: 0.82rem; }
-        .auth-link:hover { color: #a8f5c6 !important; }
-
-        /* ── ALERT ── */
-        .alert-danger {
-            background: rgba(220,50,50,0.15) !important;
-            border-color: rgba(220,50,50,0.3) !important;
-            color: #ffb3b3 !important;
-            border-radius: 6px;
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(93,177,53,0.6); }
+        .btn-login:hover::before { transform: translateX(100%); }
+        .btn-login:active { transform: translateY(0); }
+ 
+        /* ── REMEMBER ── */
+        .remember-row {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 14px;
         }
-
-        /* ── BADGE / WATERMARK ── */
-        .agri-badge {
-            position: absolute;
-            bottom: 18px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: rgba(150,200,170,0.4);
-            font-size: 0.7rem;
-            letter-spacing: 1px;
+        .remember-label {
+            display: flex; align-items: center; gap: 8px;
+            color: rgba(160,195,230,0.55);
+            font-size: 0.8rem; cursor: pointer;
+        }
+        .remember-label input[type="checkbox"] {
+            accent-color: var(--green);
+            width: 14px; height: 14px;
+        }
+ 
+        /* ── FOOTER BADGE ── */
+        .card-footer-badge {
+            margin-top: 24px;
+            text-align: center;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .badge-line {
+            height: 1px; flex:1;
+            background: linear-gradient(90deg, transparent, rgba(93,177,53,0.25), transparent);
+        }
+        .badge-text {
+            color: rgba(93,177,53,0.4);
+            font-size: 0.62rem;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
             white-space: nowrap;
         }
-        .agri-badge span { font-size: 1rem; }
+ 
+        /* alert */
+        .alert-error {
+            background: rgba(200,40,40,0.14);
+            border: 1px solid rgba(200,40,40,0.28);
+            color: #ffb3b3;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.82rem;
+            margin-bottom: 14px;
+        }
     </style>
 </head>
 <body>
-
-<!-- ══════════════ ANIMATED BACKGROUND ══════════════ -->
-<div class="agri-bg">
+ 
+<!-- BACKGROUND -->
+<div class="vet-bg">
+    <div class="orb-green"></div>
+    <div class="orb-blue"></div>
+    <div class="orb-center"></div>
+    <div class="dot-grid"></div>
     <div class="scanlines"></div>
-
-    <!-- Floating droplet molecules -->
-    <div class="molecules" id="molecules"></div>
-
-    <!-- Spray lines from bottom -->
-    <div class="spray-container" id="sprays"></div>
-
-    <!-- Floating leaves / plant icons -->
-    <div class="icons-layer" id="icons"></div>
-
-    <!-- Floating SVG elements -->
-    <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" id="svgLayer"></svg>
+    <div id="animalsLayer" style="position:absolute;inset:0;pointer-events:none;"></div>
+    <div id="pillsLayer"   style="position:absolute;inset:0;pointer-events:none;"></div>
+    <div id="crossLayer"   style="position:absolute;inset:0;pointer-events:none;"></div>
 </div>
-
-<!-- ══════════════ PAGE CONTENT ══════════════ -->
-<div class="container-scroller">
-    <div class="container-fluid page-body-wrapper full-page-wrapper">
-        <div class="content-wrapper d-flex align-items-center auth">
-            <div class="row flex-grow w-100">
-                <div class="col-lg-4 mx-auto">
-                    <div class="auth-form-light text-left p-5">
-                        <div class="brand-logo text-center">
-                            <img src="{{ asset('backend/assets/images/adminlogo.webp') }}" alt="logo">
-                        </div>
-                        <h4 class="text-center">Welcome Back! sdfsd</h4>
-                        <h6 class="font-weight-light text-center mb-4">Sign in to continue to DLLPL Admin.</h6>
-
-                        @if(session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        @endif
-
-                        <form class="pt-3" method="POST" action="{{ route('login.submit') }}">
-                            @csrf
-                            <div class="form-group">
-                                <input type="text"
-                                       class="form-control form-control-lg @error('username') is-invalid @enderror"
-                                       id="username" name="username"
-                                       placeholder="Username"
-                                       value="{{ old('username') }}" required>
-                                @error('username')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="form-group">
-                                <input type="password"
-                                       class="form-control form-control-lg @error('password') is-invalid @enderror"
-                                       id="password" name="password"
-                                       placeholder="Password" required>
-                                @error('password')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mt-3 d-grid gap-2">
-                                <button type="submit" class="btn btn-block btn-brand btn-lg font-weight-medium auth-form-btn">
-                                    SIGN IN
-                                </button>
-                            </div>
-                            <div class="my-2 d-flex justify-content-between align-items-center">
-                                <div class="form-check">
-                                    <label class="form-check-label text-muted">
-                                        <input type="checkbox" class="form-check-input" name="remember"> Keep me signed in
-                                        <i class="input-helper"></i>
-                                    </label>
-                                </div>
-                                
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Watermark -->
-                    <div class="agri-badge">
-                        <span>🌿</span> PESTICIDES &amp; FERTILIZERS MANAGEMENT &nbsp;|&nbsp; <span>🌱</span> DLLPL
-                    </div>
-                </div>
+ 
+<!-- CARD -->
+<div class="page-wrap">
+    <div class="login-card">
+ 
+        <div class="logo-wrap">
+            <img src="{{ asset('backend/assets/images/adminlogo.webp') }}"
+                 alt="SainiVet Pharma"
+                 onerror="this.style.background='#132436';this.style.padding='16px';">
+        </div>
+ 
+        <h1 class="card-title">Welcome to <span>Admin</span></h1>
+        <p class="card-subtitle">SainiVet Pharma &mdash; Management Portal</p>
+ 
+        <div class="divider">
+            <span class="divider-icon">🐄</span>
+        </div>
+ 
+        @if(session('error'))
+            <div class="alert-error">
+                {{ session('error') }}
             </div>
+        @endif
+ 
+        <form method="POST" action="{{ route('login.submit') }}">
+            @csrf
+ 
+            <div class="field-wrap">
+                <span class="field-icon">👤</span>
+                <input type="text"
+                       class="field-input @error('username') is-invalid @enderror"
+                       placeholder="Username" name="username"
+                       value="{{ old('username') }}" required autocomplete="username">
+                @error('username')<div style="color:#ff9999;font-size:0.76rem;margin-top:4px;">{{ $message }}</div>@enderror
+            </div>
+ 
+            <div class="field-wrap">
+                <span class="field-icon">🔒</span>
+                <input type="password"
+                       class="field-password @error('password') is-invalid @enderror"
+                       placeholder="Password" name="password"
+                       required autocomplete="current-password">
+                @error('password')<div style="color:#ff9999;font-size:0.76rem;margin-top:4px;">{{ $message }}</div>@enderror
+            </div>
+ 
+            <button type="submit" class="btn-login">Sign In &nbsp;→</button>
+ 
+            <div class="remember-row">
+                <label class="remember-label">
+                    <input type="checkbox" name="remember"> Keep me signed in
+                </label>
+            </div>
+        </form>
+ 
+        <div class="card-footer-badge">
+            <div class="badge-line"></div>
+            <span class="badge-text">🐄 Saini Vet Pharma &nbsp;✦&nbsp; Livestock &amp; Animal Health</span>
+            <div class="badge-line"></div>
         </div>
     </div>
 </div>
-
-<!-- JavaScript -->
-<script src="{{ asset('backend/assets/vendors/js/vendor.bundle.base.js') }}"></script>
-<script src="{{ asset('backend/assets/js/off-canvas.js') }}"></script>
-<script src="{{ asset('backend/assets/js/misc.js') }}"></script>
-
+ 
 <script>
-(function () {
+(function(){
     'use strict';
-
-    /* ── 1. FLOATING MOLECULES ── */
-    const molContainer = document.getElementById('molecules');
-    const molColors = ['blue', 'green', 'amber'];
-    const molCount = 40;
-    for (let i = 0; i < molCount; i++) {
-        const el = document.createElement('div');
-        el.className = 'mol ' + molColors[i % 3];
-        const size = 6 + Math.random() * 18;
-        el.style.cssText = `
-            width:${size}px; height:${size}px;
-            left:${Math.random()*100}%;
-            bottom:${Math.random()*20}%;
-            --dur:${4 + Math.random()*6}s;
-            --delay:${Math.random()*8}s;
-        `;
-        molContainer.appendChild(el);
-    }
-
-    /* ── 2. SPRAY LINES ── */
-    const sprayContainer = document.getElementById('sprays');
-    const sprayCount = 18;
-    for (let i = 0; i < sprayCount; i++) {
-        const el = document.createElement('div');
-        el.className = 'spray-line';
-        const angle = -20 + Math.random() * 40;
-        const len   = 80 + Math.random() * 200;
-        el.style.cssText = `
-            left:${5 + Math.random()*90}%;
-            --sdur:${2 + Math.random()*4}s;
-            --sdelay:${Math.random()*6}s;
-            --sang:${angle}deg;
-            --slen:${len}px;
-        `;
-        sprayContainer.appendChild(el);
-    }
-
-    /* ── 3. FALLING LEAVES / ICONS ── */
-    const iconContainer = document.getElementById('icons');
-    const leafEmojis = ['🌿','🍃','🌱','🌾','🍀','☘️'];
-    const leafCount = 20;
-    for (let i = 0; i < leafCount; i++) {
-        const el = document.createElement('div');
-        el.className = 'leaf';
-        const dx = (Math.random() - 0.5) * 200;
-        el.style.cssText = `
-            left:${Math.random()*100}%;
-            top:${-5 + Math.random()*-10}%;
-            --lsize:${14 + Math.random()*18}px;
-            --ldur:${6 + Math.random()*8}s;
-            --ldelay:${Math.random()*10}s;
-            --ldx:${dx}px;
-        `;
-        el.textContent = leafEmojis[Math.floor(Math.random()*leafEmojis.length)];
-        iconContainer.appendChild(el);
-    }
-
-    /* ── 4. SVG FLOATING ICONS (pesticide bottle, plant, molecule) ── */
-    const svgLayer = document.getElementById('svgLayer');
-    const svgIcons = [
-        // Fertilizer bag
-        `<g>
-          <rect x="-16" y="-20" width="32" height="36" rx="4" fill="rgba(255,200,80,0.18)" stroke="rgba(255,200,80,0.5)" stroke-width="1.5"/>
-          <text x="0" y="6" text-anchor="middle" font-size="14" fill="rgba(255,220,100,0.7)">🌿</text>
-          <rect x="-10" y="-20" width="20" height="7" rx="2" fill="rgba(255,200,80,0.3)" stroke="rgba(255,200,80,0.5)" stroke-width="1"/>
-        </g>`,
-        // Spray bottle
-        `<g>
-          <rect x="-10" y="-22" width="20" height="34" rx="5" fill="rgba(100,220,160,0.18)" stroke="rgba(100,220,160,0.5)" stroke-width="1.5"/>
-          <rect x="2" y="-28" width="8" height="10" rx="2" fill="rgba(100,220,160,0.3)" stroke="rgba(100,220,160,0.5)" stroke-width="1"/>
-          <line x1="10" y1="-23" x2="22" y2="-30" stroke="rgba(100,220,160,0.5)" stroke-width="1.5"/>
-          <circle cx="23" cy="-31" r="3" fill="rgba(100,220,160,0.5)"/>
-        </g>`,
-        // Molecule hex
-        `<g>
-          <circle cx="0" cy="0" r="10" fill="none" stroke="rgba(127,215,255,0.4)" stroke-width="1.5"/>
-          <circle cx="0" cy="0" r="4" fill="rgba(127,215,255,0.35)"/>
-          <circle cx="14" cy="0"  r="3" fill="rgba(127,215,255,0.3)"/>
-          <circle cx="-14" cy="0" r="3" fill="rgba(127,215,255,0.3)"/>
-          <circle cx="7" cy="-12" r="3" fill="rgba(127,215,255,0.3)"/>
-          <circle cx="-7" cy="12" r="3" fill="rgba(127,215,255,0.3)"/>
-          <line x1="10" y1="0"  x2="14" y2="0"  stroke="rgba(127,215,255,0.4)" stroke-width="1"/>
-          <line x1="-10" y1="0" x2="-14" y2="0" stroke="rgba(127,215,255,0.4)" stroke-width="1"/>
-          <line x1="5" y1="-8"  x2="7" y2="-12"  stroke="rgba(127,215,255,0.4)" stroke-width="1"/>
-          <line x1="-5" y1="8"  x2="-7" y2="12"  stroke="rgba(127,215,255,0.4)" stroke-width="1"/>
-        </g>`,
-        // Leaf shape
-        `<g>
-          <path d="M0,-25 C15,-15 20,5 0,20 C-20,5 -15,-15 0,-25Z"
-                fill="rgba(80,200,120,0.2)" stroke="rgba(80,200,120,0.5)" stroke-width="1.5"/>
-          <line x1="0" y1="-20" x2="0" y2="18" stroke="rgba(80,200,120,0.5)" stroke-width="1"/>
-        </g>`,
-        // Droplet
-        `<g>
-          <path d="M0,-20 C10,0 14,12 0,20 C-14,12 -10,0 0,-20Z"
-                fill="rgba(100,180,255,0.25)" stroke="rgba(100,180,255,0.5)" stroke-width="1.5"/>
-        </g>`
+ 
+    // ── LIVESTOCK SVG SILHOUETTES ──
+    const animals = [
+        // Cow
+        `<svg viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="38" cy="28" rx="22" ry="13" fill="currentColor"/>
+          <ellipse cx="15" cy="25" rx="10" ry="8" fill="currentColor"/>
+          <ellipse cx="10" cy="21" rx="5" ry="6" fill="currentColor"/>
+          <rect x="20" y="38" width="5" height="10" rx="2" fill="currentColor"/>
+          <rect x="30" y="39" width="5" height="9" rx="2" fill="currentColor"/>
+          <rect x="44" y="38" width="5" height="10" rx="2" fill="currentColor"/>
+          <rect x="54" y="39" width="5" height="9" rx="2" fill="currentColor"/>
+          <path d="M7 17 Q5 8 3 6" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M12 16 Q12 7 14 5" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M57 24 Q68 22 70 20" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        // Buffalo/ox (bulkier)
+        `<svg viewBox="0 0 90 55" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="45" cy="30" rx="28" ry="16" fill="currentColor"/>
+          <ellipse cx="17" cy="26" rx="13" ry="10" fill="currentColor"/>
+          <ellipse cx="10" cy="20" rx="7" ry="8" fill="currentColor"/>
+          <rect x="22" y="43" width="6" height="11" rx="2" fill="currentColor"/>
+          <rect x="34" y="44" width="6" height="10" rx="2" fill="currentColor"/>
+          <rect x="52" y="43" width="6" height="11" rx="2" fill="currentColor"/>
+          <rect x="63" y="44" width="6" height="10" rx="2" fill="currentColor"/>
+          <path d="M6 16 Q2 6 0 4" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M13 14 Q14 4 17 2" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M70 28 Q82 25 85 22" stroke="currentColor" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        // Goat
+        `<svg viewBox="0 0 70 55" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="38" cy="27" rx="18" ry="11" fill="currentColor"/>
+          <ellipse cx="20" cy="24" rx="9" ry="8" fill="currentColor"/>
+          <ellipse cx="15" cy="18" rx="5" ry="6" fill="currentColor"/>
+          <rect x="22" y="36" width="4" height="12" rx="2" fill="currentColor"/>
+          <rect x="31" y="37" width="4" height="11" rx="2" fill="currentColor"/>
+          <rect x="44" y="36" width="4" height="12" rx="2" fill="currentColor"/>
+          <rect x="52" y="37" width="4" height="11" rx="2" fill="currentColor"/>
+          <path d="M12 13 Q10 5 9 3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M17 12 Q18 4 20 2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M13 22 Q10 26 9 28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        // Chicken
+        `<svg viewBox="0 0 50 55" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="25" cy="35" rx="14" ry="12" fill="currentColor"/>
+          <circle cx="25" cy="16" r="10" fill="currentColor"/>
+          <path d="M32 10 Q38 5 40 3 Q36 8 35 12" fill="currentColor"/>
+          <path d="M18 10 Q14 7 10 8 Q13 10 15 13" fill="currentColor"/>
+          <rect x="21" y="45" width="4" height="9" rx="2" fill="currentColor"/>
+          <rect x="27" y="45" width="4" height="9" rx="2" fill="currentColor"/>
+          <path d="M35 33 Q45 30 46 28" stroke="currentColor" stroke-width="2.5" fill="none"/>
+        </svg>`,
+        // Horse
+        `<svg viewBox="0 0 85 55" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="45" cy="28" rx="24" ry="13" fill="currentColor"/>
+          <ellipse cx="22" cy="22" rx="11" ry="9" fill="currentColor"/>
+          <ellipse cx="16" cy="14" rx="6" ry="8" fill="currentColor"/>
+          <rect x="26" y="38" width="5" height="13" rx="2" fill="currentColor"/>
+          <rect x="36" y="39" width="5" height="12" rx="2" fill="currentColor"/>
+          <rect x="52" y="38" width="5" height="13" rx="2" fill="currentColor"/>
+          <rect x="62" y="39" width="5" height="12" rx="2" fill="currentColor"/>
+          <path d="M13 10 Q10 3 9 0" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M18 8 Q20 1 23 0" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M67 26 Q76 18 78 14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>`,
     ];
-
-    const iconPositions = [
-        {x:'8%',  y:'15%', op:0.55, dur:8,  delay:0},
-        {x:'85%', y:'20%', op:0.45, dur:10, delay:2},
-        {x:'15%', y:'65%', op:0.5,  dur:9,  delay:4},
-        {x:'80%', y:'70%', op:0.4,  dur:7,  delay:1},
-        {x:'50%', y:'10%', op:0.35, dur:11, delay:3},
-        {x:'92%', y:'45%', op:0.45, dur:8,  delay:5},
-        {x:'5%',  y:'40%', op:0.5,  dur:9,  delay:6},
-        {x:'70%', y:'88%', op:0.4,  dur:10, delay:2.5},
-        {x:'30%', y:'85%', op:0.45, dur:7,  delay:4.5},
-        {x:'60%', y:'5%',  op:0.35, dur:12, delay:1.5},
+ 
+    const positions = [
+        {l:'3%',  t:'10%', color:'rgba(30,107,181,0.22)',  s:64, op:0.7, dur:9,  del:0},
+        {l:'82%', t:'8%',  color:'rgba(93,177,53,0.2)',    s:70, op:0.6, dur:11, del:2},
+        {l:'5%',  t:'65%', color:'rgba(30,107,181,0.18)',  s:58, op:0.55,dur:8,  del:4},
+        {l:'80%', t:'65%', color:'rgba(93,177,53,0.18)',   s:66, op:0.6, dur:10, del:1},
+        {l:'42%', t:'4%',  color:'rgba(30,107,181,0.15)',  s:52, op:0.45,dur:12, del:3},
+        {l:'88%', t:'38%', color:'rgba(93,177,53,0.15)',   s:56, op:0.5, dur:9,  del:5},
+        {l:'2%',  t:'38%', color:'rgba(30,107,181,0.15)',  s:60, op:0.5, dur:10, del:6},
+        {l:'65%', t:'88%', color:'rgba(93,177,53,0.2)',    s:54, op:0.55,dur:8,  del:2.5},
+        {l:'28%', t:'88%', color:'rgba(30,107,181,0.18)',  s:62, op:0.5, dur:11, del:4.5},
+        {l:'58%', t:'5%',  color:'rgba(93,177,53,0.15)',   s:50, op:0.4, dur:13, del:1.5},
     ];
-
-    iconPositions.forEach((pos, idx) => {
-        const icon = svgIcons[idx % svgIcons.length];
-        const scale = 0.8 + Math.random() * 0.7;
-        const rot   = Math.random() * 30 - 15;
-
-        const foreignObj = document.createElementNS('http://www.w3.org/2000/svg','foreignObject');
-        foreignObj.setAttribute('width', '80');
-        foreignObj.setAttribute('height', '80');
-        foreignObj.setAttribute('x', pos.x);
-        foreignObj.setAttribute('y', pos.y);
-
-        const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-        g.innerHTML = icon;
-        g.setAttribute('transform', `translate(40,40) scale(${scale})`);
-        g.style.cssText = `
-            opacity:0;
-            animation: iconFloat ${pos.dur}s ease-in-out ${pos.delay}s infinite;
-            --iop:${pos.op};
-            --irot:${rot}deg;
-            --idur:${pos.dur}s;
-            --idelay:${pos.delay}s;
+ 
+    const layer = document.getElementById('animalsLayer');
+    positions.forEach((p, i) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'animal-float';
+        wrap.innerHTML = animals[i % animals.length];
+        const rot = Math.random()*16 - 8;
+        wrap.style.cssText = `
+            left:${p.l}; top:${p.t};
+            width:${p.s}px; height:auto;
+            color:${p.color};
+            --ad:${p.dur}s; --ade:${p.del}s; --ao:${p.op}; --ar:${rot}deg;
         `;
-
-        // We'll use a regular SVG group instead of foreignObject
-        const wrapper = document.createElementNS('http://www.w3.org/2000/svg','g');
-        wrapper.innerHTML = icon;
-
-        // Convert % to approximate pixel values for SVG
-        const svgEl = svgLayer;
-        const W = window.innerWidth;
-        const H = window.innerHeight;
-        const px = parseFloat(pos.x) / 100 * W;
-        const py = parseFloat(pos.y) / 100 * H;
-        wrapper.setAttribute('transform', `translate(${px},${py}) scale(${scale})`);
-        wrapper.style.opacity = '0';
-        wrapper.style.animation = `iconFloat ${pos.dur}s ease-in-out ${pos.delay}s infinite`;
-        wrapper.style.setProperty('--iop', pos.op);
-        wrapper.style.setProperty('--irot', rot + 'deg');
-
-        svgLayer.appendChild(wrapper);
+        layer.appendChild(wrap);
+    });
+ 
+    // ── PILLS ──
+    const pillLayer = document.getElementById('pillsLayer');
+    const pColors = [
+        'rgba(93,177,53,0.4)','rgba(30,107,181,0.4)',
+        'rgba(125,212,85,0.3)','rgba(58,143,221,0.3)',
+    ];
+    for(let i=0; i<22; i++){
+        const el = document.createElement('div');
+        el.className = 'med-pill';
+        const w=22+Math.random()*26, h=8+Math.random()*5, r=Math.random()*180;
+        const c=pColors[i%pColors.length];
+        el.style.cssText=`
+            width:${w}px;height:${h}px;
+            background:${c}; box-shadow:0 0 8px ${c};
+            left:${Math.random()*95}%;top:${Math.random()*95}%;
+            --mpd:${5+Math.random()*8}s; --mpde:${Math.random()*10}s; --mpr:${r}deg;
+        `;
+        pillLayer.appendChild(el);
+    }
+ 
+    // ── CROSS MARKS ──
+    const crossLayer = document.getElementById('crossLayer');
+    [{l:'6%',t:'20%'},{l:'90%',t:'15%'},{l:'8%',t:'75%'},{l:'87%',t:'72%'},
+     {l:'45%',t:'5%'},{l:'50%',t:'90%'},{l:'25%',t:'55%'},{l:'73%',t:'50%'}
+    ].forEach((p,i)=>{
+        const el = document.createElement('div');
+        el.className = 'cross-mark';
+        const s=18+Math.random()*22;
+        el.textContent='✚';
+        el.style.cssText=`left:${p.l};top:${p.t};--cms:${s}px;--cmd:${5+Math.random()*6}s;--cmde:${Math.random()*9}s;`;
+        crossLayer.appendChild(el);
     });
 })();
 </script>
-
-<!-- Add keyframes for iconFloat inside the SVG layer context -->
-<style>
-@keyframes iconFloat {
-    0%   { opacity: 0; transform: translateY(15px) rotate(0deg); }
-    20%  { opacity: var(--iop, 0.45); }
-    80%  { opacity: var(--iop, 0.45); }
-    100% { opacity: 0; transform: translateY(-50px) rotate(var(--irot, 10deg)); }
-}
-</style>
-
+    <script src="{{ asset('backend/assets/vendors/js/vendor.bundle.base.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/off-canvas.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/misc.js') }}"></script>
 </body>
 </html>
