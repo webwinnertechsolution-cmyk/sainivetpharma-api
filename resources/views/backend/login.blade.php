@@ -306,7 +306,7 @@
                         <div class="brand-logo text-center">
                             <img src="{{ asset('backend/assets/images/adminlogo.webp') }}" alt="logo">
                         </div>
-                        <h4 class="text-center">Welcome Back!</h4>
+                        <h4 class="text-center">Welcome Back! sdfsd</h4>
                         <h6 class="font-weight-light text-center mb-4">Sign in to continue to DLLPL Admin.</h6>
 
                         @if(session('error'))
