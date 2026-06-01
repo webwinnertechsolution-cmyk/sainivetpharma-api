@@ -381,7 +381,7 @@
                 @error('username')<div style="color:#ff9999;font-size:0.76rem;margin-top:4px;">{{ $message }}</div>@enderror
             </div>
  
-            <div class="field-wrap">
+            <div class="field-wrap pasword-field">
                 <span class="field-icon">🔒</span>
                 <input type="password"
                        class="field-password @error('password') is-invalid @enderror"
