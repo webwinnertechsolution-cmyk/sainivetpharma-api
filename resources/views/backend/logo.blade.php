@@ -14,10 +14,10 @@
     }
 
     .logo-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 40px 24px;
-    }
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0;
+}
 
     .logo-header {
         margin-bottom: 20px;
