@@ -328,18 +328,20 @@
                                     <span style="font-weight:700;color:#0a214f;font-size:12px;">{{ $cat->sort_order }}</span>
                                 </td>
                                 <td style="text-align:center;">
-                                    <a href="{{ route('home.category.edit', $cat->id) }}"
-                                       class="btn btn-warning btn-sm" style="margin-bottom:4px;">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <form action="{{ route('home.category.delete', $cat->id) }}"
-                                          method="POST" class="d-inline"
-                                          onsubmit="return confirmDelete(event, '{{ addslashes($cat->title) }}')">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
+                                    <div style="display:flex;gap:4px;justify-content:center;align-items:center;flex-wrap:nowrap;">
+                                        <a href="{{ route('home.category.edit', $cat->id) }}"
+                                           class="btn btn-warning" style="padding:3px 8px;font-size:10px;">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <form action="{{ route('home.category.delete', $cat->id) }}"
+                                              method="POST" class="d-inline"
+                                              onsubmit="return confirmDelete(event, '{{ addslashes($cat->title) }}')">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger" style="padding:3px 8px;font-size:10px;">
+                                                <i class="fas fa-trash"></i> Del
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                             @empty
