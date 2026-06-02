@@ -416,6 +416,12 @@
     font-size: 0.875rem;
     line-height: 1.5;
 }
+    .form-group label {
+    font-size: 12px;
+    line-height: 1;
+    vertical-align: top;
+    margin-bottom: 0.5rem;
+}
     /* Responsive */
     @media (max-width: 1024px) {
         .form-row {
