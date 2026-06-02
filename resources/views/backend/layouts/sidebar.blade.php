@@ -65,7 +65,11 @@
                         <a class="nav-link" href="{{ url('/home-product-section') }}">Home Product </a>
                     </li>
 					
-					
+					<li class="nav-item">
+                        <a class="nav-link" href="{{ url('/promotional-banner') }}">Promotional Banner </a>
+                    </li>
+
+                    
 					<li class="nav-item">
                         <a class="nav-link" href="{{ url('/brand-section') }}">Brand Section</a>
                     </li>
