@@ -357,18 +357,18 @@ if (fileInputWrapper) {
     padding: 0;
 }
 
-/* Page Header */
 .page-header {
     position: relative;
-    height: 140px;
+    height: 92px;
     background: linear-gradient(135deg, #0a214f 0%, #1872B5 55%, #2596e1 100%);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: center!important;
+    justify-content: center!important;
     overflow: hidden;
     padding: 0;
     margin: 0;
-    border-radius: 0;
+    border-radius: 30px;
+    padding-inline: 20px;
 }
 
 .page-header::before {
