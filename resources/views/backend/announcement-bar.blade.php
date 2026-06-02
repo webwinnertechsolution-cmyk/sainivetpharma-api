@@ -420,6 +420,9 @@
     .form-row-three {
     display: none;
 }
+    .announcement-header {
+    padding: 0;
+}
     /* Responsive */
     @media (max-width: 1024px) {
         .form-row,
