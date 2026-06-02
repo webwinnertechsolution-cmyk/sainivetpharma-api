@@ -395,13 +395,30 @@
     .action-buttons {
         display: flex;
         gap: 8px;
-        flex-wrap: wrap;
     }
 
     .action-buttons form {
         margin: 0;
     }
-
+.logo-header {
+    margin-bottom: 14px;
+}
+    .card-header-gradient {
+    background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
+    padding: 12px 20px;
+    color: #ffffff;
+}
+    a.btn.btn-warning.btn-sm {
+    font-size: 11px;
+}
+    .btn-danger:not(.btn-light) {
+    color: #ffffff;
+    background-color: red;
+    font-size: 11px;
+}
+    .card-body {
+    padding: 16px;
+}
     /* Responsive */
     @media (max-width: 768px) {
         .logo-container {
