@@ -155,6 +155,15 @@
     /* CKEditor override */
     .ck-editor__editable { min-height: 160px !important; font-size: 12px !important; }
 
+
+    .form-group label {
+    font-size: 12px;
+    line-height: 1;
+    vertical-align: top;
+    margin-bottom: 0.5rem;
+}
+
+    
     @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
         .btn-group-custom { flex-direction: column-reverse; }
