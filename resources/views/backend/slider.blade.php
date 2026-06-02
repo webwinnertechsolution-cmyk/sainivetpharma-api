@@ -183,7 +183,15 @@
     .modal-box-body strong { color: #ef4444; font-size: 13px; }
     .modal-box-body .note { font-size: 10px; color: #9ca3af; margin-top: 6px; }
     .modal-box-footer { padding: 10px 16px; display: flex; gap: 8px; justify-content: center; border-top: 1px solid #f3f4f6; }
-
+.form-group label {
+    font-size: 12px!important;
+    line-height: 1;
+    vertical-align: top;
+    margin-bottom: 0.5rem;
+}
+    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
+    font-size: 10px!important;
+}
     @media (max-width: 768px) {
         .form-row { grid-template-columns: 1fr; }
         .btn-group-custom { flex-direction: column-reverse; }
@@ -259,7 +267,7 @@
                             style="{{ old('slide_type', isset($editSlider) ? $editSlider->slide_type : 'image') === 'video' ? 'display:none' : '' }}">
                             <div class="form-group">
                                 <label class="form-label">
-                                    Image {{ !isset($editSlider) ? '<span class="text-danger">*</span>' : '' }}
+                                    Image 
                                 </label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror"
                                     id="image" name="image" accept="image/*"
