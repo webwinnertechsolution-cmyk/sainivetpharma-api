@@ -492,7 +492,7 @@
         </div>
     @endif
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0 20px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 0px;">
 
         {{-- FORM CARD --}}
         <div class="announcement-card">
