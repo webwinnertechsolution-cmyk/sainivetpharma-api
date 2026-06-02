@@ -4,7 +4,7 @@
         {{-- Dashboard --}}
         <li class="nav-item {{ Request::is('dashboard') ? 'active' : '' }}">
             <a class="nav-link" href="{{ url('/dashboard') }}">
-                <span class="menu-title">Dashboard ddddd</span>
+                <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
             </a>
         </li>
