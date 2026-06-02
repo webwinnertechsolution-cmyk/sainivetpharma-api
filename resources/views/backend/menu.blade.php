@@ -422,6 +422,13 @@
     vertical-align: top;
     margin-bottom: 0.5rem;
 }
+    .table td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+    color: #374151;
+    font-size: 12px;
+}
     /* Responsive */
     @media (max-width: 1024px) {
         .form-row {
