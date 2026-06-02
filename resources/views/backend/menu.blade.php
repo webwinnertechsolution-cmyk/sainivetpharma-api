@@ -623,7 +623,7 @@
                 </div>
 
                 <!-- Row 4 - Checkbox -->
-                <div style="margin-bottom: 12px; margin-top: 8px;">
+                <div class="adas" style="margin-bottom: 12px; margin-top: 8px;">
                     <div class="form-check form-switch">
                         <input class="form-check-input" 
                                type="checkbox" 
