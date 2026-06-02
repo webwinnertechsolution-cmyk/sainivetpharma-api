@@ -569,7 +569,8 @@
                             <input type="color" name="text_color" class="form-control form-control-color"
                                 value="{{ old('text_color', $bar->text_color ?? '#ffffff') }}">
                         </div>
-                        <div class="form-group">
+                        <div class="form-gro
+                            up">
                             <label for="slide_interval" class="form-label">Interval (ms)</label>
                             <input type="number" name="slide_interval" class="form-control"
                                 value="{{ old('slide_interval', $bar->slide_interval ?? 3000) }}"
@@ -578,7 +579,7 @@
                     </div>
 
                     {{-- Active Toggle --}}
-                    <div style="margin-bottom: 12px;">
+                    <div class="afasss" style="margin-bottom: 12px;">
                         <div class="form-check form-switch">
                             <input type="checkbox" name="is_active" class="form-check-input" id="is_active"
                                 {{ old('is_active', $bar->is_active ?? 1) ? 'checked' : '' }}>
