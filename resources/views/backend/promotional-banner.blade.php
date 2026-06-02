@@ -11,8 +11,8 @@
     .page-container { max-width: 1400px; margin: 0 auto; padding: 0; }
 
     .page-header { margin-bottom: 14px; padding: 0; }
-    .page-title { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800; color: #0a214f; margin-bottom: 4px; letter-spacing: -0.02em; }
-    .page-subtitle { font-size: 12px; color: #6b7280; font-weight: 500; }
+    .page-title { font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 800; color: #0a214f; margin-bottom: 4px; letter-spacing: -0.02em; }
+    .page-subtitle { font-size: 10px; color: #6b7280; font-weight: 500; }
 
     .alert-success {
         background: linear-gradient(135deg, #d1fae5, #a7f3d0);
@@ -514,17 +514,21 @@
                     <span class="badge {{ $banner->is_active ? 'badge-success' : 'badge-secondary' }}">
                         {{ $banner->is_active ? '✅ Active' : '⏸ Inactive' }}
                     </span>
-                    <a href="{{ route('promotional.banner.edit', $banner->id) }}" class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <form action="{{ route('promotional.banner.delete', $banner->id) }}"
-                          method="POST"
-                          onsubmit="return confirmDelete(event, 'this banner')">
-                        @csrf
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </form>
+
+                    {{-- Edit + Delete ek line mein --}}
+                    <div style="display:flex; gap:5px; align-items:center;">
+                        <a href="{{ route('promotional.banner.edit', $banner->id) }}" class="btn btn-warning btn-sm">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form action="{{ route('promotional.banner.delete', $banner->id) }}"
+                              method="POST" class="d-inline"
+                              onsubmit="return confirmDelete(event, 'this banner')">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Del
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
