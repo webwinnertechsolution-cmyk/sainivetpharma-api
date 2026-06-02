@@ -52,12 +52,7 @@
                         <a class="nav-link" href="{{ url('/slider') }}">slider</a>
                     </li>
 					
-					
-					<li class="nav-item">
-                        <a class="nav-link" href="{{ url('/homelogo') }}">Home Logo</a>
-                    </li>
-					
-					
+								
 					
 					
 					<li class="nav-item">
@@ -67,7 +62,7 @@
 					
 					
 					<li class="nav-item">
-                        <a class="nav-link" href="{{ url('/home-product-section') }}">Today's Offer</a>
+                        <a class="nav-link" href="{{ url('/home-product-section') }}">Home Product </a>
                     </li>
 					
 					
