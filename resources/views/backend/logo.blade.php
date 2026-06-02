@@ -20,20 +20,20 @@
     }
 
     .logo-header {
-        margin-bottom: 36px;
+        margin-bottom: 20px;
     }
 
     .logo-title {
         font-family: 'Sora', sans-serif;
-        font-size: 32px;
+        font-size: 22px;
         font-weight: 800;
         color: #0a214f;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         letter-spacing: -0.02em;
     }
 
     .logo-subtitle {
-        font-size: 14px;
+        font-size: 13px;
         color: #6b7280;
         font-weight: 500;
     }
@@ -43,28 +43,28 @@
         background: linear-gradient(135deg, #d1fae5, #a7f3d0);
         border: 1px solid #6ee7b7;
         color: #065f46;
-        padding: 14px 16px;
-        border-radius: 12px;
-        margin-bottom: 24px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        margin-bottom: 14px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-weight: 500;
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .alert-danger {
         background: linear-gradient(135deg, #fee2e2, #fecaca);
         border: 1px solid #fca5a5;
         color: #7f1d1d;
-        padding: 14px 16px;
-        border-radius: 12px;
-        margin-bottom: 24px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        margin-bottom: 14px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-weight: 500;
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .alert .btn-close {
@@ -75,10 +75,10 @@
     /* Card Styles */
     .logo-card {
         background: #ffffff;
-        border-radius: 16px;
+        border-radius: 12px;
         box-shadow: 0 4px 16px rgba(10, 33, 79, 0.08);
         overflow: hidden;
-        margin-bottom: 28px;
+        margin-bottom: 16px;
         border: 1px solid #e5e7eb;
         transition: all 0.3s ease;
     }
@@ -89,13 +89,13 @@
 
     .card-header-gradient {
         background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
-        padding: 24px;
+        padding: 16px 20px;
         color: #ffffff;
     }
 
     .card-header-title {
         font-family: 'Sora', sans-serif;
-        font-size: 18px;
+        font-size: 15px;
         font-weight: 700;
         margin: 0;
         display: flex;
@@ -115,32 +115,32 @@
     }
 
     .card-body {
-        padding: 32px;
+        padding: 20px;
     }
 
     /* Form Styles */
     .form-label {
         font-family: 'Sora', sans-serif;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         color: #0a214f;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         display: block;
     }
 
     .form-label small {
         display: block;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 500;
         color: #6b7280;
-        margin-top: 4px;
+        margin-top: 3px;
     }
 
     .form-control {
         border: 1.5px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 12px 14px;
-        font-size: 14px;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 13px;
         font-family: 'Nunito', sans-serif;
         transition: all 0.2s ease;
     }
@@ -164,11 +164,11 @@
 
     /* Image Preview */
     .image-preview-box {
-        margin-top: 20px;
-        padding: 20px;
+        margin-top: 14px;
+        padding: 14px;
         background: #f9fafb;
         border: 2px dashed #e5e7eb;
-        border-radius: 12px;
+        border-radius: 8px;
         transition: all 0.2s ease;
     }
 
@@ -179,51 +179,51 @@
 
     .preview-label {
         font-family: 'Sora', sans-serif;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 700;
         color: #0a214f;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
         display: block;
     }
 
     .preview-img {
-        max-width: 280px;
-        max-height: 180px;
+        max-width: 200px;
+        max-height: 120px;
         border: 1px solid #d1d5db;
-        border-radius: 8px;
-        padding: 8px;
+        border-radius: 6px;
+        padding: 6px;
         background: white;
         object-fit: contain;
     }
 
     .preview-hint {
-        font-size: 12px;
+        font-size: 11px;
         color: #6b7280;
-        margin-top: 8px;
+        margin-top: 6px;
         font-weight: 500;
     }
 
     /* Buttons */
     .btn-group-custom {
         display: flex;
-        gap: 12px;
+        gap: 10px;
         justify-content: flex-end;
-        margin-top: 28px;
+        margin-top: 20px;
         flex-wrap: wrap;
     }
 
     .btn {
-        padding: 10px 20px;
-        border-radius: 8px;
+        padding: 8px 16px;
+        border-radius: 6px;
         font-family: 'Sora', sans-serif;
         font-weight: 700;
-        font-size: 14px;
+        font-size: 12px;
         border: none;
         cursor: pointer;
         transition: all 0.3s ease;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         text-decoration: none;
     }
 
@@ -289,8 +289,8 @@
     }
 
     .btn-sm {
-        padding: 7px 14px;
-        font-size: 12px;
+        padding: 6px 12px;
+        font-size: 11px;
     }
 
     /* Disabled State */
@@ -303,14 +303,14 @@
         background: linear-gradient(135deg, #fef3c7, #fde68a);
         border: 1px solid #fcd34d;
         color: #78350f;
-        padding: 14px 16px;
-        border-radius: 10px;
-        margin-top: 20px;
-        font-size: 13px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        margin-top: 14px;
+        font-size: 12px;
         font-weight: 500;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
     }
 
     /* Table Styles */
@@ -326,26 +326,26 @@
     }
 
     .table thead {
-        background: #f3f4f6;
+        background: linear-gradient(135deg, #f0f4f8, #e8f0f8);
     }
 
     .table th {
-        padding: 14px 16px;
+        padding: 11px 14px;
         text-align: left;
         font-family: 'Sora', sans-serif;
         font-weight: 700;
-        font-size: 13px;
+        font-size: 11px;
         color: #0a214f;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        border-bottom: 1.5px solid #e5e7eb;
+        letter-spacing: 0.08em;
+        border-bottom: 2px solid #1872B5;
     }
 
     .table td {
-        padding: 16px;
+        padding: 13px 14px;
         border-bottom: 1px solid #e5e7eb;
         vertical-align: middle;
-        font-size: 14px;
+        font-size: 13px;
         color: #374151;
     }
 
@@ -359,34 +359,34 @@
 
     .logo-preview-wrapper {
         display: inline-block;
-        padding: 12px;
+        padding: 8px;
         background: #f9fafb;
-        border-radius: 8px;
+        border-radius: 6px;
     }
 
     .logo-img-table {
-        max-width: 180px;
-        max-height: 90px;
+        max-width: 120px;
+        max-height: 70px;
         object-fit: contain;
         border: 1px solid #d1d5db;
-        border-radius: 6px;
-        padding: 6px;
+        border-radius: 4px;
+        padding: 4px;
         background: white;
     }
 
     .empty-state {
         text-align: center;
-        padding: 48px 24px;
+        padding: 30px 20px;
     }
 
     .empty-icon {
-        font-size: 60px;
-        margin-bottom: 16px;
+        font-size: 40px;
+        margin-bottom: 12px;
         opacity: 0.6;
     }
 
     .empty-text {
-        font-size: 15px;
+        font-size: 13px;
         color: #6b7280;
         font-weight: 500;
         margin: 0;
@@ -587,12 +587,12 @@
                                              class="logo-img-table">
                                     </div>
                                 @else
-                                    <span style="display: inline-block; background: #f3f4f6; padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #6b7280; font-weight: 600;">No Image</span>
+                                    <span style="display: inline-block; background: #f3f4f6; padding: 3px 8px; border-radius: 4px; font-size: 11px; color: #6b7280; font-weight: 600;">No Image</span>
                                 @endif
                             </td>
                             <td>
-                                <div style="font-weight: 600; color: #0a214f;">{{ $logo->created_at->format('d M Y') }}</div>
-                                <div style="font-size: 12px; color: #6b7280;">{{ $logo->created_at->format('h:i A') }}</div>
+                                <div style="font-weight: 600; color: #0a214f; font-size: 12px;">{{ $logo->created_at->format('d M Y') }}</div>
+                                <div style="font-size: 11px; color: #6b7280; margin-top: 2px;">{{ $logo->created_at->format('h:i A') }}</div>
                             </td>
                             <td style="text-align: center;">
                                 <div class="action-buttons">
