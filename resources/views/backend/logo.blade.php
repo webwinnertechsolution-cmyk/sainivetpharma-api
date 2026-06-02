@@ -419,6 +419,22 @@
     .card-body {
     padding: 16px;
 }
+    .card-header-gradient {
+    background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
+    padding: 9px 20px;
+    color: #ffffff;
+    font-size: 12px;
+}
+.card-header-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+    
     /* Responsive */
     @media (max-width: 768px) {
         .logo-container {
