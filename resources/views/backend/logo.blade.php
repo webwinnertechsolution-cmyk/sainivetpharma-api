@@ -360,7 +360,7 @@ if (fileInputWrapper) {
 /* Page Header */
 .page-header {
     position: relative;
-    height: 180px;
+    height: 140px;
     background: linear-gradient(135deg, #0a214f 0%, #1872B5 55%, #2596e1 100%);
     display: flex;
     align-items: center;
@@ -386,26 +386,26 @@ if (fileInputWrapper) {
 
 .page-title {
     font-family: 'Sora', sans-serif;
-    font-size: 40px;
+    font-size: 28px;
     font-weight: 800;
     color: #fff;
     margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
     letter-spacing: -0.02em;
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
 }
 
 .page-title i {
-    font-size: 44px;
+    font-size: 32px;
 }
 
 .page-subtitle {
-    font-size: 13px;
+    font-size: 11px;
     color: rgba(255, 255, 255, 0.65);
-    margin: 8px 0 0 0;
+    margin: 4px 0 0 0;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -416,8 +416,8 @@ if (fileInputWrapper) {
     border: none;
     border-left: 4px solid var(--primary-color);
     border-radius: 6px;
-    padding: 15px 20px;
-    margin-bottom: 25px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
     background: rgba(24, 114, 181, 0.05);
 }
 
@@ -434,14 +434,14 @@ if (fileInputWrapper) {
 .alert-content {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     margin: 0;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .alert-content i {
-    font-size: 18px;
+    font-size: 16px;
     flex-shrink: 0;
 }
 
@@ -474,14 +474,14 @@ if (fileInputWrapper) {
 }
 
 .card-header {
-    padding: 20px 25px;
+    padding: 16px 20px;
     border-bottom: none;
 }
 
 .form-header {
     background: linear-gradient(135deg, #1872B5 0%, #0a214f 100%);
     border-bottom: none;
-    padding: 22px 25px;
+    padding: 16px 20px;
 }
 
 .list-header {
@@ -536,26 +536,26 @@ if (fileInputWrapper) {
 }
 
 .card-body {
-    padding: 30px;
+    padding: 20px;
 }
 
 .form-body {
-    padding: 30px;
+    padding: 20px;
 }
 
 /* Form Styles */
 .form-section {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .form-group {
-    margin-bottom: 25px;
+    margin-bottom: 16px;
 }
 
 .form-label {
     display: block;
-    margin-bottom: 10px;
-    font-size: 13px;
+    margin-bottom: 6px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--text-primary);
     font-family: 'Sora', sans-serif;
@@ -563,7 +563,7 @@ if (fileInputWrapper) {
 
 .label-text {
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 
 .required {
@@ -573,10 +573,10 @@ if (fileInputWrapper) {
 
 .label-hint {
     display: block;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
     font-weight: 400;
-    margin-top: 4px;
+    margin-top: 3px;
 }
 
 /* File Input */
@@ -594,7 +594,7 @@ if (fileInputWrapper) {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 45px 30px;
+    padding: 30px 20px;
     border: 2px dashed var(--border-color);
     border-radius: 18px;
     background: var(--primary-light);
@@ -611,9 +611,9 @@ if (fileInputWrapper) {
 }
 
 .upload-icon {
-    font-size: 48px;
+    font-size: 36px;
     color: var(--primary-color);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     transition: var(--transition);
 }
 
@@ -623,7 +623,7 @@ if (fileInputWrapper) {
 }
 
 .upload-main {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--text-primary);
     margin: 0;
@@ -631,9 +631,9 @@ if (fileInputWrapper) {
 }
 
 .upload-sub {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-secondary);
-    margin: 4px 0 0 0;
+    margin: 2px 0 0 0;
 }
 
 .error-feedback {
@@ -651,8 +651,8 @@ if (fileInputWrapper) {
 
 /* Previews */
 .preview-container {
-    margin-top: 25px;
-    padding: 20px;
+    margin-top: 15px;
+    padding: 14px;
     border-radius: 18px;
     background: var(--primary-light);
     border: 1.5px solid rgba(24, 114, 181, 0.1);
@@ -669,17 +669,17 @@ if (fileInputWrapper) {
 }
 
 .preview-header {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .preview-title {
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 700;
     color: var(--primary-color);
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-family: 'Sora', sans-serif;
@@ -689,47 +689,47 @@ if (fileInputWrapper) {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 15px;
     background: var(--bg-white);
     border-radius: 6px;
-    min-height: 150px;
+    min-height: 120px;
 }
 
 .preview-image img {
     max-width: 100%;
-    max-height: 250px;
+    max-height: 200px;
     object-fit: contain;
     border-radius: 4px;
 }
 
 .preview-note {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
-    margin: 10px 0 0 0;
+    margin: 8px 0 0 0;
     font-style: italic;
 }
 
 /* Form Actions */
 .form-actions {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     justify-content: flex-end;
-    margin-top: 30px;
-    padding-top: 20px;
+    margin-top: 16px;
+    padding-top: 12px;
     border-top: 1px solid var(--border-color);
 }
 
 .btn {
-    padding: 10px 24px;
-    border-radius: 30px;
-    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 12px;
     font-weight: 700;
     border: none;
     cursor: pointer;
     transition: var(--transition);
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     text-decoration: none;
     font-family: 'Nunito', sans-serif;
 }
@@ -774,9 +774,9 @@ if (fileInputWrapper) {
 }
 
 .btn-sm {
-    padding: 8px 16px;
-    font-size: 13px;
-    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 11px;
+    border-radius: 18px;
 }
 
 .btn-edit {
@@ -804,18 +804,18 @@ if (fileInputWrapper) {
 .alert-info-custom {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 15px 20px;
-    margin-top: 20px;
+    gap: 10px;
+    padding: 12px 14px;
+    margin-top: 12px;
     background: rgba(255, 193, 7, 0.1);
     border: 1px solid rgba(255, 193, 7, 0.3);
     border-radius: 6px;
     color: #856404;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .alert-info-custom i {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--warning-color);
 }
 
@@ -835,20 +835,20 @@ if (fileInputWrapper) {
 
 .logo-table th {
     border: none;
-    padding: 15px 20px;
+    padding: 12px 16px;
     font-weight: 700;
     color: var(--primary-color);
-    font-size: 12px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     font-family: 'Sora', sans-serif;
 }
 
 .logo-table td {
-    padding: 18px 20px;
+    padding: 14px 16px;
     border-color: var(--border-color);
     vertical-align: middle;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .logo-table tbody tr {
@@ -891,8 +891,8 @@ if (fileInputWrapper) {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 80px;
-    padding: 8px;
+    height: 60px;
+    padding: 6px;
     background: var(--primary-light);
     border-radius: 6px;
     border: 1.5px solid rgba(24, 114, 181, 0.1);
@@ -945,7 +945,7 @@ if (fileInputWrapper) {
 /* Empty State */
 .empty-state,
 .empty-state-placeholder {
-    padding: 80px 24px;
+    padding: 50px 20px;
     text-align: center;
     background: var(--bg-white);
     border-radius: 18px;
@@ -959,21 +959,21 @@ if (fileInputWrapper) {
 }
 
 .empty-icon {
-    font-size: 64px;
+    font-size: 48px;
     color: rgba(24, 114, 181, 0.2);
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 }
 
 .empty-text {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 800;
     color: var(--text-primary);
-    margin: 0 0 8px 0;
+    margin: 0 0 6px 0;
     font-family: 'Sora', sans-serif;
 }
 
 .empty-subtext {
-    font-size: 14px;
+    font-size: 12px;
     color: var(--text-secondary);
     margin: 0;
 }
@@ -981,33 +981,37 @@ if (fileInputWrapper) {
 /* Responsive */
 @media (max-width: 768px) {
     .page-title {
-        font-size: 24px;
-        gap: 8px;
+        font-size: 20px;
+        gap: 6px;
     }
 
     .page-title i {
-        font-size: 28px;
+        font-size: 24px;
     }
 
     .page-subtitle {
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .page-header {
-        height: 155px;
+        height: 120px;
     }
 
     .form-actions {
         flex-direction: column;
+        gap: 8px;
     }
 
     .btn {
         width: 100%;
         justify-content: center;
+        padding: 7px 16px;
+        font-size: 11px;
     }
 
     .action-buttons {
         flex-direction: column;
+        gap: 6px;
     }
 
     .action-buttons .btn {
@@ -1015,12 +1019,12 @@ if (fileInputWrapper) {
     }
 
     .table-responsive {
-        font-size: 12px;
+        font-size: 11px;
     }
 
     .logo-table th,
     .logo-table td {
-        padding: 12px 10px;
+        padding: 10px 8px;
     }
 
     .col-actions {
@@ -1028,34 +1032,34 @@ if (fileInputWrapper) {
     }
 
     .file-input-label {
-        padding: 35px 20px;
+        padding: 25px 15px;
     }
 
     .upload-icon {
-        font-size: 36px;
+        font-size: 28px;
     }
 
     .upload-main {
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .logo-management-container .row {
-        padding: 21px 24px 60px;
+        padding: 16px 16px 40px;
     }
 }
 
 @media (max-width: 576px) {
     .page-header {
-        height: 133px;
+        height: 105px;
     }
 
     .page-title {
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .page-subtitle {
-        font-size: 10px;
-        margin: 0;
+        font-size: 9px;
+        margin: 2px 0 0 0;
     }
 
     .logo-management-container {
@@ -1063,37 +1067,51 @@ if (fileInputWrapper) {
     }
 
     .card-body {
-        padding: 20px 15px;
+        padding: 16px 12px;
     }
 
     .header-flex {
         flex-direction: column;
         align-items: flex-start;
+        gap: 8px;
     }
 
     .badge-limit {
         width: 100%;
+        font-size: 11px;
+        padding: 5px 10px;
     }
 
     .form-label {
-        font-size: 12px;
+        font-size: 11px;
+        margin-bottom: 5px;
     }
 
     .file-input-label {
-        padding: 30px 15px;
+        padding: 22px 12px;
     }
 
     .preview-container {
-        padding: 15px;
+        padding: 12px;
+        margin-top: 12px;
     }
 
     .btn-sm {
-        padding: 6px 12px;
-        font-size: 12px;
+        padding: 5px 10px;
+        font-size: 10px;
     }
 
     .logo-management-container .row {
-        padding: 15px 15px 60px;
+        padding: 12px 12px 40px;
+    }
+
+    .logo-table td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .logo-preview-box {
+        height: 50px;
     }
 }
 </style>
