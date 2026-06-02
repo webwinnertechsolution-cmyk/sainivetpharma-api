@@ -406,7 +406,16 @@
         background: #e5e7eb;
         color: #6b7280;
     }
-
+.adas {
+    width: 50%;
+    margin-left: 43px;
+}
+    .form-check .form-check-label {
+    display: block;
+    margin-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
     /* Responsive */
     @media (max-width: 1024px) {
         .form-row {
