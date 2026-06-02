@@ -399,7 +399,24 @@
         border-top: 1px solid #e5e7eb;
         margin: 12px 0;
     }
-
+.afasss {
+    margin-left: 41px;
+}
+    .form-check .form-check-label {
+    display: block;
+    margin-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+    .announcement-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(10, 33, 79, 0.08);
+    overflow: hidden;
+    margin: 0;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
     /* Responsive */
     @media (max-width: 1024px) {
         .form-row,
