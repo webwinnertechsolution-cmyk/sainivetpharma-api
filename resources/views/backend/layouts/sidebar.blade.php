@@ -10,11 +10,10 @@
         </li>
 
 
-         {{-- Quotation Requests --}}
-        <li class="nav-item {{ Request::is('quotations*') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('quotations.index') }}">
-                <span class="menu-title">Quotation Requests</span>
-                <i class="mdi mdi-file-document menu-icon"></i>
+       <li class="nav-item">
+            <a class="nav-link" href="{{ url('/announcement-bar') }}" ">
+                <span class="menu-title">ANNOUNCEMENT BAR</span>
+                <i class="mdi mdi-contacts menu-icon"></i>
             </a>
         </li>
 		
