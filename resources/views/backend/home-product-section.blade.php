@@ -28,16 +28,6 @@
         display: flex; align-items: center; justify-content: space-between;
         font-weight: 500; font-size: 12px;
     }
-    .alert-info-box {
-        background: linear-gradient(135deg, #eff6ff, #dbeafe);
-        border: 1px solid #93c5fd; color: #1e40af;
-        padding: 10px 14px; border-radius: 8px; margin-bottom: 14px;
-        font-size: 12px; display: flex; align-items: flex-start; gap: 10px;
-    }
-    .alert-info-box code {
-        background: #fff; padding: 2px 8px; border-radius: 4px;
-        font-size: 11px; color: #1e40af; border: 1px solid #bfdbfe;
-    }
 
     .page-card {
         background: #ffffff; border-radius: 12px;
@@ -89,7 +79,6 @@
 
     hr { border: none; border-top: 1px solid #e5e7eb; margin: 12px 0; }
     .text-danger { color: #ef4444; }
-    .text-muted-sm { color: #6b7280; font-size: 11px; margin-top: 4px; display: block; }
 
     .btn {
         padding: 7px 14px; border-radius: 6px; font-family: 'Sora', sans-serif;
@@ -105,7 +94,7 @@
     .btn-secondary:hover { background: #d1d5db; transform: translateY(-1px); }
     .btn-danger { background: linear-gradient(135deg, #ef4444, #f87171); color: white; font-weight: 700; }
     .btn-danger:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
-    .btn-sm { padding: 5px 10px; font-size: 11px; }
+    .btn-sm { padding: 4px 9px; font-size: 10px; }
 
     .btn-group-custom { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; justify-content: flex-end; }
 
@@ -132,6 +121,7 @@
     .badge-success { background: #d1fae5; color: #065f46; }
     .badge-secondary { background: #f3f4f6; color: #6b7280; }
     .badge-id { background: #e0e7ff; color: #3730a3; font-size: 11px; padding: 4px 10px; }
+    .badge-danger { background: #fee2e2; color: #7f1d1d; }
 
     .shortcode-box {
         background: #f0f4f8; padding: 2px 8px; border-radius: 4px;
@@ -144,8 +134,15 @@
     .empty-state i { font-size: 36px; display: block; margin-bottom: 10px; opacity: 0.4; }
     .empty-state p { font-size: 12px; margin: 0; }
 
+    /* Inline actions */
+    .action-btns { display: flex; gap: 5px; align-items: center; justify-content: center; flex-wrap: nowrap; }
+
     /* Delete Modal */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+    .modal-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.5); z-index: 9999;
+        align-items: center; justify-content: center;
+    }
     .modal-overlay.show { display: flex; }
     .modal-box { background: #fff; border-radius: 12px; width: 320px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
     .modal-box-header { background: linear-gradient(135deg, #ef4444, #f87171); padding: 12px 16px; color: white; display: flex; align-items: center; justify-content: space-between; }
@@ -156,28 +153,10 @@
     .modal-box-body strong { color: #ef4444; font-size: 13px; }
     .modal-box-body .note { font-size: 10px; color: #9ca3af; margin-top: 6px; }
     .modal-box-footer { padding: 10px 16px; display: flex; gap: 8px; justify-content: center; border-top: 1px solid #f3f4f6; }
-.alert-info-box {
-    display: none;
-}
-    .form-group label {
-    font-size: 11px;
-    line-height: 1;
-    vertical-align: top;
-    margin-bottom: 0.5rem;
-}
-    .form-check.form-switch {
-    width: 61%;
-    margin-left: 42px!important;
-}
-    .form-check .form-check-label {
-    display: block;
-    margin-left: 0;
-    font-size: 0.875rem;
-    line-height: 1.5;
-}
-    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
-    font-size: 9px!important;
-}
+
+    .form-check.form-switch { margin-left: 4px; margin-bottom: 12px; }
+    .form-group label { font-size: 11px; line-height: 1; vertical-align: top; margin-bottom: 0.5rem; }
+
     @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
         .btn-group-custom { flex-direction: column-reverse; }
@@ -207,15 +186,6 @@
         </div>
     @endif
 
-    {{-- Shortcode Info --}}
-    <div class="alert-info-box">
-        <span style="font-size:18px;">💡</span>
-        <div>
-            <strong>Shortcode Usage:</strong> After creating the section, paste this in your <code>home.blade.php</code>:<br>
-            <code style="margin-top:4px;display:inline-block;">{!! render_product_section(1) !!}</code>
-        </div>
-    </div>
-
     <div class="two-col">
 
         {{-- FORM CARD --}}
@@ -240,7 +210,8 @@
                     {{-- Heading --}}
                     <div class="form-group">
                         <label class="form-label">Heading <span class="text-danger">*</span></label>
-                        <input type="text" name="heading" class="form-control @error('heading') is-invalid @enderror"
+                        <input type="text" name="heading"
+                            class="form-control @error('heading') is-invalid @enderror"
                             value="{{ old('heading', $editSection->heading ?? '') }}"
                             placeholder="e.g. Today's Offer ⚡" required>
                         @error('heading')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -310,7 +281,7 @@
                     <hr>
 
                     {{-- Active Toggle --}}
-                    <div class="form-check form-switch" style="margin-bottom: 12px; margin-left: 4px;">
+                    <div class="form-check form-switch">
                         <input type="checkbox" name="is_active" class="form-check-input" id="is_active"
                             {{ old('is_active', $editSection->is_active ?? 1) ? 'checked' : '' }}>
                         <label class="form-check-label" for="is_active">Active (Show on frontend)</label>
@@ -352,12 +323,12 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width:60px">ID</th>
+                                <th style="width:55px">ID</th>
                                 <th>Heading</th>
                                 <th>Category</th>
-                                <th style="width:80px;text-align:center;">Products</th>
-                                <th style="width:80px;text-align:center;">Status</th>
-                                <th style="width:140px;text-align:center;">Actions</th>
+                                <th style="width:70px;text-align:center;">Items</th>
+                                <th style="width:75px;text-align:center;">Status</th>
+                                <th style="width:130px;text-align:center;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -387,23 +358,28 @@
                                     @if($sec->is_active)
                                         <span class="badge badge-success">✅ Active</span>
                                     @else
-                                        <span class="badge badge-secondary">❌ Off</span>
+                                        <span class="badge badge-danger">❌ Off</span>
                                     @endif
                                 </td>
+
+                                {{-- ✅ INLINE EDIT + DELETE (ek line mein) --}}
                                 <td style="text-align:center;">
-                                    <a href="{{ route('home.product.section.edit', $sec->id) }}"
-                                       class="btn btn-warning btn-sm" style="margin-bottom:4px;">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <form action="{{ route('home.product.section.delete', $sec->id) }}"
-                                          method="POST" class="d-inline"
-                                          onsubmit="return confirmDelete(event, '{{ addslashes($sec->heading) }}')">
-                                        @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
+                                    <div class="action-btns">
+                                        <a href="{{ route('home.product.section.edit', $sec->id) }}"
+                                           class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <form action="{{ route('home.product.section.delete', $sec->id) }}"
+                                              method="POST"
+                                              onsubmit="return confirmDelete(event, '{{ addslashes($sec->heading) }}')">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i> Del
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
+
                             </tr>
                             @empty
                             <tr>
@@ -424,7 +400,7 @@
     </div>
 </div>
 
-{{-- Delete Modal --}}
+{{-- Delete Confirm Modal --}}
 <div class="modal-overlay" id="deleteModal">
     <div class="modal-box">
         <div class="modal-box-header">
@@ -465,6 +441,7 @@
         if (pendingDeleteForm) pendingDeleteForm.submit();
     });
 
+    // Auto-dismiss alerts after 5 seconds
     setTimeout(() => {
         document.querySelectorAll('.alert-success, .alert-danger').forEach(el => el.remove());
     }, 5000);
