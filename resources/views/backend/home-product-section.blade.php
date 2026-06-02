@@ -363,22 +363,22 @@
                                 </td>
 
                                 {{-- ✅ INLINE EDIT + DELETE (ek line mein) --}}
-                                <td style="text-align:center;">
-                                    <div class="action-btns">
-                                        <a href="{{ route('home.product.section.edit', $sec->id) }}"
-                                           class="btn btn-warning btn-sm">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                        <form action="{{ route('home.product.section.delete', $sec->id) }}"
-                                              method="POST"
-                                              onsubmit="return confirmDelete(event, '{{ addslashes($sec->heading) }}')">
-                                            @csrf
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash"></i> Del
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
+                               <td style="text-align:center;">
+    <div style="display:flex; gap:5px; align-items:center; justify-content:center;">
+        <a href="{{ route('home.product.section.edit', $sec->id) }}"
+           class="btn btn-warning btn-sm">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <form action="{{ route('home.product.section.delete', $sec->id) }}"
+              method="POST" class="d-inline"
+              onsubmit="return confirmDelete(event, '{{ addslashes($sec->heading) }}')">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i> Del
+            </button>
+        </form>
+    </div>
+</td>
 
                             </tr>
                             @empty
