@@ -50,17 +50,10 @@
                 <ul class="nav flex-column sub-menu">
 				    <li class="nav-item">
                         <a class="nav-link" href="{{ url('/slider') }}">slider</a>
-                    </li>
-					
-								
-					
-					
+                    </li>					
 					<li class="nav-item">
                         <a class="nav-link" href="{{ url('/home-category') }}">Home Category</a>
                     </li>
-					
-					
-					
 					<li class="nav-item">
                         <a class="nav-link" href="{{ url('/home-product-section') }}">Home Product </a>
                     </li>
@@ -76,7 +69,7 @@
 					
 					
 					<li class="nav-item">
-                        <a class="nav-link" href="{{ url('/home-product-section') }}">Best Selling</a>
+                        <a class="nav-link" href="{{ url('/industries-we-serve') }}">Offer's</a>
                     </li>
 					
 					
@@ -174,7 +167,7 @@
 								</li>
 							</ul>
 						</li>
-                        -->
+                        
 
 						<li class="nav-item">
 							<input type="radio" id="industries-dropdown" name="dropdowns">
@@ -198,7 +191,7 @@
 									</label>
 								</li>
 							</ul>
-						</li>
+						</li> -->
 
                 </ul>
             </div>
