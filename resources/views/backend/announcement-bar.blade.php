@@ -417,6 +417,9 @@
     border: 1px solid #e5e7eb;
     transition: all 0.3s ease;
 }
+    .form-row-three {
+    display: none;
+}
     /* Responsive */
     @media (max-width: 1024px) {
         .form-row,
