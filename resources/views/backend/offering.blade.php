@@ -171,7 +171,7 @@
 <div class="page-container">
 
     <div class="page-header">
-        <h1 class="page-title">💡 Offering an Innovative</h1>
+        <h1 class="page-title">💡 About</h1>
         <p class="page-subtitle">Manage the Offering Innovative section displayed on the homepage</p>
     </div>
 
