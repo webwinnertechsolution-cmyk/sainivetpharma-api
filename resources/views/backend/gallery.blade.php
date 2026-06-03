@@ -261,6 +261,15 @@
     .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
     font-size: 9px!important;
 }
+    .form-check {
+    margin-left: 24px;
+}
+    .form-group label {
+    font-size: 12px;
+    line-height: 1;
+    vertical-align: top;
+    margin-bottom: 0.5rem;
+}
     @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
         .media-grid { grid-template-columns: repeat(2, 1fr); }
