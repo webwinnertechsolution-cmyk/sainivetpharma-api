@@ -16,8 +16,7 @@
                 <i class="mdi mdi-contacts menu-icon"></i>
             </a>
         </li>
-		
-        
+
 		 {{-- Header --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#tabels" aria-expanded="false" aria-controls="forms">
@@ -36,10 +35,8 @@
                 </ul>
             </div>
         </li>
-		
-		
-		
-        {{-- HOME Menu with Submenu --}}
+
+        {{-- HOME  --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#homeMenu" aria-expanded="false" aria-controls="homeMenu">
                 <span class="menu-title">HOME</span>
@@ -57,32 +54,18 @@
 					<li class="nav-item">
                         <a class="nav-link" href="{{ url('/home-product-section') }}">Home Product </a>
                     </li>
-					
 					<li class="nav-item">
                         <a class="nav-link" href="{{ url('/promotional-banner') }}">Promotional Banner </a>
                     </li>
-
-                    
 					<li class="nav-item">
                         <a class="nav-link" href="{{ url('/brand-section') }}">Brand Section</a>
                     </li>
-					
-					
 					<li class="nav-item">
                         <a class="nav-link" href="{{ url('/industries-we-serve') }}">Offer's</a>
                     </li>
-					
 					<li class="nav-item">
                         <a class="nav-link" href="{{ url('/home-video-section') }}">Video Section</a>
                     </li>
-
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/home-video-section') }}">Video Section</a>
-                    </li>
-								
-
-
                 </ul>
             </div>
 			
@@ -90,7 +73,7 @@
         </li>
 		
 		 
-		
+		{{-- About  --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#forms" aria-expanded="false" aria-controls="forms">
                 <span class="menu-title">About Us</span>
@@ -111,6 +94,38 @@
                 </ul>
             </div>
         </li>
+
+        
+         <li class="nav-item">
+            <a class="nav-link" href="{{ url('/admin/privacy-policy') }}" ">
+                <span class="menu-title">Privacy Policy</span>
+                <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+        </li>
+
+         <li class="nav-item">
+            <a class="nav-link" href="{{ url('/admin/terms-of-service') }}" ">
+                <span class="menu-title">Terms Of Services</span>
+                <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+        </li>
+
+         <li class="nav-item">
+            <a class="nav-link" href="{{ route('faq') }}" ">
+                <span class="menu-title">FAQ</span>
+                <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+        </li>
+
+
+         <li class="nav-item">
+            <a class="nav-link" href="{{ url('/gallery') }}" ">
+                <span class="menu-title">Gallery</span>
+                <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+        </li>
+
+        
 		
 		
         {{-- Icons --}}
@@ -153,36 +168,7 @@
         </li>
 		-->
 		
-<!-- 		
-		<li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#logout" aria-expanded="false" aria-controls="logout">
-                <span class="menu-title">SERVICES</span>
-				 <i class="menu-arrow"></i>
-                <i class="mdi mdi-lock menu-icon"></i>
-            </a>
-            <div class="collapse" id="logoutlogout">
-                <ul class="nav flex-column sub-menu">
-                   <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/threedscanning') }}">3D SCANING</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ ('/threedprinting') }}">3D PRINTING</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ ('/plasticfabrication') }}">PLASTIC FABRICATION</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ ('/routercutting') }}">ROUTER CUTTING</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ ('/prototyping') }}">PROTOTYPING</a>
-                    </li>
-					<li class="nav-item">
-                        <a class="nav-link" href="{{ ('/reverseengineering') }}">REVERSE ENGINEERING</a>
-                    </li>
-                </ul>
-            </div>
-        </li> -->
+
 		
 		<li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#faqMenu" aria-expanded="false" aria-controls="faqMenu">
@@ -198,12 +184,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('faq') }}">FAQ</a>
                     </li>
-					
-					
-					
-					
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/admin/terms-of-service') }}">Terms Of Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/gallery') }}">Gallery</a>
                     </li>
                 </ul>
             </div>
