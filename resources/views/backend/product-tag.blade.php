@@ -1,176 +1,369 @@
 @extends('backend.layouts.layout')
+@section('title', 'Product Tags')
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
 
-            {{-- Page Header --}}
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="mb-0">
-                    <i class="fas fa-tag me-2 text-primary"></i>Product Tags
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+    * { box-sizing: border-box; }
+    body { font-family: 'Nunito', sans-serif; background: #f5f7fa; }
+
+    .page-container { max-width: 1400px; margin: 0 auto; padding: 0; }
+
+    .page-header { margin-bottom: 14px; padding: 0; }
+    .page-title { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800; color: #0a214f; margin-bottom: 4px; letter-spacing: -0.02em; }
+    .page-subtitle { font-size: 12px; color: #6b7280; font-weight: 500; }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        border: 1px solid #6ee7b7; color: #065f46;
+        padding: 10px 12px; border-radius: 8px; margin-bottom: 14px;
+        display: flex; align-items: center; justify-content: space-between;
+        font-weight: 500; font-size: 12px;
+    }
+    .alert-danger {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        border: 1px solid #fca5a5; color: #7f1d1d;
+        padding: 10px 12px; border-radius: 8px; margin-bottom: 14px;
+        display: flex; align-items: center; justify-content: space-between;
+        font-weight: 500; font-size: 12px;
+    }
+
+    .page-card {
+        background: #ffffff; border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(10,33,79,0.08);
+        overflow: hidden; border: 1px solid #e5e7eb;
+        transition: all 0.3s ease; margin-bottom: 16px;
+    }
+    .page-card:hover { box-shadow: 0 12px 32px rgba(10,33,79,0.12); }
+
+    .card-header-gradient {
+        background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
+        padding: 12px 20px; color: #ffffff;
+    }
+    .card-header-warning {
+        background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%);
+        padding: 12px 20px; color: #ffffff;
+    }
+    .card-header-title {
+        font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700;
+        margin: 0; display: flex; align-items: center; gap: 8px;
+    }
+    .card-header-row { display: flex; justify-content: space-between; align-items: center; }
+    .table-count { font-size: 11px; background: rgba(255,255,255,0.2); color: #fff; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
+
+    .card-body { padding: 16px; }
+
+    .form-label {
+        font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 700;
+        color: #0a214f; margin-bottom: 6px; display: block;
+    }
+    .form-label small { display: block; font-size: 10px; font-weight: 500; color: #6b7280; margin-top: 2px; }
+
+    .form-control, .form-select {
+        border: 1.5px solid #e5e7eb; border-radius: 6px;
+        padding: 7px 10px; font-size: 12px; font-family: 'Nunito', sans-serif;
+        transition: all 0.2s ease; width: 100%;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #1872B5; box-shadow: 0 0 0 3px rgba(24,114,181,0.1); outline: none;
+    }
+    .form-control.is-invalid { border-color: #ef4444; }
+    .invalid-feedback { color: #ef4444; font-size: 11px; margin-top: 4px; display: block; }
+    .form-group { margin-bottom: 12px; }
+
+    hr { border: none; border-top: 1px solid #e5e7eb; margin: 12px 0; }
+    .text-danger { color: #ef4444; }
+
+    .btn {
+        padding: 7px 14px; border-radius: 6px; font-family: 'Sora', sans-serif;
+        font-weight: 700; font-size: 11px; border: none; cursor: pointer;
+        transition: all 0.3s ease; display: inline-flex; align-items: center;
+        gap: 5px; text-decoration: none;
+    }
+    .btn-primary { background: linear-gradient(135deg, #1872B5, #2596e1); color: white; box-shadow: 0 4px 12px rgba(24,114,181,0.3); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(24,114,181,0.4); color: white; }
+    .btn-warning { background: linear-gradient(135deg, #b45309, #f59e0b); color: white; box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+    .btn-warning:hover { transform: translateY(-1px); color: white; }
+    .btn-secondary { background: #e5e7eb; color: #1f2937; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .btn-secondary:hover { background: #d1d5db; transform: translateY(-1px); }
+    .btn-danger { background: linear-gradient(135deg, #ef4444, #f87171); color: white; font-weight: 700; }
+    .btn-danger:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+    .btn-sm { padding: 4px 9px; font-size: 10px; }
+
+    .btn-group-custom { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; justify-content: flex-end; }
+
+    /* Two col layout */
+    .two-col { display: grid; grid-template-columns: 380px 1fr; gap: 16px; align-items: start; }
+
+    /* Table */
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead tr { background: #f9fafb; }
+    thead th {
+        padding: 10px 12px; font-family: 'Sora', sans-serif; font-weight: 700;
+        color: #0a214f; font-size: 11px; border-bottom: 2px solid #e5e7eb; white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f3f4f6; transition: background 0.15s; }
+    tbody tr:hover { background: #f9fafb; }
+    tbody tr.highlight-row { background: #fffbeb; }
+    tbody td { padding: 10px 12px; color: #374151; vertical-align: middle; }
+
+    .badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        padding: 3px 8px; border-radius: 20px; font-size: 10px;
+        font-family: 'Sora', sans-serif; font-weight: 700;
+    }
+    .badge-primary { background: #dbeafe; color: #1e40af; }
+    .badge-secondary { background: #f3f4f6; color: #6b7280; }
+    .badge-id { background: #e0e7ff; color: #3730a3; font-size: 11px; padding: 4px 10px; }
+
+    .slug-code {
+        background: #f0fdf4; padding: 2px 8px; border-radius: 4px;
+        font-size: 10px; font-family: 'Courier New', monospace;
+        color: #166534; display: inline-block;
+        border: 1px solid #bbf7d0;
+    }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: #6b7280; }
+    .empty-state i { font-size: 36px; display: block; margin-bottom: 10px; opacity: 0.4; }
+    .empty-state p { font-size: 12px; margin: 0; }
+
+    /* Delete Modal */
+    .modal-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.5); z-index: 9999;
+        align-items: center; justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: 12px; width: 320px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .modal-box-header { background: linear-gradient(135deg, #ef4444, #f87171); padding: 12px 16px; color: white; display: flex; align-items: center; justify-content: space-between; }
+    .modal-box-header h6 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; margin: 0; }
+    .modal-close { background: none; border: none; color: white; font-size: 16px; cursor: pointer; }
+    .modal-box-body { padding: 20px 16px; text-align: center; }
+    .modal-box-body p { font-size: 12px; color: #374151; margin: 0 0 6px; }
+    .modal-box-body strong { color: #ef4444; font-size: 13px; }
+    .modal-box-body .note { font-size: 10px; color: #9ca3af; margin-top: 6px; }
+    .modal-box-footer { padding: 10px 16px; display: flex; gap: 8px; justify-content: center; border-top: 1px solid #f3f4f6; }
+
+    .slug-readonly {
+        background: #f9fafb; color: #6b7280; cursor: not-allowed;
+    }
+    .helper-text { font-size: 10px; color: #9ca3af; margin-top: 3px; display: block; }
+
+    @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+        .btn-group-custom { flex-direction: column-reverse; }
+        .btn { width: 100%; justify-content: center; }
+    }
+</style>
+
+<div class="page-container">
+
+    {{-- Header --}}
+    <div class="page-header">
+        <h1 class="page-title">🏷️ Product Tags</h1>
+        <p class="page-subtitle">Manage tags assigned to products</p>
+    </div>
+
+    {{-- Alerts --}}
+    @if(session('success'))
+        <div class="alert-success">
+            <span>✅ {{ session('success') }}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert-danger">
+            <span>⚠️ {{ session('error') }}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    <div class="two-col">
+
+        {{-- FORM CARD --}}
+        <div class="page-card">
+            <div class="{{ isset($editTag) ? 'card-header-warning' : 'card-header-gradient' }}">
+                <h2 class="card-header-title">
+                    @if(isset($editTag))
+                        <i class="fas fa-pen"></i> Edit Tag #{{ $editTag->id }}
+                    @else
+                        <i class="fas fa-plus-circle"></i> Add New Tag
+                    @endif
                 </h2>
-                <span class="badge bg-secondary fs-6">Total: {{ $tags->count() }}</span>
             </div>
+            <div class="card-body">
+                <form action="{{ isset($editTag) ? route('product.tag.update', $editTag->id) : route('product.tag.store') }}"
+                      method="POST">
+                    @csrf
 
-            {{-- Success / Error Messages --}}
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show">
-                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
+                    {{-- Tag Name --}}
+                    <div class="form-group">
+                        <label class="form-label">Tag Name <span class="text-danger">*</span></label>
+                        <input type="text"
+                               name="name"
+                               class="form-control @error('name') is-invalid @enderror"
+                               value="{{ old('name', $editTag->name ?? '') }}"
+                               placeholder="e.g. New Arrival, Sale, Featured..."
+                               required>
+                        @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
 
-            {{-- ADD / EDIT FORM --}}
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header {{ isset($editTag) ? 'bg-warning text-dark' : 'bg-primary text-white' }}">
-                    <h5 class="mb-0">
-                        <i class="fas fa-{{ isset($editTag) ? 'edit' : 'plus-circle' }} me-2"></i>
-                        {{ isset($editTag) ? 'Edit Tag: ' . $editTag->name : 'Add New Tag' }}
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <form action="{{ isset($editTag) ? route('product.tag.update', $editTag->id) : route('product.tag.store') }}"
-                          method="POST">
-                        @csrf
-                        <div class="row align-items-end">
+                    {{-- Slug (Read Only) --}}
+                    <div class="form-group">
+                        <label class="form-label">Slug</label>
+                        <input type="text"
+                               class="form-control slug-readonly"
+                               value="{{ isset($editTag) ? $editTag->slug : '' }}"
+                               placeholder="auto-generated"
+                               readonly>
+                        <span class="helper-text">Auto-generated from tag name</span>
+                    </div>
 
-                            {{-- Name --}}
-                            <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label fw-semibold">
-                                    Tag Name <span class="text-danger">*</span>
-                                </label>
-                                <input type="text"
-                                       class="form-control @error('name') is-invalid @enderror"
-                                       id="name"
-                                       name="name"
-                                       value="{{ old('name', $editTag->name ?? '') }}"
-                                       placeholder="e.g. New Arrival, Sale, Featured..."
-                                       required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                    <hr>
 
-                            {{-- Slug (read only - auto generated) --}}
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label fw-semibold">Slug</label>
-                                <input type="text"
-                                       class="form-control bg-light"
-                                       value="{{ isset($editTag) ? $editTag->slug : '' }}"
-                                       placeholder="auto-generated"
-                                       readonly>
-                                <small class="text-muted">Auto-generated</small>
-                            </div>
+                    {{-- Buttons --}}
+                    <div class="btn-group-custom">
+                        @if(isset($editTag))
+                            <a href="{{ route('product.tag') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save"></i> Update Tag
+                            </button>
+                        @else
+                            <button type="reset" class="btn btn-secondary">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Tag
+                            </button>
+                        @endif
+                    </div>
 
-                            {{-- Submit Button --}}
-                            <div class="col-md-3 mb-3">
-                                <div class="d-flex gap-2">
-                                    <button type="submit" class="btn btn-{{ isset($editTag) ? 'warning' : 'primary' }} w-100">
-                                        <i class="fas fa-save me-1"></i>
-                                        {{ isset($editTag) ? 'Update Tag' : 'Add Tag' }}
-                                    </button>
-                                    @if(isset($editTag))
-                                        <a href="{{ route('product.tag') }}" class="btn btn-secondary">
-                                            <i class="fas fa-times"></i>
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
+                </form>
+            </div>
+        </div>
 
-                        </div>
-                    </form>
+        {{-- TABLE CARD --}}
+        <div class="page-card">
+            <div class="card-header-gradient">
+                <div class="card-header-row">
+                    <h2 class="card-header-title"><i class="fas fa-list"></i> All Product Tags</h2>
+                    <span class="table-count">Total: {{ $tags->count() }}</span>
                 </div>
             </div>
-
-            {{-- TAGS TABLE --}}
-            <div class="card shadow-sm">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-list me-2"></i>All Product Tags
-                    </h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width:50px;" class="text-center">#</th>
-                                    <th>Tag Name</th>
-                                    <th>Slug</th>
-                                    <th style="width:150px;">Created At</th>
-                                    <th style="width:130px;" class="text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($tags as $tag)
-                                <tr class="{{ isset($editTag) && $editTag->id == $tag->id ? 'table-warning' : '' }}">
-
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-
-                                    <td>
-                                        <span class="badge bg-primary fs-6 px-3 py-2">
-                                            <i class="fas fa-tag me-1"></i>{{ $tag->name }}
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        <code class="text-success">{{ $tag->slug }}</code>
-                                    </td>
-
-                                    <td>
-                                        <small class="text-muted">{{ $tag->created_at->format('d M Y') }}</small>
-                                    </td>
-
-                                    {{-- Actions --}}
-                                    <td class="text-center">
+            <div class="card-body" style="padding: 0;">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:55px;text-align:center;">#</th>
+                                <th>Tag Name</th>
+                                <th>Slug</th>
+                                <th style="width:120px;">Created</th>
+                                <th style="width:130px;text-align:center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($tags as $tag)
+                            <tr class="{{ isset($editTag) && $editTag->id == $tag->id ? 'highlight-row' : '' }}">
+                                <td style="text-align:center;">
+                                    <span class="badge badge-id">#{{ $loop->iteration }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-primary">
+                                        <i class="fas fa-tag" style="font-size:9px;"></i> {{ $tag->name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="slug-code">{{ $tag->slug }}</span>
+                                </td>
+                                <td>
+                                    <span style="font-size:11px;color:#6b7280;">{{ $tag->created_at->format('d M Y') }}</span>
+                                </td>
+                                <td style="text-align:center;">
+                                    <div style="display:flex; gap:5px; align-items:center; justify-content:center;">
                                         <a href="{{ route('product.tag.edit', $tag->id) }}"
-                                           class="btn btn-sm btn-primary me-1"
-                                           title="Edit">
-                                            <i class="fas fa-edit"></i>
+                                           class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
                                         </a>
-
                                         <form action="{{ route('product.tag.delete', $tag->id) }}"
-                                              method="POST"
-                                              class="d-inline"
-                                              onsubmit="return confirm('Are you sure? Delete this tag?');">
+                                              method="POST" class="d-inline"
+                                              onsubmit="return confirmDelete(event, '{{ addslashes($tag->name) }}')">
                                             @csrf
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-danger"
-                                                    title="Delete">
-                                                <i class="fas fa-trash"></i>
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i> Del
                                             </button>
                                         </form>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="5" class="text-center py-5">
-                                        <div class="text-muted">
-                                            <i class="fas fa-tags fa-3x mb-3 d-block"></i>
-                                            <p class="mb-1 fs-5">No tag found.</p>
-                                            <small>Add the first tag from the form above!</small>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-tags"></i>
+                                        <p>No tags yet. Add your first one!</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
 
+    </div>
+</div>
+
+{{-- Delete Confirm Modal --}}
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <div class="modal-box-header">
+            <h6><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h6>
+            <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+        </div>
+        <div class="modal-box-body">
+            <p>Are you sure you want to delete</p>
+            <strong id="deleteItemName"></strong>
+            <p class="note">This action cannot be undone.</p>
+        </div>
+        <div class="modal-box-footer">
+            <button class="btn btn-secondary btn-sm" onclick="closeDeleteModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> Yes, Delete
+            </button>
         </div>
     </div>
 </div>
 
-<style>
-.table td { vertical-align: middle; }
-.card { border-radius: 8px; }
-</style>
+<script>
+    let pendingDeleteForm = null;
+
+    function confirmDelete(e, name) {
+        e.preventDefault();
+        pendingDeleteForm = e.target;
+        document.getElementById('deleteItemName').textContent = '"' + name + '"';
+        document.getElementById('deleteModal').classList.add('show');
+        return false;
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('show');
+        pendingDeleteForm = null;
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (pendingDeleteForm) pendingDeleteForm.submit();
+    });
+
+    // Auto-dismiss alerts after 5 seconds
+    setTimeout(() => {
+        document.querySelectorAll('.alert-success, .alert-danger').forEach(el => el.remove());
+    }, 5000);
+</script>
+
 @endsection
