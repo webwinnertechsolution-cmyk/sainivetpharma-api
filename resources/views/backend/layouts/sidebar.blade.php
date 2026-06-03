@@ -72,8 +72,14 @@
                         <a class="nav-link" href="{{ url('/industries-we-serve') }}">Offer's</a>
                     </li>
 					
-					
-				
+					<li class="nav-item">
+                        <a class="nav-link" href="{{ url('/home-video-section') }}">Video Section</a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/home-video-section') }}">Video Section</a>
+                    </li>
 								
 
 
@@ -96,32 +102,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/offering') }}">ABOUT</a>
                     </li>
-					
-					
-					<li class="nav-item">
-							<input type="radio" id="corevalues-dropdown" name="dropdowns">
-							<label for="corevalues-dropdown" class="sdsd">
-								<span class="menu-title nav-link">CORE VALUES</span>
-								<i class="menu-arrow"></i>
-								<i class="mdi mdi-lock menu-icon"></i>
-							</label>
-							<ul class="drop">
-								<!-- <li>
-									<input type="radio" id="corevalues-main" name="menu3">
-									<label for="corevalues-main">
-										<a class="nav-link" href="{{ url('/corevaluesmain') }}">
-											Core Section</a>
-									</label>
-								</li> -->
-								<li>
-									<input type="radio" id="corevalues-list" name="menu3">
-									<label for="corevalues-list">
-										<a class="nav-link" href="{{ url('/corevalues') }}">Core List</a>
-									</label>
-								</li>
-							</ul>
-						</li>
-						
+                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url('/corevalues') }}">Teams</a>
+                    </li>	
 						 <li class="nav-item">
                         <a class="nav-link" href="{{ url('/experience-the-power') }}">PORTFOLIO</a>
                     </li>
