@@ -346,7 +346,11 @@ Route::post('/brand/delete/{id}', [BackendController::class, 'brandDelete'])->na
 
 Route::get('/product', [BackendController::class, 'product'])->name('product');
 Route::post('/product/store', [BackendController::class, 'productStore'])->name('product.store');
+// ✅ YEH PEHLE RAKHO — specific routes
 Route::get('/product/create', [BackendController::class, 'productCreate'])->name('product.create');
+
+// Phir yeh — wildcard route
+Route::get('/product/{slug}', [FrontendController::class, 'productDetail'])->name('product.detail');
 Route::get('/product/edit/{id}', [BackendController::class, 'productEdit'])->name('product.edit');
 Route::post('/product/update/{id}', [BackendController::class, 'productUpdate'])->name('product.update');
 Route::post('/product/delete/{id}', [BackendController::class, 'productDelete'])->name('product.delete');
