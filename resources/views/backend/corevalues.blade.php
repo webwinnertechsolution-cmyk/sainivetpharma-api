@@ -1,5 +1,5 @@
 @extends('backend.layouts.layout')
-@section('title', 'Core Values')
+@section('title', 'Teams')
 @section('content')
 
 <style>
@@ -173,7 +173,7 @@
 <div class="page-container">
 
     <div class="page-header">
-        <h1 class="page-title">❤️ Core Values</h1>
+        <h1 class="page-title">❤️ Teams</h1>
         <p class="page-subtitle">Manage core value items displayed on the homepage</p>
     </div>
 
@@ -281,7 +281,7 @@
         <div class="page-card">
             <div class="card-header-gradient">
                 <div class="card-header-row">
-                    <h2 class="card-header-title"><i class="fas fa-list"></i> All Core Values</h2>
+                    <h2 class="card-header-title"><i class="fas fa-list"></i> All Teams</h2>
                     <span class="table-count">Total: {{ $coreValues->count() }}</span>
                 </div>
             </div>
@@ -348,7 +348,7 @@
                                 <td colspan="5">
                                     <div class="empty-state">
                                         <i class="fas fa-heart"></i>
-                                        <p>No core values yet. Add your first one!</p>
+                                        <p>No Team yet. Add your first one!</p>
                                     </div>
                                 </td>
                             </tr>
