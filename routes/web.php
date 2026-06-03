@@ -345,6 +345,7 @@ Route::post('/brand/delete/{id}', [BackendController::class, 'brandDelete'])->na
 // Add these routes to your web.php inside the admin group
 
 Route::get('/product', [BackendController::class, 'product'])->name('product');
+Route::get('/product/create', [BackendController::class, 'productCreate'])->name('product.create');
 Route::post('/product/store', [BackendController::class, 'productStore'])->name('product.store');
 Route::get('/product/edit/{id}', [BackendController::class, 'productEdit'])->name('product.edit');
 Route::post('/product/update/{id}', [BackendController::class, 'productUpdate'])->name('product.update');
