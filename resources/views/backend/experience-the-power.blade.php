@@ -1,5 +1,5 @@
 @extends('backend.layouts.layout')
-@section('title', 'Experience The Power')
+@section('title', '')
 @section('content')
 
 <style>
@@ -178,7 +178,7 @@
 
     {{-- Header --}}
     <div class="page-header">
-        <h1 class="page-title">⚡ Experience The Power</h1>
+        <h1 class="page-title">⚡ Portfolio</h1>
         <p class="page-subtitle">Homepage par Experience section manage karein (Max: 1 item)</p>
     </div>
 
@@ -201,9 +201,9 @@
         <div class="{{ isset($editExperience) ? 'card-header-warning' : 'card-header-gradient' }}">
             <h2 class="card-header-title">
                 @if(isset($editExperience))
-                    <i class="fas fa-pen"></i> Edit Experience The Power
+                    <i class="fas fa-pen"></i> Edit 
                 @else
-                    <i class="fas fa-plus-circle"></i> Add Experience The Power
+                    <i class="fas fa-plus-circle"></i> Add 
                 @endif
                 @if($experienceCount >= 1 && !isset($editExperience))
                     <span class="badge-limit">⚠ Limit Reached (Max 1)</span>
@@ -253,7 +253,7 @@
                                            class="form-control @error('alt_tag') is-invalid @enderror"
                                            id="alt_tag" name="alt_tag"
                                            value="{{ old('alt_tag', isset($editExperience) ? $editExperience->alt_tag : '') }}"
-                                           placeholder="e.g., Experience the power banner">
+                                           placeholder="e.g.,  banner">
                                     @error('alt_tag')<div class="invalid-feedback">{{ $message }}</div>@enderror
                                 </div>
                             </div>
@@ -346,7 +346,7 @@
     <div class="page-card">
         <div class="card-header-dark">
             <div class="card-header-row">
-                <h2 class="card-header-title"><i class="fas fa-list"></i> All Experience The Power</h2>
+                <h2 class="card-header-title"><i class="fas fa-list"></i> All </h2>
                 <span class="table-count">Total: {{ $experiences->count() }}</span>
             </div>
         </div>
