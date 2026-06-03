@@ -228,7 +228,11 @@
 
 			  <!-- Product -->
 			  <li class="nav-item">
-				<a class="nav-link" href="{{ url('/product') }}">Add Product</a>
+				<a class="nav-link" href="{{ url('/product') }}">Product List</a>
+			  </li>
+			  
+			  <li class="nav-item">
+				<a class="nav-link" href="{{ url('/product/create') }}">Add Product</a>
 			  </li>
 
 			  <!-- CORE VALUES (nested dropdown) -->
