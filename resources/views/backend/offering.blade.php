@@ -161,6 +161,22 @@
 
     .ck-editor__editable { min-height: 150px !important; font-size: 12px !important; }
 
+
+        .form-check.form-switch {
+    width: 61%;
+    margin-left: 42px!important;
+}
+    .form-check .form-check-label {
+    display: block;
+    margin-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
+    font-size: 9px!important;
+}
+
+    
     @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
         .btn-group-custom { flex-direction: column-reverse; }
