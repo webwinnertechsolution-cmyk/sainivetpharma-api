@@ -165,7 +165,19 @@
     /* Delete Modal */
     .del-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; }
     .del-modal-overlay.show { display: flex; }
-
+    .form-check.form-switch {
+    width: 61%;
+    margin-left: 42px!important;
+}
+    .form-check .form-check-label {
+    display: block;
+    margin-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
+    font-size: 9px!important;
+}
     @media (max-width: 768px) {
         .btn-group-custom { flex-direction: column-reverse; }
         .btn { width: 100%; justify-content: center; }
@@ -206,7 +218,7 @@
     {{-- FORM CARD --}}
     @if($canAdd || isset($page))
     <div class="page-card">
-        <div class="{{ isset($page) ? 'card-header-warning' : 'card-header-gradient' }}">
+        <div class="{{ request()->routeIs('terms.of.service.edit') ? 'card-header-warning' : 'card-header-gradient' }}">
             <h2 class="card-header-title">
                 @if(isset($page))
                     <i class="fas fa-pen"></i> Edit Terms of Service
