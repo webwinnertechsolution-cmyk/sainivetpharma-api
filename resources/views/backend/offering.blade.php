@@ -292,7 +292,7 @@
                             </button>
                             <button type="submit" class="btn btn-primary"
                                     {{ $offeringCount >= 1 ? 'disabled' : '' }}>
-                                <i class="fas fa-plus"></i> Add Offering
+                                <i class="fas fa-plus"></i> Add 
                             </button>
                         @endif
                     </div>
@@ -305,7 +305,7 @@
         <div class="page-card">
             <div class="card-header-gradient">
                 <div class="card-header-row">
-                    <h2 class="card-header-title"><i class="fas fa-list"></i> All Offerings</h2>
+                    <h2 class="card-header-title"><i class="fas fa-list"></i> All </h2>
                     <span class="table-count">Total: {{ $offerings->count() }}</span>
                 </div>
             </div>
