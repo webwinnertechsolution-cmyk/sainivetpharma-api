@@ -167,6 +167,21 @@
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
     .modal-overlay.show { display: flex; }
 
+        .form-check.form-switch {
+    width: 61%;
+    margin-left: 42px!important;
+}
+    .form-check .form-check-label {
+    display: block;
+    margin-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
+    font-size: 9px!important;
+}
+
+    
     @media (max-width: 768px) {
         .two-col { grid-template-columns: 1fr; }
         .btn-group-custom { flex-direction: column-reverse; }
