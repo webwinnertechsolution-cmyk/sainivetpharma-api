@@ -223,7 +223,19 @@
     }
     .empty-state i { font-size: 48px; margin-bottom: 12px; display: block; color: #d1d5db; opacity: 0.5; }
     .empty-state p { font-size: 13px; }
-
+    .form-check.form-switch {
+    width: 61%;
+    margin-left: 42px!important;
+}
+    .form-check .form-check-label {
+    display: block;
+    margin-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
+    font-size: 9px!important;
+}
     /* RESPONSIVE */
     @media (max-width: 768px) {
         .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
