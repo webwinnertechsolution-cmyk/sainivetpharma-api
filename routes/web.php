@@ -28,7 +28,7 @@ Route::get('/shop-new', [FrontendController::class, 'shopNew'])->name('shop-new'
 Route::get('/blog', [FrontendController::class, 'blog'])->name('frontend.blog');
 
 // Route::get('/blog/tag/{slug}', [FrontendController::class, 'blogTag'])->name('frontend.blog.tag');
-Route::get('/product/{slug}', [FrontendController::class, 'productDetail'])->name('product.detail');
+
 
 
 // Shopify-style collection routes
@@ -342,24 +342,20 @@ Route::post('/brand/delete/{id}', [BackendController::class, 'brandDelete'])->na
 // ============================================
 // PRODUCT MANAGEMENT ROUTES
 // ============================================
-// Add these routes to your web.php inside the admin group
 
 Route::get('/product', [BackendController::class, 'product'])->name('product');
 Route::post('/product/store', [BackendController::class, 'productStore'])->name('product.store');
-// ✅ YEH PEHLE RAKHO — specific routes
-Route::get('/product/create', [BackendController::class, 'productCreate'])->name('product.create');
 
-// Phir yeh — wildcard route
-Route::get('/product/{slug}', [FrontendController::class, 'productDetail'])->name('product.detail');
+// ✅ SPECIFIC ROUTES PEHLE — create, edit
+Route::get('/product/create', [BackendController::class, 'productCreate'])->name('product.create');
 Route::get('/product/edit/{id}', [BackendController::class, 'productEdit'])->name('product.edit');
 Route::post('/product/update/{id}', [BackendController::class, 'productUpdate'])->name('product.update');
 Route::post('/product/delete/{id}', [BackendController::class, 'productDelete'])->name('product.delete');
-
-// Product Gallery Image Delete (AJAX)
 Route::post('/product/gallery-image/{id}', [BackendController::class, 'productDeleteGalleryImage'])->name('product.gallery.delete');
-
-// Product Variant Delete (AJAX)
 Route::post('/product/variant/{id}', [BackendController::class, 'productDeleteVariant'])->name('product.variant.delete');
+
+// ✅ WILDCARD ROUTE BAAD MEIN — yeh {slug} sab kuch catch karta hai
+Route::get('/product/{slug}', [FrontendController::class, 'productDetail'])->name('product.detail');
     // Quotation Management
     Route::get('/quotations', [\App\Http\Controllers\Admin\QuotationController::class, 'index'])->name('quotations.index');
     Route::get('/quotations/{id}', [\App\Http\Controllers\Admin\QuotationController::class, 'show'])->name('quotations.show');
