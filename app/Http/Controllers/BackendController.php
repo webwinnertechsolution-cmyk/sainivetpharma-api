@@ -4502,11 +4502,10 @@ public function product()
         return redirect()->route('login')->with('error', 'Please login first');
     }
     
-    $products = Product::with(['categories', 'tags', 'images'])->orderBy('created_at', 'desc')->get();
-    $categories = ProductCategory::orderBy('name', 'asc')->get();
-    $tags = ProductTag::orderBy('name', 'asc')->get();
+    $products = Product::with(['categories', 'tags', 'images', 'variants'])
+                       ->orderBy('created_at', 'desc')->get();
     
-    return view('backend.product', compact('products', 'categories', 'tags'));
+    return view('backend.product', compact('products'));
 }
 public function productEdit($id)
 {
@@ -4514,17 +4513,22 @@ public function productEdit($id)
         return redirect()->route('login')->with('error', 'Please login first');
     }
     
-    $product = Product::with(['categories', 'tags', 'images', 'variants'])->findOrFail($id);
-    $products = Product::with(['categories', 'tags', 'images'])->orderBy('created_at', 'desc')->get();
-    $categories = ProductCategory::orderBy('name', 'asc')->get();
-    $tags = ProductTag::orderBy('name', 'asc')->get();
+    $editProduct = Product::with(['categories', 'tags', 'images', 'variants'])->findOrFail($id);
+    $categories  = ProductCategory::orderBy('name', 'asc')->get();
+    $tags        = ProductTag::orderBy('name', 'asc')->get();
     
-    return view('backend.product', [
-        'products'    => $products,
-        'editProduct' => $product,
-        'categories'  => $categories,
-        'tags'        => $tags
-    ]);
+    return view('backend.product-edit', compact('editProduct', 'categories', 'tags'));
+}
+public function productCreate()
+{
+    if (!Session::has('user_id')) {
+        return redirect()->route('login')->with('error', 'Please login first');
+    }
+    
+    $categories = ProductCategory::orderBy('name', 'asc')->get();
+    $tags       = ProductTag::orderBy('name', 'asc')->get();
+    
+    return view('backend.product-edit', compact('categories', 'tags'));
 }
 public function productStore(Request $request)
 {
