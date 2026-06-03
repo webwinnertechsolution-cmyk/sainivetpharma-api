@@ -173,6 +173,11 @@
     vertical-align: top;
     margin-bottom: 0.5rem;
 }
+    .card-header-purple {
+    background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
+    padding: 12px 20px;
+    color: #ffffff;
+}
     /* RESPONSIVE */
     @media (max-width: 768px) {
         .page-title { font-size: 22px; }
@@ -199,7 +204,7 @@
     <div class="page-header">
         <div>
             <h1 class="page-title">
-                <i class="fas fa-tags" style="color: #7c3aed;"></i> Blog Tags Management
+                <i class="fas fa-tags" style="color: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);"></i> Blog Tags Management
             </h1>
             <p class="page-subtitle">Create and organize blog post tags</p>
         </div>
