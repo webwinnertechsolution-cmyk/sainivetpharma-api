@@ -110,6 +110,54 @@
     .form-check-label { font-size: 12px; color: #374151; font-weight: 500; margin: 0; cursor: pointer; }
     .form-switch .form-check-input { width: 36px; height: 18px; }
 
+    /* Checkbox Grid Styles */
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 10px;
+        margin-top: 8px;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        max-height: 240px;
+        overflow-y: auto;
+    }
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        background: white;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .checkbox-item:hover {
+        border-color: #1872B5;
+        background: #eff6ff;
+    }
+    .checkbox-item input[type="checkbox"] {
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        accent-color: #1872B5;
+        flex-shrink: 0;
+    }
+    .checkbox-item input[type="checkbox"]:checked + label {
+        color: #0a214f;
+        font-weight: 600;
+    }
+    .checkbox-item label {
+        cursor: pointer;
+        margin: 0;
+        font-size: 12px;
+        color: #374151;
+        flex: 1;
+        user-select: none;
+    }
+
     .cta-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
     .cta-option { display: flex; align-items: center; gap: 6px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; }
     .cta-option:has(input:checked) { border-color: #1872B5; background: #eff6ff; }
@@ -276,6 +324,7 @@
         .form-row-2, .form-row-3, .form-row-4 { grid-template-columns: 1fr; }
         .btn-group-custom { flex-direction: column-reverse; }
         .btn { width: 100%; justify-content: center; }
+        .checkbox-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
     }
 </style>
 
@@ -642,27 +691,32 @@
             </div>
             <div class="card-body">
                 <div class="form-row form-row-2">
+                    {{-- CATEGORIES AS CHECKBOXES --}}
                     <div class="form-group">
-                        <label class="form-label">Categories <small>Hold Ctrl/Cmd for multiple</small></label>
-                        <select class="form-select" name="categories[]" multiple style="height:110px;">
+                        <label class="form-label">Categories</label>
+                        <div class="checkbox-grid">
                             @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}"
-                                    {{ isset($editProduct) && $editProduct->categories->contains($cat->id) ? 'selected' : '' }}>
-                                    {{ $cat->name }}
-                                </option>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="cat-{{ $cat->id }}" name="categories[]" value="{{ $cat->id }}"
+                                        {{ isset($editProduct) && $editProduct->categories->contains($cat->id) ? 'checked' : '' }}>
+                                    <label for="cat-{{ $cat->id }}">{{ $cat->name }}</label>
+                                </div>
                             @endforeach
-                        </select>
+                        </div>
                     </div>
+
+                    {{-- TAGS AS CHECKBOXES --}}
                     <div class="form-group">
-                        <label class="form-label">Tags <small>Hold Ctrl/Cmd for multiple</small></label>
-                        <select class="form-select" name="tags[]" multiple style="height:110px;">
+                        <label class="form-label">Tags</label>
+                        <div class="checkbox-grid">
                             @foreach($tags as $tag)
-                                <option value="{{ $tag->id }}"
-                                    {{ isset($editProduct) && $editProduct->tags->contains($tag->id) ? 'selected' : '' }}>
-                                    {{ $tag->name }}
-                                </option>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="tag-{{ $tag->id }}" name="tags[]" value="{{ $tag->id }}"
+                                        {{ isset($editProduct) && $editProduct->tags->contains($tag->id) ? 'checked' : '' }}>
+                                    <label for="tag-{{ $tag->id }}">{{ $tag->name }}</label>
+                                </div>
                             @endforeach
-                        </select>
+                        </div>
                     </div>
                 </div>
 
