@@ -1,1041 +1,997 @@
 @extends('backend.layouts.layout')
+@section('title', 'Product Management')
 @section('content')
 
 <style>
-/* =============================================
-   SHOPIFY-STYLE VARIANT BUILDER
-   ============================================= */
-.variant-builder-wrap { font-family: inherit; }
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap');
 
-.vg-card {
-    background: #fff;
-    border: 1.5px solid #dde1e9;
-    border-radius: 10px;
-    margin-bottom: 14px;
-    overflow: hidden;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-.vg-card:hover { border-color: #5c6ac4; box-shadow: 0 2px 10px rgba(92,106,196,0.10); }
+    * { box-sizing: border-box; }
+    body { font-family: 'Nunito', sans-serif; background: #f5f7fa; }
 
-.vg-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 15px;
-    background: #f7f8fc;
-    border-bottom: 1px solid #dde1e9;
-}
-.vg-header input[type="text"] {
-    flex: 1;
-    border: 1.5px solid #dde1e9;
-    border-radius: 7px;
-    padding: 7px 12px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #1a2332;
-    background: #fff;
-    outline: none;
-    transition: border-color 0.2s;
-}
-.vg-header input[type="text"]:focus {
-    border-color: #5c6ac4;
-    box-shadow: 0 0 0 3px rgba(92,106,196,0.12);
-}
-.vg-header input::placeholder { font-weight: 400; color: #b0b8c4; }
-.vg-type-label {
-    font-size: 11px;
-    font-weight: 700;
-    color: #5c6ac4;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    white-space: nowrap;
-}
-.btn-vg-remove {
-    background: none;
-    border: none;
-    color: #c44b4b;
-    padding: 6px 9px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 15px;
-    line-height: 1;
-    transition: background 0.15s;
-    flex-shrink: 0;
-}
-.btn-vg-remove:hover { background: #fef0f0; }
+    .page-container { max-width: 1400px; margin: 0 auto; padding: 0; }
 
-.vg-options-area { padding: 13px 15px 10px; }
-.vg-tags-wrap {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    min-height: 36px;
-    align-items: center;
-    margin-bottom: 9px;
-}
-.vg-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: #eef0fd;
-    border: 1.5px solid #c5caf5;
-    color: #3a46a8;
-    border-radius: 20px;
-    padding: 4px 10px 4px 12px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: default;
-    animation: tagPop 0.15s ease;
-}
-@keyframes tagPop { from { transform: scale(0.85); opacity:0; } to { transform: scale(1); opacity:1; } }
-.vg-tag .tag-x {
-    background: none;
-    border: none;
-    padding: 0 0 0 2px;
-    cursor: pointer;
-    color: #8892d8;
-    font-size: 13px;
-    line-height: 1;
-    transition: color 0.15s;
-}
-.vg-tag .tag-x:hover { color: #c44b4b; }
-.vg-input-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-top: 3px;
-}
-.vg-opt-input {
-    flex: 1;
-    border: 1.5px dashed #c5caf5;
-    border-radius: 7px;
-    padding: 7px 12px;
-    font-size: 13px;
-    color: #1a2332;
-    background: #f9faff;
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-}
-.vg-opt-input:focus {
-    border-color: #5c6ac4;
-    border-style: solid;
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(92,106,196,0.10);
-}
-.vg-opt-input::placeholder { color: #b0b8c4; }
-.btn-add-opt {
-    background: #5c6ac4;
-    color: #fff;
-    border: none;
-    border-radius: 7px;
-    padding: 7px 15px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.15s;
-}
-.btn-add-opt:hover { background: #4959b8; }
-.vg-hint { font-size: 11.5px; color: #9aa2b4; margin-top: 6px; }
+    /* ── Header ── */
+    .page-header { margin-bottom: 14px; }
+    .page-title { font-family: 'Sora', sans-serif; font-size: 22px; font-weight: 800; color: #0a214f; margin-bottom: 4px; letter-spacing: -0.02em; }
+    .page-subtitle { font-size: 12px; color: #6b7280; font-weight: 500; }
 
-.btn-add-vg-type {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    background: #fff;
-    border: 2px dashed #5c6ac4;
-    color: #5c6ac4;
-    border-radius: 9px;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 4px;
-    transition: all 0.15s;
-}
-.btn-add-vg-type:hover { background: #f0f2fd; border-color: #4959b8; color: #4959b8; }
+    /* ── Alerts ── */
+    .alert-success {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        border: 1px solid #6ee7b7; color: #065f46;
+        padding: 10px 12px; border-radius: 8px; margin-bottom: 14px;
+        display: flex; align-items: center; justify-content: space-between;
+        font-weight: 500; font-size: 12px;
+    }
+    .alert-danger {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        border: 1px solid #fca5a5; color: #7f1d1d;
+        padding: 10px 12px; border-radius: 8px; margin-bottom: 14px;
+        display: flex; align-items: center; justify-content: space-between;
+        font-weight: 500; font-size: 12px;
+    }
+    .alert-validation {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        border: 1px solid #fca5a5; color: #7f1d1d;
+        padding: 10px 14px; border-radius: 8px; margin-bottom: 14px;
+        font-weight: 500; font-size: 12px;
+    }
+    .alert-validation ul { margin: 6px 0 0 16px; padding: 0; }
+    .alert-validation li { margin-bottom: 2px; }
 
-.gen-wrap {
-    background: #f4f6ff;
-    border: 1.5px solid #d5daf5;
-    border-radius: 10px;
-    margin-top: 18px;
-    overflow: hidden;
-    animation: fadeIn 0.25s ease;
+    /* ── Cards ── */
+    .page-card {
+        background: #ffffff; border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(10,33,79,0.08);
+        overflow: hidden; border: 1px solid #e5e7eb;
+        transition: all 0.3s ease; margin-bottom: 16px;
+    }
+    .page-card:hover { box-shadow: 0 12px 32px rgba(10,33,79,0.12); }
+
+    .card-header-gradient {
+        background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
+        padding: 12px 20px; color: #ffffff;
+    }
+    .card-header-warning {
+        background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%);
+        padding: 12px 20px; color: #ffffff;
+    }
+    .card-header-light {
+        background: #f9fafb; padding: 10px 16px;
+        border-bottom: 1.5px solid #e5e7eb;
+    }
+    .card-header-success {
+        background: linear-gradient(135deg, #065f46, #059669);
+        padding: 10px 16px; color: #ffffff;
+    }
+    .card-header-info {
+        background: linear-gradient(135deg, #1e40af, #3b82f6);
+        padding: 10px 16px; color: #ffffff;
+    }
+    .card-header-purple {
+        background: linear-gradient(135deg, #4c1d95, #7c3aed);
+        padding: 10px 16px; color: #ffffff;
+    }
+    .card-header-orange {
+        background: linear-gradient(135deg, #92400e, #d97706);
+        padding: 10px 16px; color: #ffffff;
+    }
+    .card-header-title {
+        font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700;
+        margin: 0; display: flex; align-items: center; gap: 8px;
+    }
+    .card-header-row { display: flex; justify-content: space-between; align-items: center; }
+    .table-count { font-size: 11px; background: rgba(255,255,255,0.2); color: #fff; padding: 3px 10px; border-radius: 20px; font-weight: 700; }
+    .card-header-light .card-header-title { color: #0a214f; font-size: 12px; }
+
+    .card-body { padding: 16px; }
+    .card-body-0 { padding: 0; }
+
+    /* ── Form Elements ── */
+    .form-label {
+        font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 700;
+        color: #0a214f; margin-bottom: 6px; display: block;
+    }
+    .form-label small { display: block; font-size: 10px; font-weight: 500; color: #6b7280; margin-top: 2px; }
+    .form-control, .form-select {
+        border: 1.5px solid #e5e7eb; border-radius: 6px;
+        padding: 7px 10px; font-size: 12px; font-family: 'Nunito', sans-serif;
+        transition: all 0.2s ease; width: 100%;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #1872B5; box-shadow: 0 0 0 3px rgba(24,114,181,0.1); outline: none;
+    }
+    .form-control.is-invalid { border-color: #ef4444; }
+    .invalid-feedback { color: #ef4444; font-size: 11px; margin-top: 4px; display: block; }
+    .form-group { margin-bottom: 12px; }
+    .form-row { display: grid; gap: 12px; }
+    .form-row-2 { grid-template-columns: 1fr 1fr; }
+    .form-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .form-row-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .form-hint { font-size: 10px; color: #9ca3af; margin-top: 3px; display: block; }
+    .slug-preview { background: #f1f5f9; padding: 7px 10px; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 11px; color: #1e40af; margin-top: 5px; border: 1px solid #e0e7ff; }
+
+    /* ── Form Check / Toggle ── */
+    .form-check { display: flex; align-items: center; gap: 8px; }
+    .form-check-input { width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: #1872B5; }
+    .form-check-label { font-size: 12px; color: #374151; font-weight: 500; margin: 0; cursor: pointer; }
+    .form-switch .form-check-input { width: 36px; height: 18px; }
+
+    /* CTA Radio */
+    .cta-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+    .cta-option { display: flex; align-items: center; gap: 6px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 6px 12px; cursor: pointer; transition: all 0.2s; }
+    .cta-option:has(input:checked) { border-color: #1872B5; background: #eff6ff; }
+    .cta-option input { accent-color: #1872B5; }
+    .cta-option label { font-size: 12px; font-weight: 600; color: #374151; cursor: pointer; margin: 0; }
+
+    hr { border: none; border-top: 1px solid #e5e7eb; margin: 12px 0; }
+    .text-danger { color: #ef4444; }
+    .section-divider { border: none; border-top: 2px dashed #e0e7ff; margin: 16px 0; }
+
+    /* ── Buttons ── */
+    .btn {
+        padding: 7px 14px; border-radius: 6px; font-family: 'Sora', sans-serif;
+        font-weight: 700; font-size: 11px; border: none; cursor: pointer;
+        transition: all 0.3s ease; display: inline-flex; align-items: center;
+        gap: 5px; text-decoration: none;
+    }
+    .btn-primary { background: linear-gradient(135deg, #1872B5, #2596e1); color: white; box-shadow: 0 4px 12px rgba(24,114,181,0.3); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(24,114,181,0.4); color: white; }
+    .btn-warning { background: linear-gradient(135deg, #b45309, #f59e0b); color: white; box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+    .btn-warning:hover { transform: translateY(-1px); color: white; }
+    .btn-secondary { background: #e5e7eb; color: #1f2937; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .btn-secondary:hover { background: #d1d5db; transform: translateY(-1px); }
+    .btn-danger { background: linear-gradient(135deg, #ef4444, #f87171); color: white; font-weight: 700; }
+    .btn-danger:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+    .btn-success { background: linear-gradient(135deg, #059669, #34d399); color: white; box-shadow: 0 4px 12px rgba(5,150,105,0.3); }
+    .btn-success:hover { transform: translateY(-1px); color: white; }
+    .btn-sm { padding: 4px 9px; font-size: 10px; }
+    .btn-group-custom { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; justify-content: flex-end; }
+
+    /* ── Image Preview ── */
+    .img-preview-box {
+        margin-top: 8px; display: inline-block; position: relative;
+        border: 1.5px solid #e5e7eb; border-radius: 8px; overflow: hidden;
+    }
+    .img-preview-box img { display: block; max-width: 180px; max-height: 130px; object-fit: cover; }
+    .img-preview-box .remove-btn {
+        position: absolute; top: 4px; right: 4px;
+        background: rgba(239,68,68,0.9); border: none; color: white;
+        border-radius: 4px; padding: 2px 7px; font-size: 10px; cursor: pointer;
+        font-family: 'Sora', sans-serif; font-weight: 700;
+    }
+    .img-label { font-size: 10px; color: #9ca3af; margin-top: 4px; display: block; }
+    .gallery-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .gallery-thumb { position: relative; width: 90px; }
+    .gallery-thumb img { width: 84px; height: 84px; object-fit: cover; border: 1.5px solid #e5e7eb; border-radius: 6px; display: block; }
+    .gallery-thumb .remove-btn { position: absolute; top: 2px; right: 8px; background: rgba(239,68,68,0.9); border: none; color: white; border-radius: 3px; padding: 1px 6px; font-size: 9px; cursor: pointer; }
+    .gallery-thumb .new-badge { position: absolute; bottom: 2px; left: 2px; background: #0ea5e9; color: white; font-size: 9px; padding: 1px 5px; border-radius: 3px; }
+    .video-thumb { width: 84px; height: 84px; background: #111827; border: 1.5px solid #e5e7eb; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .video-thumb span { font-size: 22px; }
+    .video-thumb small { color: #9ca3af; font-size: 9px; margin-top: 3px; }
+
+    /* ── Variant Builder ── */
+    .vg-card {
+        background: #fff; border: 1.5px solid #e0e7ff; border-radius: 10px;
+        margin-bottom: 10px; overflow: hidden;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .vg-card:hover { border-color: #6366f1; box-shadow: 0 2px 10px rgba(99,102,241,0.12); }
+    .vg-header {
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 14px; background: #f5f3ff; border-bottom: 1px solid #e0e7ff;
+    }
+    .vg-header input[type="text"] {
+        flex: 1; border: 1.5px solid #e0e7ff; border-radius: 6px;
+        padding: 6px 10px; font-size: 12px; font-weight: 600; color: #1a2332;
+        background: #fff; outline: none;
+    }
+    .vg-header input[type="text"]:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+    .vg-type-label { font-size: 10px; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; font-family: 'Sora', sans-serif; }
+    .btn-vg-remove { background: none; border: none; color: #ef4444; padding: 5px 8px; border-radius: 5px; cursor: pointer; font-size: 13px; transition: background 0.15s; flex-shrink: 0; }
+    .btn-vg-remove:hover { background: #fef2f2; }
+    .vg-options-area { padding: 12px 14px 10px; }
+    .vg-tags-wrap { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; align-items: center; margin-bottom: 8px; }
+    .vg-tag {
+        display: inline-flex; align-items: center; gap: 5px;
+        background: #eff6ff; border: 1.5px solid #bfdbfe; color: #1d4ed8;
+        border-radius: 20px; padding: 3px 10px 3px 10px;
+        font-size: 11px; font-weight: 600; cursor: default;
+        animation: tagPop 0.15s ease;
+    }
+    @keyframes tagPop { from { transform: scale(0.85); opacity:0; } to { transform: scale(1); opacity:1; } }
+    .vg-tag .tag-x { background: none; border: none; padding: 0 0 0 2px; cursor: pointer; color: #93c5fd; font-size: 11px; transition: color 0.15s; }
+    .vg-tag .tag-x:hover { color: #ef4444; }
+    .vg-input-row { display: flex; gap: 7px; align-items: center; margin-top: 3px; }
+    .vg-opt-input {
+        flex: 1; border: 1.5px dashed #bfdbfe; border-radius: 6px;
+        padding: 6px 10px; font-size: 12px; color: #1a2332; background: #f9faff;
+        outline: none; transition: all 0.2s;
+    }
+    .vg-opt-input:focus { border-color: #6366f1; border-style: solid; background: #fff; }
+    .btn-add-opt { background: #6366f1; color: #fff; border: none; border-radius: 6px; padding: 6px 13px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Sora', sans-serif; }
+    .btn-add-opt:hover { background: #4f46e5; }
+    .vg-hint { font-size: 10px; color: #9ca3af; margin-top: 5px; }
+    .btn-add-vg-type {
+        display: flex; align-items: center; justify-content: center; gap: 7px;
+        width: 100%; background: #fff; border: 2px dashed #6366f1; color: #6366f1;
+        border-radius: 8px; padding: 9px 16px; font-size: 12px; font-weight: 700;
+        cursor: pointer; margin-top: 4px; transition: all 0.15s; font-family: 'Sora', sans-serif;
+    }
+    .btn-add-vg-type:hover { background: #f5f3ff; }
+
+    /* Generated variants table */
+    .gen-wrap {
+        background: #f5f3ff; border: 1.5px solid #ddd6fe;
+        border-radius: 10px; margin-top: 14px; overflow: hidden;
+        animation: fadeIn 0.25s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+    .gen-head {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 14px; background: #ede9fe; border-bottom: 1px solid #ddd6fe;
+    }
+    .gen-head h6 { margin: 0; font-size: 12px; font-weight: 700; color: #4c1d95; text-transform: uppercase; letter-spacing: 0.04em; font-family: 'Sora', sans-serif; }
+    .gen-badge { background: #6366f1; color: #fff; font-size: 10px; font-weight: 700; border-radius: 12px; padding: 2px 9px; }
+    .gen-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .gen-table th { background: #ede9fe; font-size: 10px; font-weight: 700; color: #6366f1; text-transform: uppercase; letter-spacing: 0.05em; padding: 7px 12px; text-align: left; border-bottom: 1px solid #ddd6fe; font-family: 'Sora', sans-serif; }
+    .gen-table td { padding: 7px 12px; color: #1a2332; border-bottom: 1px solid #ede9fe; vertical-align: middle; }
+    .gen-table tr:last-child td { border-bottom: none; }
+    .gen-table tr:hover td { background: #f0ebff; }
+    .gen-name { font-weight: 700; color: #4c1d95; font-size: 11px; }
+    .gen-input { border: 1.5px solid #ddd6fe; border-radius: 5px; padding: 4px 8px; font-size: 11px; width: 100%; outline: none; background: #fff; }
+    .gen-input:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99,102,241,0.1); }
+    .gen-input.compare-price-input { border-color: #fecaca; background: #fff9f9; }
+    .gen-input.compare-price-input:focus { border-color: #ef4444; }
+    .compare-price-hint { font-size: 9px; color: #ef4444; margin-top: 2px; display: block; }
+    .gen-footer-note { padding: 7px 14px; background: #fff8e1; border-top: 1px solid #ddd6fe; font-size: 10px; color: #92400e; }
+
+    /* Variant image */
+    .variant-img-existing { width: 48px; height: 48px; object-fit: cover; border: 1.5px solid #ddd6fe; border-radius: 5px; margin-bottom: 4px; display: block; }
+    .variant-img-placeholder { width: 48px; height: 48px; background: #f5f3ff; border: 1.5px dashed #ddd6fe; border-radius: 5px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; font-size: 16px; }
+    .variant-img-input { border: 1.5px dashed #ddd6fe !important; background: #f9faff !important; padding: 2px 5px !important; font-size: 10px !important; cursor: pointer; }
+    .variant-img-preview { margin-top: 4px; display: none; }
+    .variant-img-preview img { width: 48px; height: 48px; object-fit: cover; border: 1.5px solid #34d399; border-radius: 5px; display: block; }
+    .variant-new-badge { font-size: 9px; color: #fff; background: #059669; border-radius: 3px; padding: 1px 5px; margin-top: 2px; display: inline-block; }
+
+    /* ── Extra Tabs ── */
+    .tab-item {
+        background: #fff; border: 1.5px solid #d1fae5; border-radius: 10px;
+        padding: 14px; margin-bottom: 10px; position: relative;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        animation: tabSlideIn 0.2s ease;
+    }
+    @keyframes tabSlideIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+    .tab-item:hover { border-color: #059669; box-shadow: 0 2px 10px rgba(5,150,105,0.10); }
+    .tab-header-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #d1fae5; }
+    .tab-number-badge { background: #059669; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Sora', sans-serif; }
+    .tab-label { font-size: 12px; font-weight: 700; color: #065f46; text-transform: uppercase; letter-spacing: 0.05em; flex: 1; font-family: 'Sora', sans-serif; }
+    .btn-remove-tab { background: none; border: none; color: #ef4444; padding: 3px 7px; border-radius: 5px; cursor: pointer; font-size: 12px; transition: background 0.15s; }
+    .btn-remove-tab:hover { background: #fef2f2; }
+    .btn-add-tab {
+        display: flex; align-items: center; justify-content: center; gap: 7px;
+        width: 100%; background: #fff; border: 2px dashed #059669; color: #059669;
+        border-radius: 8px; padding: 9px 16px; font-size: 12px; font-weight: 700;
+        cursor: pointer; margin-top: 4px; transition: all 0.15s; font-family: 'Sora', sans-serif;
+    }
+    .btn-add-tab:hover { background: #f0fdf4; }
+    .no-tabs-msg { text-align: center; padding: 24px; color: #9ca3af; font-size: 12px; }
+    .no-tabs-msg i { font-size: 26px; margin-bottom: 8px; display: block; color: #bbf7d0; }
+    .tab-ck-container { border: 1.5px solid #e5e7eb; border-radius: 6px; min-height: 140px; overflow: hidden; }
+    .tab-ck-container .ck-editor__editable { min-height: 140px; }
+
+    /* ── Table (product list) ── */
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead tr { background: #f9fafb; }
+    thead th { padding: 10px 12px; font-family: 'Sora', sans-serif; font-weight: 700; color: #0a214f; font-size: 11px; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
+    tbody tr { border-bottom: 1px solid #f3f4f6; transition: background 0.15s; }
+    tbody tr:hover { background: #f9fafb; }
+    tbody td { padding: 10px 12px; color: #374151; vertical-align: middle; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-family: 'Sora', sans-serif; font-weight: 700; }
+    .badge-id { background: #e0e7ff; color: #3730a3; font-size: 11px; padding: 4px 10px; }
+    .badge-success { background: #d1fae5; color: #065f46; }
+    .badge-secondary { background: #f3f4f6; color: #6b7280; }
+    .badge-warning { background: #fef3c7; color: #92400e; }
+    .badge-info { background: #dbeafe; color: #1e40af; }
+    .badge-danger { background: #fee2e2; color: #7f1d1d; }
+    .badge-primary { background: #dbeafe; color: #1e40af; }
+    .price-original { font-size: 10px; color: #9ca3af; text-decoration: line-through; display: block; }
+    .price-sale { font-weight: 700; color: #059669; font-size: 12px; }
+    .price-regular { font-weight: 600; color: #1f2937; font-size: 12px; }
+
+    /* ── Empty state ── */
+    .empty-state { text-align: center; padding: 40px 20px; color: #6b7280; }
+    .empty-state i { font-size: 36px; display: block; margin-bottom: 10px; opacity: 0.4; }
+    .empty-state p { font-size: 12px; margin: 0; }
+
+    /* ── Delete Modal ── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: 12px; width: 320px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .modal-box-header { background: linear-gradient(135deg, #ef4444, #f87171); padding: 12px 16px; color: white; display: flex; align-items: center; justify-content: space-between; }
+    .modal-box-header h6 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; margin: 0; }
+    .modal-close { background: none; border: none; color: white; font-size: 16px; cursor: pointer; }
+    .modal-box-body { padding: 20px 16px; text-align: center; }
+    .modal-box-body p { font-size: 12px; color: #374151; margin: 0 0 6px; }
+    .modal-box-body strong { color: #ef4444; font-size: 13px; }
+    .modal-box-body .note { font-size: 10px; color: #9ca3af; margin-top: 6px; }
+    .modal-box-footer { padding: 10px 16px; display: flex; gap: 8px; justify-content: center; border-top: 1px solid #f3f4f6; }
+
+    /* ── Section info tip ── */
+    .info-tip { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #1d4ed8; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 7px; }
+    .info-tip i { flex-shrink: 0; margin-top: 1px; }
+
+    /* ── SEO preview ── */
+    .seo-section { background: #f9fafb; border-radius: 8px; padding: 14px; }
+    .form-check.form-switch {
+    width: 61%;
+    margin-left: 42px!important;
 }
-@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
-.gen-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 11px 16px;
-    background: #eef0fd;
-    border-bottom: 1px solid #d5daf5;
-}
-.gen-head h6 {
-    margin: 0;
-    font-size: 12.5px;
-    font-weight: 700;
-    color: #3a46a8;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-.gen-badge {
-    background: #5c6ac4;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 12px;
-    padding: 2px 9px;
-}
-.gen-table { width: 100%; border-collapse: collapse; }
-.gen-table th {
-    background: #eef0fd;
-    font-size: 11px;
-    font-weight: 700;
-    color: #5c6ac4;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 8px 13px;
-    text-align: left;
-    border-bottom: 1px solid #d5daf5;
-}
-.gen-table td {
-    padding: 8px 13px;
-    font-size: 13px;
-    color: #1a2332;
-    border-bottom: 1px solid #e8ebf8;
-    vertical-align: middle;
-}
-.gen-table tr:last-child td { border-bottom: none; }
-.gen-table tr:hover td { background: #f0f2fd; }
-.gen-name { font-weight: 600; color: #2d3563; }
-.gen-input {
-    border: 1.5px solid #d5daf5;
-    border-radius: 6px;
-    padding: 5px 9px;
-    font-size: 13px;
-    width: 100%;
-    outline: none;
-    background: #fff;
-    color: #1a2332;
-    transition: border-color 0.15s;
-}
-.gen-input:focus {
-    border-color: #5c6ac4;
-    box-shadow: 0 0 0 2px rgba(92,106,196,0.12);
-}
-.gen-input.compare-price-input {
-    border-color: #f5c5c5;
-    background: #fff9f9;
-}
-.gen-input.compare-price-input:focus {
-    border-color: #e05c5c;
-    box-shadow: 0 0 0 2px rgba(224,92,92,0.12);
-}
-.compare-price-hint {
-    font-size: 10px;
-    color: #e05c5c;
-    margin-top: 3px;
+    .form-check .form-check-label {
     display: block;
+    margin-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
 }
-.no-combo-msg {
-    text-align: center;
-    padding: 22px 16px;
-    color: #9aa2b4;
-    font-size: 13px;
+    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
+    font-size: 9px!important;
 }
-
-/* ── Variant Image Cell ── */
-.variant-img-cell { min-width: 130px; }
-.variant-img-existing {
-    width: 56px;
-    height: 56px;
-    object-fit: cover;
-    border: 1.5px solid #c5caf5;
-    border-radius: 6px;
-    margin-bottom: 5px;
-    display: block;
-}
-.variant-img-input {
-    border: 1.5px dashed #c5caf5 !important;
-    background: #f9faff !important;
-    padding: 3px 6px !important;
-    font-size: 11px !important;
-    cursor: pointer;
-}
-.variant-img-input:hover { border-color: #5c6ac4 !important; }
-.variant-img-preview {
-    margin-top: 5px;
-    display: none;
-}
-.variant-img-preview img {
-    width: 56px;
-    height: 56px;
-    object-fit: cover;
-    border: 1.5px solid #20c997;
-    border-radius: 6px;
-    display: block;
-}
-.variant-img-new-badge {
-    font-size: 9px;
-    color: #fff;
-    background: #20c997;
-    border-radius: 3px;
-    padding: 1px 5px;
-    margin-top: 3px;
-    display: inline-block;
-}
-
-/* =============================================
-   EXTRA TABS STYLES
-   ============================================= */
-.tab-item {
-    background: #fff;
-    border: 1.5px solid #dde1e9 !important;
-    border-radius: 10px !important;
-    padding: 18px !important;
-    margin-bottom: 14px !important;
-    position: relative;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    animation: tabSlideIn 0.2s ease;
-}
-@keyframes tabSlideIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-.tab-item:hover {
-    border-color: #5c6ac4 !important;
-    box-shadow: 0 2px 10px rgba(92,106,196,0.10);
-}
-.tab-item .tab-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #eef0fd;
-}
-.tab-item .tab-number {
-    background: #5c6ac4;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-.tab-item .tab-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #3a46a8;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    flex: 1;
-}
-.btn-remove-tab {
-    background: none;
-    border: none;
-    color: #c44b4b;
-    padding: 4px 8px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.15s;
-    flex-shrink: 0;
-}
-.btn-remove-tab:hover { background: #fef0f0; }
-
-.btn-add-tab {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    background: #fff;
-    border: 2px dashed #20c997;
-    color: #20c997;
-    border-radius: 9px;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 4px;
-    transition: all 0.15s;
-}
-.btn-add-tab:hover { background: #f0fdf8; border-color: #1aab82; color: #1aab82; }
-
-.no-tabs-msg {
-    text-align: center;
-    padding: 24px 16px;
-    color: #9aa2b4;
-    font-size: 13px;
-}
-.no-tabs-msg i { font-size: 28px; margin-bottom: 8px; display: block; color: #c5e8df; }
-
-.tab-ck-container {
-    border: 1.5px solid #dde1e9;
-    border-radius: 7px;
-    min-height: 150px;
-    overflow: hidden;
-}
-.tab-ck-container .ck-editor__editable { min-height: 150px; }
-
-/* General */
-.table td { vertical-align: middle; }
-.gallery-img-wrap img { transition: opacity 0.2s; }
+    
+    @media (max-width: 768px) {
+        .form-row-2, .form-row-3, .form-row-4 { grid-template-columns: 1fr; }
+        .btn-group-custom { flex-direction: column-reverse; }
+        .btn { width: 100%; justify-content: center; }
+    }
 </style>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h2 class="mb-4"><i class="fas fa-boxes me-2"></i>Product Management</h2>
+<div class="page-container">
 
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show">
-                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-            @if($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <strong>Validation Errors:</strong>
-                    <ul class="mb-0">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
+    {{-- ── Header ── --}}
+    <div class="page-header">
+        <h1 class="page-title">📦 Product Management</h1>
+        <p class="page-subtitle">Add, edit and manage all your products</p>
+    </div>
 
-            <!-- ========== ADD / EDIT FORM ========== -->
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header {{ isset($editProduct) ? 'bg-warning text-dark' : 'bg-primary text-white' }}">
-                    <h5 class="mb-0">
-                        <i class="fas fa-{{ isset($editProduct) ? 'edit' : 'plus-circle' }} me-2"></i>
-                        {{ isset($editProduct) ? 'Edit: '.$editProduct->title : 'Add New Product' }}
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <form id="productForm"
-                          action="{{ isset($editProduct) ? route('product.update', $editProduct->id) : route('product.store') }}"
-                          method="POST" enctype="multipart/form-data">
-                        @csrf
+    {{-- ── Alerts ── --}}
+    @if(session('success'))
+        <div class="alert-success">
+            <span>✅ {{ session('success') }}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert-danger">
+            <span>⚠️ {{ session('error') }}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if($errors->any())
+        <div class="alert-validation">
+            <strong>⚠️ Validation Errors:</strong>
+            <ul>@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
+        </div>
+    @endif
 
-                        <!-- ── Basic Info ── -->
-                        <div class="card mb-3">
-                            <div class="card-header bg-light">
-                                <strong><i class="fas fa-info-circle me-2"></i>Basic Information</strong>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Product Title <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                               id="title" name="title"
-                                               value="{{ old('title', $editProduct->title ?? '') }}"
-                                               placeholder="e.g. Premium Conveyor Belt Guard" required>
-                                        @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                    </div>
+    {{-- ══════════════════════════════════════════
+         FORM CARD
+    ══════════════════════════════════════════ --}}
+    <div class="page-card">
+        <div class="{{ isset($editProduct) ? 'card-header-warning' : 'card-header-gradient' }}">
+            <h2 class="card-header-title">
+                @if(isset($editProduct))
+                    <i class="fas fa-pen"></i> Edit Product: {{ Str::limit($editProduct->title, 45) }}
+                @else
+                    <i class="fas fa-plus-circle"></i> Add New Product
+                @endif
+            </h2>
+        </div>
 
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">URL Slug <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('slug') is-invalid @enderror"
-                                               id="slug" name="slug"
-                                               value="{{ old('slug', $editProduct->slug ?? '') }}"
-                                               placeholder="url-friendly-slug" required>
-                                        @error('slug')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                        <div class="mt-2" style="background:#e9ecef;padding:10px;border-radius:5px;font-family:monospace;font-size:12px;">
-                                            Preview URL: <span id="slug-text">{{ isset($editProduct) && $editProduct->slug ? url('product/'.$editProduct->slug) : 'Will generate from title' }}</span>
-                                        </div>
-                                    </div>
+        <div class="card-body">
+            <form id="productForm"
+                  action="{{ isset($editProduct) ? route('product.update', $editProduct->id) : route('product.store') }}"
+                  method="POST" enctype="multipart/form-data">
+                @csrf
 
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Overview / Short Description</label>
-                                        <textarea class="form-control" name="overview" rows="2"
-                                                  placeholder="Brief product description for listings">{{ old('overview', $editProduct->overview ?? '') }}</textarea>
-                                    </div>
-
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Full Description <span class="text-danger">*</span></label>
-                                        <textarea class="form-control @error('description') is-invalid @enderror"
-                                                  id="editor" name="description" rows="6">{{ old('description', $editProduct->description ?? '') }}</textarea>
-                                        @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                    </div>
-                                </div>
-                            </div>
+                {{-- ════════════════ BASIC INFO ════════════════ --}}
+                <div class="page-card">
+                    <div class="card-header-light">
+                        <h3 class="card-header-title"><i class="fas fa-info-circle text-primary"></i> Basic Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label">Product Title <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                   id="title" name="title"
+                                   value="{{ old('title', $editProduct->title ?? '') }}"
+                                   placeholder="e.g. Premium Conveyor Belt Guard" required>
+                            @error('title')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
-                        <!-- ══════════════════════════════════════════
-                             EXTRA TABS
-                             ══════════════════════════════════════════ -->
-                        <div class="card mb-3">
-                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                <strong><i class="fas fa-layer-group me-2 text-success"></i>Extra Tabs
-                                    <small class="text-muted fw-normal ms-2" style="font-size:12px;">(Specifications, Features, etc.)</small>
-                                </strong>
-                                <button type="button" class="btn btn-sm btn-success" onclick="addTab()">
-                                    <i class="fas fa-plus me-1"></i> Add Tab
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <div id="tabs-container">
-                                    @php
-                                        $existingTabs = [];
-                                        if (isset($editProduct) && $editProduct->extra_tabs) {
-                                            $decoded = is_array($editProduct->extra_tabs)
-                                                ? $editProduct->extra_tabs
-                                                : json_decode($editProduct->extra_tabs, true);
-                                            $existingTabs = $decoded ?: [];
-                                        }
-                                    @endphp
-
-                                    @foreach($existingTabs as $ti => $tab)
-                                    <div class="tab-item" id="tab-item-{{ $ti }}">
-                                        <div class="tab-header">
-                                            <span class="tab-number">{{ $ti + 1 }}</span>
-                                            <span class="tab-label">Tab {{ $ti + 1 }}</span>
-                                            <button type="button" class="btn-remove-tab" onclick="removeTab(this)" title="Remove Tab">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label fw-semibold">
-                                                <i class="fas fa-heading me-1 text-primary"></i> Tab Title
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="text" class="form-control"
-                                                   name="tab_titles[]"
-                                                   value="{{ $tab['title'] ?? '' }}"
-                                                   placeholder="e.g. Specifications, Features">
-                                        </div>
-                                        <div>
-                                            <label class="form-label fw-semibold">
-                                                <i class="fas fa-align-left me-1 text-primary"></i> Tab Content
-                                            </label>
-                                            <input type="hidden"
-                                                   name="tab_contents[]"
-                                                   id="tab-hidden-{{ $ti }}"
-                                                   value="{{ $tab['content'] ?? '' }}">
-                                            <div id="tab-editor-{{ $ti }}"
-                                                 class="tab-ck-container"
-                                                 data-hidden-id="tab-hidden-{{ $ti }}"></div>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                </div>
-
-                                <div id="no-tabs-msg" class="no-tabs-msg"
-                                     style="{{ count($existingTabs) > 0 ? 'display:none;' : '' }}">
-                                    <i class="fas fa-layer-group"></i>
-                                    No extra tabs added yet.<br>
-                                    <span style="font-size:12px;">Click <strong>+ Add Tab</strong> to add tabs like Specifications, Features, FAQs, etc.</span>
-                                </div>
-
-                                <button type="button" class="btn-add-tab mt-2" onclick="addTab()">
-                                    <i class="fas fa-plus-circle"></i> Add New Tab
-                                </button>
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">URL Slug <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('slug') is-invalid @enderror"
+                                   id="slug" name="slug"
+                                   value="{{ old('slug', $editProduct->slug ?? '') }}"
+                                   placeholder="url-friendly-slug" required>
+                            @error('slug')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            <div class="slug-preview">🔗 <span id="slug-text">{{ isset($editProduct) && $editProduct->slug ? url('product/'.$editProduct->slug) : 'Will generate from title' }}</span></div>
                         </div>
 
-                        <!-- ── Images ── -->
-                        <div class="card mb-3">
-                            <div class="card-header bg-light">
-                                <strong><i class="fas fa-images me-2"></i>Product Images</strong>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Featured Image</label>
-                                        <input type="file" class="form-control @error('featured_image') is-invalid @enderror"
-                                               name="featured_image" accept="image/*"
-                                               onchange="previewImage(event,'featured')">
-                                        @error('featured_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                                        @if(isset($editProduct) && $editProduct->featured_image)
-                                            <div class="mt-2 position-relative d-inline-block" id="featured-current-wrap">
-                                                <img src="{{ asset('uploads/products/'.$editProduct->featured_image) }}"
-                                                     style="max-width:200px;max-height:150px;border:1px solid #ddd;padding:5px;border-radius:4px;">
-                                                <button type="button" class="btn btn-danger btn-sm position-absolute"
-                                                        style="top:0;right:0;padding:2px 7px;font-size:11px;border-radius:0 4px 0 4px;"
-                                                        onclick="removeFeaturedImage()"><i class="fas fa-times"></i></button>
-                                                <input type="hidden" name="remove_featured_image" id="remove_featured_image" value="0">
-                                                <p class="text-muted small mt-1 mb-0">Current Featured Image</p>
-                                            </div>
-                                        @endif
-                                        <div id="featured-preview" class="mt-2" style="display:none;">
-                                            <img id="featured-img" src="" style="max-width:200px;max-height:150px;border:1px solid #ddd;padding:5px;border-radius:4px;">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Featured Image Alt Tag</label>
-                                        <input type="text" class="form-control" name="featured_image_alt"
-                                               value="{{ old('featured_image_alt', $editProduct->featured_image_alt ?? '') }}"
-                                               placeholder="Image description for SEO">
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Gallery Images (Multiple)</label>
-                                        <input type="file" class="form-control" name="gallery_images[]"
-                                               accept="image/*,video/mp4,video/webm,video/ogg,video/mov"
-                                               multiple onchange="previewGalleryImages(event)">
-                                        <small class="text-muted">Hold Ctrl/Cmd to select multiple</small>
-                                        <div id="gallery-preview" class="mt-3 d-flex flex-wrap gap-2"></div>
-                                        @if(isset($editProduct) && $editProduct->images->count() > 0)
-                                            <div class="mt-3">
-                                                <p class="fw-semibold mb-2">Existing Gallery Images:</p>
-                                                <div class="d-flex flex-wrap gap-2">
-                                                    @foreach($editProduct->images as $img)
-                                                    <div class="position-relative gallery-img-wrap" id="gallery-img-{{ $img->id }}" style="width:110px;">
-                                                        @if(($img->type ?? 'image') === 'video')
-                                                            <div style="width:100px;height:100px;background:#1a1a1a;border:1px solid #ddd;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-direction:column;">
-                                                                <span style="font-size:28px;">▶️</span>
-                                                                <span style="color:#fff;font-size:9px;margin-top:4px;">Video</span>
-                                                            </div>
-                                                        @else
-                                                            <img src="{{ asset('uploads/products/gallery/'.$img->image) }}"
-                                                                 style="width:100px;height:100px;object-fit:cover;border:1px solid #ddd;padding:3px;border-radius:4px;display:block;">
-                                                        @endif
-                                                        <button type="button" class="btn btn-danger btn-sm position-absolute"
-                                                                style="top:0;right:10px;padding:2px 6px;font-size:10px;border-radius:0 4px 0 4px;"
-                                                                onclick="deleteGalleryImage({{ $img->id }})">
-                                                            <i class="fas fa-times"></i>
-                                                        </button>
-                                                    </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Overview / Short Description</label>
+                            <textarea class="form-control" name="overview" rows="2"
+                                      placeholder="Brief product description for listings">{{ old('overview', $editProduct->overview ?? '') }}</textarea>
                         </div>
 
-                        <!-- ── Pricing ── -->
-                        <div class="card mb-3">
-                            <div class="card-header bg-light">
-                                <strong><i class="fas fa-dollar-sign me-2"></i>Pricing & Inventory</strong>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">Regular Price</label>
-                                        <input type="number" class="form-control" name="price"
-                                               value="{{ old('price', $editProduct->price ?? '') }}" step="0.01" min="0" placeholder="0.00">
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">Sale Price</label>
-                                        <input type="number" class="form-control" name="sale_price"
-                                               value="{{ old('sale_price', $editProduct->sale_price ?? '') }}" step="0.01" min="0" placeholder="0.00">
-                                        <small class="text-muted">Leave empty if not on sale</small>
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">SKU</label>
-                                        <input type="text" class="form-control" name="sku"
-                                               value="{{ old('sku', $editProduct->sku ?? '') }}" placeholder="PROD-001">
-                                    </div>
-                                    <div class="col-md-3 mb-3">
-                                        <label class="form-label">Stock Quantity</label>
-                                        <input type="number" class="form-control" name="stock_quantity"
-                                               value="{{ old('stock_quantity', $editProduct->stock_quantity ?? 0) }}" min="0">
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">Full Description <span class="text-danger">*</span></label>
+                            <textarea class="form-control @error('description') is-invalid @enderror"
+                                      id="editor" name="description" rows="6">{{ old('description', $editProduct->description ?? '') }}</textarea>
+                            @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-
-                        <!-- ── Variants ── -->
-                        <div class="card mb-3">
-                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                <strong><i class="fas fa-sliders-h me-2"></i>Product Variants</strong>
-                            </div>
-                            <div class="card-body variant-builder-wrap">
-                                <p class="text-muted small mb-3">
-                                    <i class="fas fa-lightbulb text-warning me-1"></i>
-                                    First add a <strong>Variant Type</strong> (such as Size, Color), then add <strong>Options</strong>.
-                                    Combinations will be auto-generated below with individual image upload per variant.
-                                </p>
-
-                                <div id="vg-container">
-                                    @if(isset($editProduct) && $editProduct->variants->count() > 0)
-                                        @php
-                                            $groups = [];
-                                            foreach($editProduct->variants as $v) {
-                                                $attrs = is_array($v->attributes) ? $v->attributes : [];
-                                                if(!empty($attrs)) {
-                                                    foreach($attrs as $k => $val) { $groups[$k][] = $val; }
-                                                } else {
-                                                    $groups['Option'][] = $v->name;
-                                                }
-                                            }
-                                            $groups = array_map('array_unique', $groups);
-                                        @endphp
-                                        @foreach($groups as $typeName => $options)
-                                        @php $gi = $loop->index; @endphp
-                                        <div class="vg-card" data-gid="{{ $gi }}">
-                                            <div class="vg-header">
-                                                <span class="vg-type-label">Type</span>
-                                                <input type="text" name="variant_types[]"
-                                                       value="{{ ucfirst($typeName) }}"
-                                                       placeholder="e.g. Size, Color, Material"
-                                                       onchange="regenerate()">
-                                                <button type="button" class="btn-vg-remove" onclick="removeGroup(this)">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </div>
-                                            <div class="vg-options-area">
-                                                <div class="vg-tags-wrap" id="tags-{{ $gi }}">
-                                                    @foreach($options as $opt)
-                                                        <span class="vg-tag" data-val="{{ $opt }}">
-                                                            {{ $opt }}
-                                                            <button type="button" class="tag-x" onclick="removeTag(this)">
-                                                                <i class="fas fa-times"></i>
-                                                            </button>
-                                                            <input type="hidden" name="variant_options[{{ $gi }}][]" value="{{ $opt }}">
-                                                        </span>
-                                                    @endforeach
-                                                </div>
-                                                <div class="vg-input-row">
-                                                    <input type="text" class="vg-opt-input"
-                                                           placeholder="Type an option and press Enter"
-                                                           onkeydown="handleKey(event,this,{{ $gi }})"
-                                                           data-gid="{{ $gi }}">
-                                                    <button type="button" class="btn-add-opt" onclick="addOptBtn(this,{{ $gi }})">
-                                                        <i class="fas fa-plus me-1"></i>Add
-                                                    </button>
-                                                </div>
-                                                <div class="vg-hint"><i class="fas fa-info-circle me-1"></i>Press <strong>Enter</strong> or click <strong>Add</strong>.</div>
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-
-                                <button type="button" class="btn-add-vg-type" onclick="addGroup()">
-                                    <i class="fas fa-plus-circle"></i> Add Variant Type (Size, Color, etc.)
-                                </button>
-
-                                <!-- Generated Variants Table -->
-                                <div id="gen-wrap" class="gen-wrap" style="display:none;">
-                                    <div class="gen-head">
-                                        <h6><i class="fas fa-th me-2"></i>Generated Variant Combinations</h6>
-                                        <span class="gen-badge" id="gen-badge">0</span>
-                                    </div>
-                                    <div style="overflow-x:auto;">
-                                        <table class="gen-table">
-                                            <thead>
-                                                <tr>
-                                                    <th style="min-width:160px;">Variant</th>
-                                                    <th style="min-width:110px;">SKU</th>
-                                                    <th style="min-width:110px;">Price (₹)</th>
-                                                    <th style="min-width:130px;">Compare Price (₹)</th>
-                                                    <th style="min-width:90px;">Stock</th>
-                                                    <th style="min-width:140px;">
-                                                        <i class="fas fa-image me-1"></i>Image
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="gen-tbody"></tbody>
-                                        </table>
-                                    </div>
-                                    <div style="padding:8px 14px;background:#fff8e1;border-top:1px solid #d5daf5;font-size:11.5px;color:#b07d00;">
-                                        <i class="fas fa-info-circle me-1"></i>
-                                        <strong>Compare Price</strong> = Original/MRP price (shown strikethrough). Should be higher than sale price.
-                                        &nbsp;|&nbsp;
-                                        <i class="fas fa-image me-1 text-primary"></i>
-                                        <strong>Variant Image</strong> = Upload a unique image per variant (e.g. different color photos).
-                                    </div>
-                                </div>
-
-                                @if(isset($editProduct))
-                                    <script id="existing-variants-data" type="application/json">
-                                        {!! json_encode($editProduct->variants->mapWithKeys(function($v) {
-                                            return [$v->name => [
-                                                'sku'           => $v->sku ?? '',
-                                                'price'         => $v->price ?? '',
-                                                'compare_price' => $v->compare_price ?? '',
-                                                'stock'         => $v->stock_quantity ?? 0,
-                                                'image'         => $v->image
-                                                                    ? asset('uploads/products/variants/'.$v->image)
-                                                                    : ''
-                                            ]];
-                                        })) !!}
-                                    </script>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- ── Categories & Tags ── -->
-                        <div class="card mb-3">
-                            <div class="card-header bg-light">
-                                <strong><i class="fas fa-tags me-2"></i>Categories & Tags</strong>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Categories</label>
-                                        <select class="form-select" name="categories[]" multiple style="height:120px;">
-                                            @foreach($categories as $cat)
-                                                <option value="{{ $cat->id }}"
-                                                    {{ isset($editProduct) && $editProduct->categories->contains($cat->id) ? 'selected' : '' }}>
-                                                    {{ $cat->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <small class="text-muted">Hold Ctrl/Cmd for multiple</small>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Tags</label>
-                                        <select class="form-select" name="tags[]" multiple style="height:120px;">
-                                            @foreach($tags as $tag)
-                                                <option value="{{ $tag->id }}"
-                                                    {{ isset($editProduct) && $editProduct->tags->contains($tag->id) ? 'selected' : '' }}>
-                                                    {{ $tag->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <small class="text-muted">Hold Ctrl/Cmd for multiple</small>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label">Status <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="status" required>
-                                            <option value="draft"     {{ old('status', $editProduct->status ?? '') == 'draft'     ? 'selected' : '' }}>Draft</option>
-                                            <option value="published" {{ old('status', $editProduct->status ?? '') == 'published' ? 'selected' : '' }}>Published</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label fw-bold">
-                                            <i class="fas fa-mouse-pointer me-1 text-primary"></i>CTA Button (Frontend)
-                                        </label>
-                                        @php $ctaVal = old('cta_button', $editProduct->cta_button ?? 'add_to_cart'); @endphp
-                                        <div class="d-flex gap-3 mt-2">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="cta_button"
-                                                       id="cta_add_to_cart" value="add_to_cart"
-                                                       {{ $ctaVal === 'add_to_cart' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="cta_add_to_cart">🛒 Add to Cart</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="cta_button"
-                                                       id="cta_enquire_now" value="enquire_now"
-                                                       {{ $ctaVal === 'enquire_now' ? 'checked' : '' }}>
-                                                <label class="form-check-label" for="cta_enquire_now">✉️ Enquire Now</label>
-                                            </div>
-                                        </div>
-                                        <small class="text-muted">Frontend pe sirf yahi button dikhega</small>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label class="form-label d-block">Featured</label>
-                                        <div class="form-check form-switch mt-2">
-                                            <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured"
-                                                   {{ isset($editProduct) && $editProduct->is_featured ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="is_featured">Mark as featured</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ── SEO ── -->
-                        <div class="card mb-3">
-                            <div class="card-header bg-light">
-                                <strong><i class="fas fa-search me-2"></i>SEO Settings</strong>
-                            </div>
-                            <div class="card-body" style="background:#f8f9fa;">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Meta Title</label>
-                                        <input type="text" class="form-control" name="meta_title"
-                                               value="{{ old('meta_title', $editProduct->meta_title ?? '') }}"
-                                               placeholder="Leave empty to use product title">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">Meta Keywords</label>
-                                        <input type="text" class="form-control" name="meta_keywords"
-                                               value="{{ old('meta_keywords', $editProduct->meta_keywords ?? '') }}"
-                                               placeholder="keyword1, keyword2">
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Meta Description</label>
-                                        <textarea class="form-control" name="meta_description" rows="2">{{ old('meta_description', $editProduct->meta_description ?? '') }}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ── OG ── -->
-                        <div class="card mb-3">
-                            <div class="card-header bg-light">
-                                <strong><i class="fas fa-share-alt me-2"></i>Social Media (Open Graph)</strong>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">OG Title</label>
-                                        <input type="text" class="form-control" name="og_title"
-                                               value="{{ old('og_title', $editProduct->og_title ?? '') }}"
-                                               placeholder="Title for social media sharing">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label">OG Image</label>
-                                        <input type="file" class="form-control" name="og_image"
-                                               accept="image/*" onchange="previewImage(event,'og')">
-                                        <small class="text-muted">1200x630px recommended</small>
-                                        @if(isset($editProduct) && $editProduct->og_image)
-                                            <div class="mt-2 position-relative d-inline-block" id="og-current-wrap">
-                                                <img src="{{ asset('uploads/products/og/'.$editProduct->og_image) }}"
-                                                     style="max-width:200px;max-height:150px;border:1px solid #ddd;padding:5px;border-radius:4px;">
-                                                <button type="button" class="btn btn-danger btn-sm position-absolute"
-                                                        style="top:0;right:0;padding:2px 7px;font-size:11px;border-radius:0 4px 0 4px;"
-                                                        onclick="removeOgImage()"><i class="fas fa-times"></i></button>
-                                                <input type="hidden" name="remove_og_image" id="remove_og_image" value="0">
-                                            </div>
-                                        @endif
-                                        <div id="og-preview" class="mt-2" style="display:none;">
-                                            <img id="og-img" src="" style="max-width:200px;max-height:150px;border:1px solid #ddd;padding:5px;border-radius:4px;">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">OG Description</label>
-                                        <textarea class="form-control" name="og_description" rows="2">{{ old('og_description', $editProduct->og_description ?? '') }}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- ── Submit ── -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            @if(isset($editProduct))
-                                <a href="{{ route('product') }}" class="btn btn-secondary me-md-2">
-                                    <i class="fas fa-times"></i> Cancel Edit
-                                </a>
-                                <button type="submit" id="submitBtn" class="btn btn-success">
-                                    <i class="fas fa-save"></i> Update Product
-                                </button>
-                            @else
-                                <button type="reset" class="btn btn-secondary me-md-2" onclick="resetTabsForm()">
-                                    <i class="fas fa-redo"></i> Reset
-                                </button>
-                                <button type="submit" id="submitBtn" class="btn btn-primary">
-                                    <i class="fas fa-plus"></i> Add Product
-                                </button>
-                            @endif
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- ========== PRODUCT LIST ========== -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-dark text-white">
-                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Products</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width:50px;">ID</th>
-                                    <th style="width:100px;">Image</th>
-                                    <th>Title</th>
-                                    <th style="width:100px;">Price</th>
-                                    <th style="width:80px;">Stock</th>
-                                    <th>Categories</th>
-                                    <th style="width:100px;">Status</th>
-                                    <th style="width:200px;" class="text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($products as $product)
-                                <tr>
-                                    <td class="text-center">{{ $product->id }}</td>
-                                    <td>
-                                        @if($product->featured_image)
-                                            <img src="{{ asset('uploads/products/'.$product->featured_image) }}"
-                                                 style="width:80px;height:60px;object-fit:cover;" class="img-thumbnail">
-                                        @else
-                                            <span class="badge bg-secondary">No Image</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        {{ Str::limit($product->title, 40) }}
-                                        @if($product->is_featured)
-                                            <span class="badge bg-warning text-dark ms-1">Featured</span>
-                                        @endif
-                                        @php
-                                            $tabsArr = $product->extra_tabs
-                                                ? (is_array($product->extra_tabs)
-                                                    ? $product->extra_tabs
-                                                    : json_decode($product->extra_tabs, true))
-                                                : [];
-                                        @endphp
-                                        @if(!empty($tabsArr))
-                                            <span class="badge bg-info text-dark ms-1">
-                                                <i class="fas fa-layer-group me-1"></i>{{ count($tabsArr) }} Tabs
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($product->sale_price)
-                                            <s class="text-muted">${{ number_format($product->price, 2) }}</s><br>
-                                            <strong class="text-success">${{ number_format($product->sale_price, 2) }}</strong>
-                                        @elseif($product->price)
-                                            ${{ number_format($product->price, 2) }}
-                                        @else
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge {{ $product->stock_quantity > 0 ? 'bg-success' : 'bg-danger' }}">
-                                            {{ $product->stock_quantity }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        @foreach($product->categories as $cat)
-                                            <span class="badge bg-primary mb-1">{{ $cat->name }}</span><br>
-                                        @endforeach
-                                        @if($product->categories->count() === 0)
-                                            <span class="text-muted">-</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <span class="badge {{ $product->status === 'published' ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ ucfirst($product->status) }}
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="{{ route('product.edit', $product->id) }}" class="btn btn-sm btn-warning mb-1">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                        <form action="{{ route('product.delete', $product->id) }}" method="POST"
-                                              class="d-inline" onsubmit="return confirm('Delete this product?');">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-danger mb-1">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-5 text-muted">
-                                        <i class="fas fa-boxes fa-3x mb-3 d-block"></i>
-                                        No products yet. Create your first product above!
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
                     </div>
                 </div>
-            </div>
 
+                {{-- ════════════════ EXTRA TABS ════════════════ --}}
+                <div class="page-card">
+                    <div class="card-header-success">
+                        <div class="card-header-row">
+                            <h3 class="card-header-title"><i class="fas fa-layer-group"></i> Extra Tabs <small style="font-size:10px;font-weight:500;opacity:0.8;">(Specifications, Features, etc.)</small></h3>
+                            <button type="button" class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);" onclick="addTab()">
+                                <i class="fas fa-plus"></i> Add Tab
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="tabs-container">
+                            @php
+                                $existingTabs = [];
+                                if (isset($editProduct) && $editProduct->extra_tabs) {
+                                    $decoded = is_array($editProduct->extra_tabs)
+                                        ? $editProduct->extra_tabs
+                                        : json_decode($editProduct->extra_tabs, true);
+                                    $existingTabs = $decoded ?: [];
+                                }
+                            @endphp
+
+                            @foreach($existingTabs as $ti => $tab)
+                            <div class="tab-item" id="tab-item-{{ $ti }}">
+                                <div class="tab-header-row">
+                                    <span class="tab-number-badge">{{ $ti + 1 }}</span>
+                                    <span class="tab-label">Tab {{ $ti + 1 }}</span>
+                                    <button type="button" class="btn-remove-tab" onclick="removeTab(this)">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="fas fa-heading me-1" style="color:#6366f1;"></i> Tab Title <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="tab_titles[]"
+                                           value="{{ $tab['title'] ?? '' }}"
+                                           placeholder="e.g. Specifications, Features, How to Use">
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label class="form-label"><i class="fas fa-align-left me-1" style="color:#6366f1;"></i> Tab Content</label>
+                                    <input type="hidden" name="tab_contents[]" id="tab-hidden-{{ $ti }}" value="{{ $tab['content'] ?? '' }}">
+                                    <div id="tab-editor-{{ $ti }}" class="tab-ck-container" data-hidden-id="tab-hidden-{{ $ti }}"></div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+
+                        <div id="no-tabs-msg" class="no-tabs-msg" style="{{ count($existingTabs) > 0 ? 'display:none;' : '' }}">
+                            <i class="fas fa-layer-group"></i>
+                            No extra tabs yet.<br>
+                            <span style="font-size:11px;">Click <strong>+ Add Tab</strong> to add Specifications, Features, FAQs, etc.</span>
+                        </div>
+
+                        <button type="button" class="btn-add-tab" onclick="addTab()">
+                            <i class="fas fa-plus-circle"></i> Add New Tab
+                        </button>
+                    </div>
+                </div>
+
+                {{-- ════════════════ IMAGES ════════════════ --}}
+                <div class="page-card">
+                    <div class="card-header-info">
+                        <h3 class="card-header-title"><i class="fas fa-images"></i> Product Images</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row form-row-2">
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Featured Image</label>
+                                    <input type="file" class="form-control @error('featured_image') is-invalid @enderror"
+                                           name="featured_image" accept="image/*"
+                                           onchange="previewImage(event,'featured')">
+                                    @error('featured_image')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                    @if(isset($editProduct) && $editProduct->featured_image)
+                                        <div class="img-preview-box mt-2" id="featured-current-wrap">
+                                            <img src="{{ asset('uploads/products/'.$editProduct->featured_image) }}">
+                                            <button type="button" class="remove-btn" onclick="removeFeaturedImage()">✕</button>
+                                            <input type="hidden" name="remove_featured_image" id="remove_featured_image" value="0">
+                                        </div>
+                                        <span class="img-label">Current featured image</span>
+                                    @endif
+                                    <div id="featured-preview" style="display:none;" class="img-preview-box mt-2">
+                                        <img id="featured-img" src="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Featured Image Alt Tag</label>
+                                    <input type="text" class="form-control" name="featured_image_alt"
+                                           value="{{ old('featured_image_alt', $editProduct->featured_image_alt ?? '') }}"
+                                           placeholder="Image description for SEO">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Gallery Images <small>Hold Ctrl/Cmd to select multiple</small></label>
+                                    <input type="file" class="form-control" name="gallery_images[]"
+                                           accept="image/*,video/mp4,video/webm,video/ogg,video/mov"
+                                           multiple onchange="previewGalleryImages(event)">
+                                    <div id="gallery-preview" class="gallery-grid"></div>
+                                    @if(isset($editProduct) && $editProduct->images->count() > 0)
+                                        <div class="mt-2">
+                                            <label class="form-label" style="color:#6b7280;">Existing Gallery:</label>
+                                            <div class="gallery-grid">
+                                                @foreach($editProduct->images as $img)
+                                                <div class="gallery-thumb" id="gallery-img-{{ $img->id }}">
+                                                    @if(($img->type ?? 'image') === 'video')
+                                                        <div class="video-thumb"><span>▶️</span><small>Video</small></div>
+                                                    @else
+                                                        <img src="{{ asset('uploads/products/gallery/'.$img->image) }}">
+                                                    @endif
+                                                    <button type="button" class="remove-btn" onclick="deleteGalleryImage({{ $img->id }})">✕</button>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ════════════════ PRICING & INVENTORY ════════════════ --}}
+                <div class="page-card">
+                    <div class="card-header-orange">
+                        <h3 class="card-header-title"><i class="fas fa-rupee-sign"></i> Pricing & Inventory</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row form-row-4">
+                            <div class="form-group">
+                                <label class="form-label">Regular Price</label>
+                                <input type="number" class="form-control" name="price"
+                                       value="{{ old('price', $editProduct->price ?? '') }}"
+                                       step="0.01" min="0" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Sale Price <small>Leave empty if not on sale</small></label>
+                                <input type="number" class="form-control" name="sale_price"
+                                       value="{{ old('sale_price', $editProduct->sale_price ?? '') }}"
+                                       step="0.01" min="0" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">SKU</label>
+                                <input type="text" class="form-control" name="sku"
+                                       value="{{ old('sku', $editProduct->sku ?? '') }}"
+                                       placeholder="PROD-001">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Stock Quantity</label>
+                                <input type="number" class="form-control" name="stock_quantity"
+                                       value="{{ old('stock_quantity', $editProduct->stock_quantity ?? 0) }}"
+                                       min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ════════════════ VARIANTS ════════════════ --}}
+                <div class="page-card">
+                    <div class="card-header-purple">
+                        <h3 class="card-header-title"><i class="fas fa-sliders-h"></i> Product Variants</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-tip">
+                            <i class="fas fa-lightbulb"></i>
+                            Add a <strong>Variant Type</strong> (Size, Color, etc.), then add <strong>Options</strong>. Combinations are auto-generated below with individual image upload per variant.
+                        </div>
+
+                        <div id="vg-container">
+                            @if(isset($editProduct) && $editProduct->variants->count() > 0)
+                                @php
+                                    $groups = [];
+                                    foreach($editProduct->variants as $v) {
+                                        $attrs = is_array($v->attributes) ? $v->attributes : [];
+                                        if(!empty($attrs)) {
+                                            foreach($attrs as $k => $val) { $groups[$k][] = $val; }
+                                        } else {
+                                            $groups['Option'][] = $v->name;
+                                        }
+                                    }
+                                    $groups = array_map('array_unique', $groups);
+                                @endphp
+                                @foreach($groups as $typeName => $options)
+                                @php $gi = $loop->index; @endphp
+                                <div class="vg-card" data-gid="{{ $gi }}">
+                                    <div class="vg-header">
+                                        <span class="vg-type-label">Type</span>
+                                        <input type="text" name="variant_types[]"
+                                               value="{{ ucfirst($typeName) }}"
+                                               placeholder="e.g. Size, Color, Material"
+                                               onchange="regenerate()">
+                                        <button type="button" class="btn-vg-remove" onclick="removeGroup(this)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </div>
+                                    <div class="vg-options-area">
+                                        <div class="vg-tags-wrap" id="tags-{{ $gi }}">
+                                            @foreach($options as $opt)
+                                                <span class="vg-tag" data-val="{{ $opt }}">
+                                                    {{ $opt }}
+                                                    <button type="button" class="tag-x" onclick="removeTag(this)">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                    <input type="hidden" name="variant_options[{{ $gi }}][]" value="{{ $opt }}">
+                                                </span>
+                                            @endforeach
+                                        </div>
+                                        <div class="vg-input-row">
+                                            <input type="text" class="vg-opt-input"
+                                                   placeholder="Type an option and press Enter"
+                                                   onkeydown="handleKey(event,this,{{ $gi }})"
+                                                   data-gid="{{ $gi }}">
+                                            <button type="button" class="btn-add-opt" onclick="addOptBtn(this,{{ $gi }})">
+                                                <i class="fas fa-plus me-1"></i> Add
+                                            </button>
+                                        </div>
+                                        <div class="vg-hint"><i class="fas fa-info-circle me-1"></i>Press <strong>Enter</strong> or click <strong>Add</strong>.</div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @endif
+                        </div>
+
+                        <button type="button" class="btn-add-vg-type" onclick="addGroup()">
+                            <i class="fas fa-plus-circle"></i> Add Variant Type (Size, Color, etc.)
+                        </button>
+
+                        <div id="gen-wrap" class="gen-wrap" style="display:none;">
+                            <div class="gen-head">
+                                <h6><i class="fas fa-th me-1"></i> Generated Variant Combinations</h6>
+                                <span class="gen-badge" id="gen-badge">0</span>
+                            </div>
+                            <div style="overflow-x:auto;">
+                                <table class="gen-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="min-width:150px;">Variant</th>
+                                            <th style="min-width:100px;">SKU</th>
+                                            <th style="min-width:100px;">Price (₹)</th>
+                                            <th style="min-width:120px;">Compare Price (₹)</th>
+                                            <th style="min-width:80px;">Stock</th>
+                                            <th style="min-width:130px;"><i class="fas fa-image me-1"></i>Image</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="gen-tbody"></tbody>
+                                </table>
+                            </div>
+                            <div class="gen-footer-note">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <strong>Compare Price</strong> = MRP/Original price (strikethrough). Should be higher than sale price.
+                            </div>
+                        </div>
+
+                        @if(isset($editProduct))
+                            <script id="existing-variants-data" type="application/json">
+                                {!! json_encode($editProduct->variants->mapWithKeys(function($v) {
+                                    return [$v->name => [
+                                        'sku'           => $v->sku ?? '',
+                                        'price'         => $v->price ?? '',
+                                        'compare_price' => $v->compare_price ?? '',
+                                        'stock'         => $v->stock_quantity ?? 0,
+                                        'image'         => $v->image ? asset('uploads/products/variants/'.$v->image) : ''
+                                    ]];
+                                })) !!}
+                            </script>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- ════════════════ CATEGORIES & TAGS ════════════════ --}}
+                <div class="page-card">
+                    <div class="card-header-light">
+                        <h3 class="card-header-title"><i class="fas fa-tags text-primary"></i> Categories, Tags & Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row form-row-2">
+                            <div class="form-group">
+                                <label class="form-label">Categories <small>Hold Ctrl/Cmd for multiple</small></label>
+                                <select class="form-select" name="categories[]" multiple style="height:110px;">
+                                    @foreach($categories as $cat)
+                                        <option value="{{ $cat->id }}"
+                                            {{ isset($editProduct) && $editProduct->categories->contains($cat->id) ? 'selected' : '' }}>
+                                            {{ $cat->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tags <small>Hold Ctrl/Cmd for multiple</small></label>
+                                <select class="form-select" name="tags[]" multiple style="height:110px;">
+                                    @foreach($tags as $tag)
+                                        <option value="{{ $tag->id }}"
+                                            {{ isset($editProduct) && $editProduct->tags->contains($tag->id) ? 'selected' : '' }}>
+                                            {{ $tag->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row form-row-3">
+                            <div class="form-group">
+                                <label class="form-label">Status <span class="text-danger">*</span></label>
+                                <select class="form-select" name="status" required>
+                                    <option value="draft"     {{ old('status', $editProduct->status ?? '') == 'draft'     ? 'selected' : '' }}>Draft</option>
+                                    <option value="published" {{ old('status', $editProduct->status ?? '') == 'published' ? 'selected' : '' }}>Published</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">CTA Button (Frontend)</label>
+                                @php $ctaVal = old('cta_button', $editProduct->cta_button ?? 'add_to_cart'); @endphp
+                                <div class="cta-group">
+                                    <div class="cta-option">
+                                        <input type="radio" name="cta_button" id="cta_add_to_cart" value="add_to_cart" {{ $ctaVal === 'add_to_cart' ? 'checked' : '' }}>
+                                        <label for="cta_add_to_cart">🛒 Add to Cart</label>
+                                    </div>
+                                    <div class="cta-option">
+                                        <input type="radio" name="cta_button" id="cta_enquire_now" value="enquire_now" {{ $ctaVal === 'enquire_now' ? 'checked' : '' }}>
+                                        <label for="cta_enquire_now">✉️ Enquire Now</label>
+                                    </div>
+                                </div>
+                                <span class="form-hint">Frontend pe sirf yahi button dikhega</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Featured</label>
+                                <div class="form-check form-switch mt-1">
+                                    <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured"
+                                           {{ isset($editProduct) && $editProduct->is_featured ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_featured">Mark as featured product</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ════════════════ SEO ════════════════ --}}
+                <div class="page-card">
+                    <div class="card-header-light">
+                        <h3 class="card-header-title"><i class="fas fa-search text-primary"></i> SEO Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="seo-section">
+                            <div class="form-row form-row-2">
+                                <div class="form-group">
+                                    <label class="form-label">Meta Title</label>
+                                    <input type="text" class="form-control" name="meta_title"
+                                           value="{{ old('meta_title', $editProduct->meta_title ?? '') }}"
+                                           placeholder="Leave empty to use product title">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Meta Keywords</label>
+                                    <input type="text" class="form-control" name="meta_keywords"
+                                           value="{{ old('meta_keywords', $editProduct->meta_keywords ?? '') }}"
+                                           placeholder="keyword1, keyword2">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label class="form-label">Meta Description</label>
+                                <textarea class="form-control" name="meta_description" rows="2">{{ old('meta_description', $editProduct->meta_description ?? '') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ════════════════ OPEN GRAPH ════════════════ --}}
+                <div class="page-card">
+                    <div class="card-header-light">
+                        <h3 class="card-header-title"><i class="fas fa-share-alt text-primary"></i> Social Media (Open Graph)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row form-row-2">
+                            <div class="form-group">
+                                <label class="form-label">OG Title</label>
+                                <input type="text" class="form-control" name="og_title"
+                                       value="{{ old('og_title', $editProduct->og_title ?? '') }}"
+                                       placeholder="Title for social media sharing">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">OG Image <small>1200×630px recommended</small></label>
+                                <input type="file" class="form-control" name="og_image"
+                                       accept="image/*" onchange="previewImage(event,'og')">
+                                @if(isset($editProduct) && $editProduct->og_image)
+                                    <div class="img-preview-box mt-2" id="og-current-wrap">
+                                        <img src="{{ asset('uploads/products/og/'.$editProduct->og_image) }}">
+                                        <button type="button" class="remove-btn" onclick="removeOgImage()">✕</button>
+                                        <input type="hidden" name="remove_og_image" id="remove_og_image" value="0">
+                                    </div>
+                                @endif
+                                <div id="og-preview" style="display:none;" class="img-preview-box mt-2">
+                                    <img id="og-img" src="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label class="form-label">OG Description</label>
+                            <textarea class="form-control" name="og_description" rows="2">{{ old('og_description', $editProduct->og_description ?? '') }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ════════════════ SUBMIT BUTTONS ════════════════ --}}
+                <div class="btn-group-custom">
+                    @if(isset($editProduct))
+                        <a href="{{ route('product') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel Edit
+                        </a>
+                        <button type="submit" id="submitBtn" class="btn btn-warning">
+                            <i class="fas fa-save"></i> Update Product
+                        </button>
+                    @else
+                        <button type="reset" class="btn btn-secondary" onclick="resetTabsForm()">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Product
+                        </button>
+                    @endif
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    {{-- ══════════════════════════════════════════
+         PRODUCT LIST TABLE
+    ══════════════════════════════════════════ --}}
+    <div class="page-card">
+        <div class="card-header-gradient">
+            <div class="card-header-row">
+                <h2 class="card-header-title"><i class="fas fa-list"></i> All Products</h2>
+                <span class="table-count">Total: {{ $products->count() }}</span>
+            </div>
+        </div>
+        <div class="card-body-0">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:55px;text-align:center;">ID</th>
+                            <th style="width:90px;">Image</th>
+                            <th>Title</th>
+                            <th style="width:110px;">Price</th>
+                            <th style="width:75px;text-align:center;">Stock</th>
+                            <th style="width:160px;">Categories</th>
+                            <th style="width:90px;text-align:center;">Status</th>
+                            <th style="width:150px;text-align:center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($products as $product)
+                        <tr>
+                            <td style="text-align:center;">
+                                <span class="badge badge-id">#{{ $product->id }}</span>
+                            </td>
+                            <td>
+                                @if($product->featured_image)
+                                    <img src="{{ asset('uploads/products/'.$product->featured_image) }}"
+                                         style="width:70px;height:54px;object-fit:cover;border-radius:6px;border:1.5px solid #e5e7eb;">
+                                @else
+                                    <div style="width:70px;height:54px;background:#f3f4f6;border-radius:6px;border:1.5px dashed #e5e7eb;display:flex;align-items:center;justify-content:center;font-size:18px;">📷</div>
+                                @endif
+                            </td>
+                            <td>
+                                <div style="font-weight:700;color:#0a214f;font-size:12px;margin-bottom:4px;">
+                                    {{ Str::limit($product->title, 40) }}
+                                </div>
+                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                    @if($product->is_featured)
+                                        <span class="badge badge-warning">⭐ Featured</span>
+                                    @endif
+                                    @php
+                                        $tabsArr = $product->extra_tabs
+                                            ? (is_array($product->extra_tabs) ? $product->extra_tabs : json_decode($product->extra_tabs, true))
+                                            : [];
+                                    @endphp
+                                    @if(!empty($tabsArr))
+                                        <span class="badge badge-info"><i class="fas fa-layer-group" style="font-size:8px;"></i> {{ count($tabsArr) }} Tabs</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td>
+                                @if($product->sale_price)
+                                    <span class="price-original">₹{{ number_format($product->price, 2) }}</span>
+                                    <span class="price-sale">₹{{ number_format($product->sale_price, 2) }}</span>
+                                @elseif($product->price)
+                                    <span class="price-regular">₹{{ number_format($product->price, 2) }}</span>
+                                @else
+                                    <span style="color:#9ca3af;font-size:11px;">—</span>
+                                @endif
+                            </td>
+                            <td style="text-align:center;">
+                                <span class="badge {{ $product->stock_quantity > 0 ? 'badge-success' : 'badge-danger' }}">
+                                    {{ $product->stock_quantity }}
+                                </span>
+                            </td>
+                            <td>
+                                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                                    @foreach($product->categories as $cat)
+                                        <span class="badge badge-primary">{{ $cat->name }}</span>
+                                    @endforeach
+                                    @if($product->categories->count() === 0)
+                                        <span style="color:#9ca3af;font-size:11px;">—</span>
+                                    @endif
+                                </div>
+                            </td>
+                            <td style="text-align:center;">
+                                <span class="badge {{ $product->status === 'published' ? 'badge-success' : 'badge-secondary' }}">
+                                    {{ $product->status === 'published' ? '✅' : '⏸' }} {{ ucfirst($product->status) }}
+                                </span>
+                            </td>
+                            <td style="text-align:center;">
+                                <div style="display:flex;gap:5px;align-items:center;justify-content:center;">
+                                    <a href="{{ route('product.edit', $product->id) }}" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form action="{{ route('product.delete', $product->id) }}" method="POST" class="d-inline"
+                                          onsubmit="return confirmDelete(event, '{{ addslashes(Str::limit($product->title, 30)) }}')">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Del
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <i class="fas fa-boxes"></i>
+                                    <p>No products yet. Add your first one above!</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{{-- ── Delete Confirm Modal ── --}}
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <div class="modal-box-header">
+            <h6><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h6>
+            <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+        </div>
+        <div class="modal-box-body">
+            <p>Are you sure you want to delete</p>
+            <strong id="deleteItemName"></strong>
+            <p class="note">This action cannot be undone.</p>
+        </div>
+        <div class="modal-box-footer">
+            <button class="btn btn-secondary btn-sm" onclick="closeDeleteModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> Yes, Delete
+            </button>
         </div>
     </div>
 </div>
@@ -1044,100 +1000,75 @@
 <script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
 
 <script>
-// ==============================================
+// ════════════════════════════════════════
 // GLOBAL STATE
-// ==============================================
+// ════════════════════════════════════════
 let editorInstance;
 let gid = 0;
 let tabCount = {{ isset($editProduct) && $editProduct->extra_tabs
     ? count(is_array($editProduct->extra_tabs) ? $editProduct->extra_tabs : (json_decode($editProduct->extra_tabs, true) ?: []))
     : 0 }};
 
-// tabEditors stores { 'tab-editor-0': CKEditorInstance, ... }
 const tabEditors = {};
 
-// Load existing variant data (edit mode)
 const existingVariantData = (() => {
     const el = document.getElementById('existing-variants-data');
     if (!el) return {};
     try { return JSON.parse(el.textContent); } catch(e) { return {}; }
 })();
 
-// ==============================================
-// MAIN DESCRIPTION EDITOR
-// ==============================================
+// ════════════════════════════════════════
+// MAIN EDITOR
+// ════════════════════════════════════════
 ClassicEditor.create(document.querySelector('#editor'), {
     toolbar: ['heading','|','bold','italic','link','bulletedList','numberedList','blockQuote']
-}).then(e => {
-    editorInstance = e;
-}).catch(console.error);
+}).then(e => { editorInstance = e; }).catch(console.error);
 
-// ==============================================
+// ════════════════════════════════════════
 // EXISTING TAB EDITORS (edit mode)
-// ==============================================
+// ════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', function() {
-
-    // Initialize CKEditor on every existing tab container
     document.querySelectorAll('.tab-ck-container').forEach(function(container) {
         const divId    = container.id;
         const hiddenId = container.getAttribute('data-hidden-id');
         const hidden   = document.getElementById(hiddenId);
         const content  = hidden ? hidden.value : '';
-
         ClassicEditor.create(container, {
             toolbar: ['heading','|','bold','italic','link','bulletedList','numberedList','blockQuote']
         }).then(function(editor) {
             tabEditors[divId] = editor;
-            if (content && content.trim() !== '') {
-                editor.setData(content);
-            }
+            if (content && content.trim() !== '') editor.setData(content);
         }).catch(console.error);
     });
 
-    // Re-generate variants if editing an existing product
     const existing = document.querySelectorAll('#vg-container .vg-card');
     gid = existing.length;
     if (existing.length > 0) regenerate();
 });
 
-// ==============================================
-// SLUG AUTO-GENERATE
-// ==============================================
+// ════════════════════════════════════════
+// SLUG
+// ════════════════════════════════════════
 document.getElementById('title').addEventListener('input', function() {
-    const slug = this.value.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+    const slug = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     const si = document.getElementById('slug');
-    if (!si.value || si.dataset.auto === 'true') {
-        si.value = slug;
-        si.dataset.auto = 'true';
-    }
-    document.getElementById('slug-text').textContent =
-        slug ? window.location.origin + '/product/' + slug : 'Will generate from title';
+    if (!si.value || si.dataset.auto === 'true') { si.value = slug; si.dataset.auto = 'true'; }
+    document.getElementById('slug-text').textContent = slug ? window.location.origin + '/product/' + slug : 'Will generate from title';
 });
-
 document.getElementById('slug').addEventListener('input', function() {
     this.dataset.auto = 'false';
-    document.getElementById('slug-text').textContent =
-        this.value
-            ? window.location.origin + '/product/' + this.value
-            : 'Will generate from title';
+    document.getElementById('slug-text').textContent = this.value ? window.location.origin + '/product/' + this.value : 'Will generate from title';
 });
 
-// ==============================================
+// ════════════════════════════════════════
 // IMAGE HELPERS
-// ==============================================
+// ════════════════════════════════════════
 function previewImage(ev, type) {
     const f = ev.target.files[0];
     const d = document.getElementById(type + '-preview');
     const i = document.getElementById(type + '-img');
-    if (f) {
-        const r = new FileReader();
-        r.onload = e => { i.src = e.target.result; d.style.display = 'block'; };
-        r.readAsDataURL(f);
-    } else {
-        d.style.display = 'none';
-    }
+    if (f) { const r = new FileReader(); r.onload = e => { i.src = e.target.result; d.style.display = 'block'; }; r.readAsDataURL(f); }
+    else { d.style.display = 'none'; }
 }
 
 function previewGalleryImages(ev) {
@@ -1145,29 +1076,15 @@ function previewGalleryImages(ev) {
     c.innerHTML = '';
     const videoExts = ['mp4','webm','ogg','mov','avi'];
     Array.from(ev.target.files).forEach(f => {
-        const ext     = f.name.split('.').pop().toLowerCase();
+        const ext = f.name.split('.').pop().toLowerCase();
         const isVideo = videoExts.includes(ext);
-        const d       = document.createElement('div');
-        d.style.cssText = 'position:relative;width:110px;';
+        const d = document.createElement('div');
+        d.className = 'gallery-thumb';
         if (isVideo) {
-            d.innerHTML = `
-                <div style="width:100px;height:100px;background:#1a1a1a;border:1px solid #ddd;
-                            border-radius:4px;display:flex;align-items:center;
-                            justify-content:center;flex-direction:column;">
-                    <span style="font-size:28px;">▶️</span>
-                    <span style="color:#fff;font-size:9px;margin-top:4px;">${f.name.substring(0,12)}...</span>
-                </div>
-                <span style="position:absolute;top:0;left:0;background:#e05c5c;color:#fff;
-                             font-size:9px;padding:1px 5px;border-radius:0 0 4px 0;">Video</span>`;
+            d.innerHTML = `<div class="video-thumb"><span>▶️</span><small>${f.name.substring(0,10)}</small></div><span class="new-badge">New</span>`;
         } else {
             const r = new FileReader();
-            r.onload = e => {
-                d.innerHTML = `
-                    <img src="${e.target.result}" style="width:100px;height:100px;object-fit:cover;
-                                border:1px solid #ddd;padding:3px;border-radius:4px;display:block;">
-                    <span style="position:absolute;top:0;left:0;background:#17a2b8;color:#fff;
-                                 font-size:9px;padding:1px 5px;border-radius:0 0 4px 0;">New</span>`;
-            };
+            r.onload = e => { d.innerHTML = `<img src="${e.target.result}"><span class="new-badge">New</span>`; };
             r.readAsDataURL(f);
         }
         c.appendChild(d);
@@ -1175,28 +1092,23 @@ function previewGalleryImages(ev) {
 }
 
 function previewVariantImg(input) {
-    // Find the preview div right after this input
     const preview = input.nextElementSibling;
     if (!preview || !preview.classList.contains('variant-img-preview')) return;
-
     if (input.files && input.files[0]) {
         const r = new FileReader();
         r.onload = function(e) {
             preview.style.display = 'block';
             preview.querySelector('img').src = e.target.result;
-            // Show "New" badge
-            let badge = preview.querySelector('.variant-img-new-badge');
+            let badge = preview.querySelector('.variant-new-badge');
             if (!badge) {
                 badge = document.createElement('span');
-                badge.className = 'variant-img-new-badge';
+                badge.className = 'variant-new-badge';
                 badge.textContent = '✓ New image selected';
                 preview.appendChild(badge);
             }
         };
         r.readAsDataURL(input.files[0]);
-    } else {
-        preview.style.display = 'none';
-    }
+    } else { preview.style.display = 'none'; }
 }
 
 function removeFeaturedImage() {
@@ -1215,136 +1127,96 @@ function deleteGalleryImage(id) {
     if (!confirm('Delete this image?')) return;
     fetch(`/product/gallery-image/${id}`, {
         method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Content-Type': 'application/json'
-        }
+        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }
     })
     .then(r => r.json())
     .then(d => {
         if (d.success) {
             const el = document.getElementById('gallery-img-' + id);
-            if (el) {
-                el.style.transition = 'opacity 0.3s';
-                el.style.opacity    = '0';
-                setTimeout(() => el.remove(), 300);
-            }
-        } else {
-            alert('Error: ' + d.error);
-        }
+            if (el) { el.style.transition='opacity 0.3s'; el.style.opacity='0'; setTimeout(()=>el.remove(),300); }
+        } else { alert('Error: ' + d.error); }
     })
     .catch(() => alert('Failed to delete image'));
 }
 
-// ==============================================
+// ════════════════════════════════════════
 // EXTRA TABS
-// ==============================================
+// ════════════════════════════════════════
 function addTab() {
     const noMsg = document.getElementById('no-tabs-msg');
     if (noMsg) noMsg.style.display = 'none';
-
-    const num      = document.querySelectorAll('#tabs-container .tab-item').length + 1;
-    const uid      = tabCount;
-    const divId    = 'tab-editor-' + uid;
+    const num = document.querySelectorAll('#tabs-container .tab-item').length + 1;
+    const uid = tabCount;
+    const divId = 'tab-editor-' + uid;
     const hiddenId = 'tab-hidden-' + uid;
     tabCount++;
-
     const div = document.createElement('div');
     div.className = 'tab-item';
     div.innerHTML = `
-        <div class="tab-header">
-            <span class="tab-number">${num}</span>
+        <div class="tab-header-row">
+            <span class="tab-number-badge">${num}</span>
             <span class="tab-label">Tab ${num}</span>
-            <button type="button" class="btn-remove-tab" onclick="removeTab(this)" title="Remove Tab">
-                <i class="fas fa-trash-alt"></i>
-            </button>
+            <button type="button" class="btn-remove-tab" onclick="removeTab(this)"><i class="fas fa-trash-alt"></i></button>
         </div>
-        <div class="mb-3">
-            <label class="form-label fw-semibold">
-                <i class="fas fa-heading me-1 text-primary"></i> Tab Title
-                <span class="text-danger">*</span>
-            </label>
-            <input type="text" class="form-control"
-                   name="tab_titles[]"
-                   placeholder="e.g. Specifications, Features, How to Use">
+        <div class="form-group">
+            <label class="form-label"><i class="fas fa-heading me-1" style="color:#6366f1;"></i> Tab Title <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="tab_titles[]" placeholder="e.g. Specifications, Features">
         </div>
-        <div>
-            <label class="form-label fw-semibold">
-                <i class="fas fa-align-left me-1 text-primary"></i> Tab Content
-            </label>
+        <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label"><i class="fas fa-align-left me-1" style="color:#6366f1;"></i> Tab Content</label>
             <input type="hidden" name="tab_contents[]" id="${hiddenId}">
             <div id="${divId}" class="tab-ck-container" data-hidden-id="${hiddenId}"></div>
         </div>
     `;
-
     document.getElementById('tabs-container').appendChild(div);
-
-    // Initialize CKEditor on the new div
     ClassicEditor.create(document.getElementById(divId), {
         toolbar: ['heading','|','bold','italic','link','bulletedList','numberedList','blockQuote']
-    }).then(function(editor) {
-        tabEditors[divId] = editor;
-    }).catch(console.error);
-
+    }).then(editor => { tabEditors[divId] = editor; }).catch(console.error);
     div.querySelector('input[name="tab_titles[]"]').focus();
-    div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    div.scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
 
 function removeTab(btn) {
-    const item  = btn.closest('.tab-item');
+    const item = btn.closest('.tab-item');
     const edDiv = item.querySelector('.tab-ck-container');
-
-    // Destroy the CKEditor instance for this tab
     if (edDiv && edDiv.id && tabEditors[edDiv.id]) {
         tabEditors[edDiv.id].destroy().catch(console.error);
         delete tabEditors[edDiv.id];
     }
-
-    item.style.transition = 'opacity 0.2s, transform 0.2s';
-    item.style.opacity    = '0';
-    item.style.transform  = 'translateY(-6px)';
-
+    item.style.transition='opacity 0.2s,transform 0.2s'; item.style.opacity='0'; item.style.transform='translateY(-6px)';
     setTimeout(() => {
-        item.remove();
-        renumberTabs();
+        item.remove(); renumberTabs();
         const remaining = document.querySelectorAll('#tabs-container .tab-item');
-        const noMsg     = document.getElementById('no-tabs-msg');
-        if (noMsg && remaining.length === 0) noMsg.style.display = '';
+        const noMsg = document.getElementById('no-tabs-msg');
+        if (noMsg && remaining.length === 0) noMsg.style.display='';
     }, 220);
 }
 
 function renumberTabs() {
     document.querySelectorAll('#tabs-container .tab-item').forEach((item, i) => {
-        const numEl   = item.querySelector('.tab-number');
+        const numEl = item.querySelector('.tab-number-badge');
         const labelEl = item.querySelector('.tab-label');
-        if (numEl)   numEl.textContent   = i + 1;
+        if (numEl) numEl.textContent = i + 1;
         if (labelEl) labelEl.textContent = 'Tab ' + (i + 1);
     });
 }
 
 function resetTabsForm() {
-    // Destroy all tab editors
-    Object.keys(tabEditors).forEach(id => {
-        if (tabEditors[id]) {
-            tabEditors[id].destroy().catch(console.error);
-            delete tabEditors[id];
-        }
-    });
+    Object.keys(tabEditors).forEach(id => { if (tabEditors[id]) { tabEditors[id].destroy().catch(console.error); delete tabEditors[id]; } });
     document.getElementById('tabs-container').innerHTML = '';
     tabCount = 0;
     const noMsg = document.getElementById('no-tabs-msg');
     if (noMsg) noMsg.style.display = '';
 }
 
-// ==============================================
-// SHOPIFY VARIANT BUILDER
-// ==============================================
-
+// ════════════════════════════════════════
+// VARIANT BUILDER
+// ════════════════════════════════════════
 function getGroups() {
     const groups = [];
     document.querySelectorAll('#vg-container .vg-card').forEach(card => {
         const typeName = card.querySelector('input[name="variant_types[]"]').value.trim();
-        const opts     = [];
+        const opts = [];
         card.querySelectorAll('.vg-tag').forEach(t => opts.push(t.dataset.val));
         if (typeName) groups.push({ typeName, opts });
     });
@@ -1353,136 +1225,73 @@ function getGroups() {
 
 function cartesian(arrays) {
     if (!arrays.length) return [];
-    return arrays.reduce((a, b) => {
-        const res = [];
-        a.forEach(x => b.forEach(y => res.push([...x, y])));
-        return res;
-    }, [[]]);
+    return arrays.reduce((a, b) => { const res=[]; a.forEach(x=>b.forEach(y=>res.push([...x,y]))); return res; }, [[]]);
 }
 
 function regenerate() {
-    const groups  = getGroups().filter(g => g.opts.length > 0);
+    const groups = getGroups().filter(g => g.opts.length > 0);
     const genWrap = document.getElementById('gen-wrap');
-    const tbody   = document.getElementById('gen-tbody');
-    const badge   = document.getElementById('gen-badge');
-
-    if (!groups.length) {
-        genWrap.style.display = 'none';
-        tbody.innerHTML = '';
-        return;
-    }
-
+    const tbody = document.getElementById('gen-tbody');
+    const badge = document.getElementById('gen-badge');
+    if (!groups.length) { genWrap.style.display='none'; tbody.innerHTML=''; return; }
     const optArrays = groups.map(g => g.opts.map(o => ({ type: g.typeName, val: o })));
-    const combos    = cartesian(optArrays);
-
+    const combos = cartesian(optArrays);
     genWrap.style.display = 'block';
-    badge.textContent     = combos.length;
-    tbody.innerHTML       = '';
-
+    badge.textContent = combos.length;
+    tbody.innerHTML = '';
     combos.forEach(combo => {
-        const label   = combo.map(c => c.val).join(' / ');
+        const label = combo.map(c => c.val).join(' / ');
         const attrObj = {};
         combo.forEach(c => { attrObj[c.type.toLowerCase()] = c.val; });
         const attrJson = JSON.stringify(attrObj);
-
-        // Pull existing data (edit mode)
         const ex = existingVariantData[label] || {};
-
-        // Existing image HTML — show current image if editing
         const existingImgHtml = ex.image
-            ? `<img src="${esc(ex.image)}"
-                    class="variant-img-existing"
-                    title="Current image for: ${esc(label)}">`
-            : `<div style="width:56px;height:56px;background:#f0f2fd;border:1.5px dashed #c5caf5;
-                           border-radius:6px;display:flex;align-items:center;justify-content:center;
-                           margin-bottom:5px;font-size:18px;">🖼️</div>`;
-
+            ? `<img src="${esc(ex.image)}" class="variant-img-existing" title="Current: ${esc(label)}">`
+            : `<div class="variant-img-placeholder">🖼️</div>`;
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="gen-name">
                 ${esc(label)}
-                <input type="hidden" name="variant_names[]"      value="${esc(label)}">
+                <input type="hidden" name="variant_names[]" value="${esc(label)}">
                 <input type="hidden" name="variant_attributes[]" value='${esc(attrJson)}'>
             </td>
+            <td><input type="text" class="gen-input" name="variant_skus[]" value="${esc(ex.sku||'')}" placeholder="SKU"></td>
+            <td><input type="number" class="gen-input" name="variant_prices[]" value="${esc(ex.price||'')}" placeholder="0.00" step="0.01" min="0"></td>
             <td>
-                <input type="text"   class="gen-input"
-                       name="variant_skus[]"
-                       value="${esc(ex.sku || '')}"
-                       placeholder="SKU">
+                <input type="number" class="gen-input compare-price-input" name="variant_compare_prices[]" value="${esc(ex.compare_price||'')}" placeholder="0.00" step="0.01" min="0">
+                <span class="compare-price-hint">MRP / Original</span>
             </td>
+            <td><input type="number" class="gen-input" name="variant_stocks[]" value="${esc(ex.stock??0)}" placeholder="0" min="0"></td>
             <td>
-                <input type="number" class="gen-input"
-                       name="variant_prices[]"
-                       value="${esc(ex.price || '')}"
-                       placeholder="0.00" step="0.01" min="0">
-            </td>
-            <td>
-                <input type="number" class="gen-input compare-price-input"
-                       name="variant_compare_prices[]"
-                       value="${esc(ex.compare_price || '')}"
-                       placeholder="0.00" step="0.01" min="0">
-                <span class="compare-price-hint">MRP / Original price</span>
-            </td>
-            <td>
-                <input type="number" class="gen-input"
-                       name="variant_stocks[]"
-                       value="${esc(ex.stock ?? 0)}"
-                       placeholder="0" min="0">
-            </td>
-            <td class="variant-img-cell">
                 ${existingImgHtml}
-                <input type="file"
-                       class="gen-input variant-img-input"
-                       name="variant_images[]"
-                       accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
-                       onchange="previewVariantImg(this)"
-                       title="Upload image for: ${esc(label)}">
-                <div class="variant-img-preview">
-                    <img src="" alt="New image preview">
-                </div>
-                <small style="font-size:10px;color:#9aa2b4;display:block;margin-top:3px;">
-                    ${ex.image ? 'Upload to replace current' : 'Optional variant image'}
-                </small>
+                <input type="file" class="gen-input variant-img-input" name="variant_images[]" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" onchange="previewVariantImg(this)" title="Upload for: ${esc(label)}">
+                <div class="variant-img-preview"><img src="" alt="preview"></div>
+                <small style="font-size:9px;color:#9ca3af;">${ex.image?'Upload to replace':'Optional image'}</small>
             </td>
         `;
         tbody.appendChild(tr);
     });
 }
 
-// HTML escape helper
 function esc(s) {
-    return String(s)
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function addGroup() {
-    const id   = gid++;
+    const id = gid++;
     const card = document.createElement('div');
-    card.className   = 'vg-card';
-    card.dataset.gid = id;
-    card.innerHTML   = `
+    card.className = 'vg-card'; card.dataset.gid = id;
+    card.innerHTML = `
         <div class="vg-header">
             <span class="vg-type-label">Type</span>
-            <input type="text" name="variant_types[]"
-                   placeholder="e.g. Size, Color, Material"
-                   onchange="regenerate()">
-            <button type="button" class="btn-vg-remove" onclick="removeGroup(this)">
-                <i class="fas fa-trash-alt"></i>
-            </button>
+            <input type="text" name="variant_types[]" placeholder="e.g. Size, Color, Material" onchange="regenerate()">
+            <button type="button" class="btn-vg-remove" onclick="removeGroup(this)"><i class="fas fa-trash-alt"></i></button>
         </div>
         <div class="vg-options-area">
             <div class="vg-tags-wrap" id="tags-${id}"></div>
             <div class="vg-input-row">
-                <input type="text" class="vg-opt-input"
-                       placeholder="Type an option and press Enter"
-                       onkeydown="handleKey(event,this,${id})"
-                       data-gid="${id}">
-                <button type="button" class="btn-add-opt" onclick="addOptBtn(this,${id})">
-                    <i class="fas fa-plus me-1"></i>Add
-                </button>
+                <input type="text" class="vg-opt-input" placeholder="Type option, press Enter" onkeydown="handleKey(event,this,${id})" data-gid="${id}">
+                <button type="button" class="btn-add-opt" onclick="addOptBtn(this,${id})"><i class="fas fa-plus me-1"></i>Add</button>
             </div>
             <div class="vg-hint"><i class="fas fa-info-circle me-1"></i>Press Enter or click Add.</div>
         </div>
@@ -1493,25 +1302,17 @@ function addGroup() {
 
 function removeGroup(btn) {
     const card = btn.closest('.vg-card');
-    card.style.transition = 'opacity 0.2s';
-    card.style.opacity    = '0';
-    setTimeout(() => { card.remove(); regenerate(); }, 220);
+    card.style.transition='opacity 0.2s'; card.style.opacity='0';
+    setTimeout(()=>{ card.remove(); regenerate(); },220);
 }
 
 function handleKey(ev, input, gid) {
-    if (ev.key === 'Enter') {
-        ev.preventDefault();
-        addTag(input.value.trim(), gid);
-        input.value = '';
-    }
+    if (ev.key==='Enter') { ev.preventDefault(); addTag(input.value.trim(),gid); input.value=''; }
 }
 
 function addOptBtn(btn, gid) {
     const input = btn.closest('.vg-input-row').querySelector('.vg-opt-input');
-    if (input.value.trim()) {
-        addTag(input.value.trim(), gid);
-        input.value = '';
-    }
+    if (input.value.trim()) { addTag(input.value.trim(),gid); input.value=''; }
     input.focus();
 }
 
@@ -1519,65 +1320,60 @@ function addTag(val, gid) {
     if (!val) return;
     const wrap = document.getElementById('tags-' + gid);
     if (!wrap) return;
-
-    // Prevent duplicate options
-    const existing = Array.from(wrap.querySelectorAll('.vg-tag'))
-                          .map(t => t.dataset.val.toLowerCase());
+    const existing = Array.from(wrap.querySelectorAll('.vg-tag')).map(t=>t.dataset.val.toLowerCase());
     if (existing.includes(val.toLowerCase())) return;
-
     const tag = document.createElement('span');
-    tag.className   = 'vg-tag';
-    tag.dataset.val = val;
-    tag.innerHTML   = `
-        ${esc(val)}
-        <button type="button" class="tag-x" onclick="removeTag(this)">
-            <i class="fas fa-times"></i>
-        </button>
-        <input type="hidden" name="variant_options[${gid}][]" value="${esc(val)}">
-    `;
+    tag.className='vg-tag'; tag.dataset.val=val;
+    tag.innerHTML=`${esc(val)}<button type="button" class="tag-x" onclick="removeTag(this)"><i class="fas fa-times"></i></button><input type="hidden" name="variant_options[${gid}][]" value="${esc(val)}">`;
     wrap.appendChild(tag);
     regenerate();
 }
 
-function removeTag(btn) {
-    btn.closest('.vg-tag').remove();
-    regenerate();
+function removeTag(btn) { btn.closest('.vg-tag').remove(); regenerate(); }
+
+// ════════════════════════════════════════
+// DELETE MODAL
+// ════════════════════════════════════════
+let pendingDeleteForm = null;
+
+function confirmDelete(e, name) {
+    e.preventDefault();
+    pendingDeleteForm = e.target;
+    document.getElementById('deleteItemName').textContent = '"' + name + '"';
+    document.getElementById('deleteModal').classList.add('show');
+    return false;
 }
 
-// ==============================================
-// FORM SUBMIT — sync all editors before submit
-// ==============================================
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+    pendingDeleteForm = null;
+}
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+    if (pendingDeleteForm) pendingDeleteForm.submit();
+});
+
+// ════════════════════════════════════════
+// FORM SUBMIT — sync editors
+// ════════════════════════════════════════
 document.getElementById('productForm').addEventListener('submit', function(e) {
-    // Temporarily prevent submit to sync editors first
     e.preventDefault();
-
-    // Sync main description editor
-    if (editorInstance) {
-        document.querySelector('#editor').value = editorInstance.getData();
-    }
-
-    // Sync every tab editor → its hidden input
+    if (editorInstance) document.querySelector('#editor').value = editorInstance.getData();
     Object.keys(tabEditors).forEach(function(divId) {
-        const editor    = tabEditors[divId];
+        const editor = tabEditors[divId];
         const container = document.getElementById(divId);
         if (!editor || !container) return;
-
         const hiddenId = container.getAttribute('data-hidden-id');
-        if (hiddenId) {
-            const hidden = document.getElementById(hiddenId);
-            if (hidden) {
-                hidden.value = editor.getData();
-            }
-        }
+        if (hiddenId) { const hidden = document.getElementById(hiddenId); if (hidden) hidden.value = editor.getData(); }
     });
-
-    // Disable submit button to prevent double-submit
     const btn = document.getElementById('submitBtn');
-    btn.disabled  = true;
+    btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
-    // Now actually submit
     this.submit();
 });
+
+// Auto-dismiss alerts
+setTimeout(() => { document.querySelectorAll('.alert-success,.alert-danger,.alert-validation').forEach(el=>el.remove()); }, 5000);
 </script>
+
 @endsection
