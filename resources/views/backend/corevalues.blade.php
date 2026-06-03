@@ -176,7 +176,6 @@
 
     <div class="page-header">
         <h1 class="page-title">❤️ Teams</h1>
-        <p class="page-subtitle">Manage core value items displayed on the homepage</p>
     </div>
 
     @if(session('success'))
@@ -199,9 +198,9 @@
             <div class="{{ isset($editCoreValue) ? 'card-header-warning' : 'card-header-gradient' }}">
                 <h2 class="card-header-title">
                     @if(isset($editCoreValue))
-                        <i class="fas fa-pen"></i> Edit Core Value #{{ $editCoreValue->id }}
+                        <i class="fas fa-pen"></i> Edit #{{ $editCoreValue->id }}
                     @else
-                        <i class="fas fa-plus-circle"></i> Add New Core Value
+                        <i class="fas fa-plus-circle"></i> Add New 
                     @endif
                 </h2>
             </div>
@@ -263,14 +262,14 @@
                                 <i class="fas fa-times"></i> Cancel
                             </a>
                             <button type="submit" class="btn btn-warning">
-                                <i class="fas fa-save"></i> Update Core Value
+                                <i class="fas fa-save"></i> Update 
                             </button>
                         @else
                             <button type="reset" class="btn btn-secondary">
                                 <i class="fas fa-redo"></i> Reset
                             </button>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Add Core Value
+                                <i class="fas fa-plus"></i> Add 
                             </button>
                         @endif
                     </div>
