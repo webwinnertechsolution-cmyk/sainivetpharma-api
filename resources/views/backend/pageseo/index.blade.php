@@ -110,26 +110,6 @@
     .modal-box-footer { padding: 10px 16px; display: flex; gap: 8px; justify-content: center; border-top: 1px solid #f3f4f6; }
 
     .meta-title-text { font-size: 11px; color: #374151; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .form-check.form-switch {
-    width: 61%;
-    margin-left: 42px!important;
-}
-    .form-check .form-check-label {
-    display: block;
-    margin-left: 0;
-    font-size: 0.875rem;
-    line-height: 1.5;
-}
-    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
-    font-size: 9px!important;
-}
-
-.form-group label {
-    font-size: 12px;
-    line-height: 1;
-    vertical-align: top;
-    margin-bottom: 0.5rem;
-}
 </style>
 
 <div class="page-container">
@@ -210,7 +190,8 @@
                                        class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <form action="{{ route('admin.pageseo.destroy', $seo->id) }}"
+                                    {{-- Delete: uncomment when admin.pageseo.destroy route is defined --}}
+                                    {{-- <form action="{{ route('admin.pageseo.destroy', $seo->id) }}"
                                           method="POST" class="d-inline"
                                           onsubmit="return confirmDelete(event, '{{ addslashes($seo->page_name) }}')">
                                         @csrf
@@ -218,7 +199,7 @@
                                         <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="fas fa-trash"></i> Del
                                         </button>
-                                    </form>
+                                    </form> --}}
                                 </div>
                             </td>
                         </tr>
