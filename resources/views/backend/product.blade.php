@@ -128,7 +128,7 @@
     font-size: 9px!important;
 }
     .form-group label {
-    font-size: 12px;
+    font-size: 12px!important;
     line-height: 1;
     vertical-align: top;
     margin-bottom: 0.5rem;
