@@ -248,7 +248,19 @@
     .edit-modal-header h6 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; margin: 0; }
     .edit-modal-body { padding: 16px; }
     .edit-modal-footer { padding: 10px 16px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid #f3f4f6; }
-
+    .form-check.form-switch {
+    width: 61%;
+    margin-left: 42px!important;
+}
+    .form-check .form-check-label {
+    display: block;
+    margin-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
+    font-size: 9px!important;
+}
     @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
         .media-grid { grid-template-columns: repeat(2, 1fr); }
