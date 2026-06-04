@@ -1966,13 +1966,23 @@ public function homeContactDelete($id)
 }
 
 // Contact Submissions Methods
-public function contactSubmissions()
+public function contactSubmissions(Request $request)
 {
     if (!Session::has('user_id')) {
         return redirect()->route('login')->with('error', 'Please login first');
     }
     
-    $contacts = Contact::orderBy('created_at', 'desc')->paginate(20);
+    $query = Contact::orderBy('created_at', 'desc');
+
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
+
+    $contacts = $query->paginate(20)->withQueryString();
+    
     return view('backend.contact-submissions', compact('contacts'));
 }
 
