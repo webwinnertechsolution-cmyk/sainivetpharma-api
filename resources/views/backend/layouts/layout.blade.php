@@ -51,6 +51,9 @@
         .navbar .navbar-brand-wrapper {
     background: #ff000000!important;
 }
+        .content-wrapper {
+    background: #fff!important;
+}
 	</style>
 	
 </head>
