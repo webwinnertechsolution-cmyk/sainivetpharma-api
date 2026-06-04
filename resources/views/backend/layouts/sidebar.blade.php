@@ -12,7 +12,7 @@
 
        <li class="nav-item">
             <a class="nav-link" href="{{ url('/announcement-bar') }}" ">
-                <span class="menu-title">ANNOUNCEMENT BAR</span>
+                <span class="menu-title">Announcement Bar </span>
                 <i class="mdi mdi-contacts menu-icon"></i>
             </a>
         </li>
@@ -83,13 +83,13 @@
             <div class="collapse" id="forms">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/offering') }}">ABOUT</a>
+                        <a class="nav-link" href="{{ url('/offering') }}">About</a>
                     </li>
                      <li class="nav-item">
                         <a class="nav-link" href="{{ url('/corevalues') }}">Teams</a>
                     </li>	
 						 <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/experience-the-power') }}">PORTFOLIO</a>
+                        <a class="nav-link" href="{{ url('/experience-the-power') }}">Portfolio</a>
                     </li>
                 </ul>
             </div>
@@ -112,7 +112,7 @@
 
          <li class="nav-item">
             <a class="nav-link" href="{{ route('faq') }}" ">
-                <span class="menu-title">FAQ</span>
+                <span class="menu-title">Faq</span>
                 <i class="mdi mdi-contacts menu-icon"></i>
             </a>
         </li>
@@ -197,14 +197,14 @@
 			<ul class="nav flex-column sub-menu">
 
 			  <!-- Product -->
-			  <li class="nav-item">
-				<a class="nav-link" href="{{ url('/product') }}">Product List</a>
-			  </li>
+			  
 			  
 			  <li class="nav-item">
 				<a class="nav-link" href="{{ url('/product/create') }}">Add Product</a>
 			  </li>
-
+                <li class="nav-item">
+				<a class="nav-link" href="{{ url('/product') }}">Product List</a>
+			  </li>
 			  <!-- CORE VALUES (nested dropdown) -->
 			
 			  <li class="nav-item">
@@ -224,14 +224,14 @@
 				</div>
 			  </li>
 			   -->
-			
+			<li class="nav-item">
+				<a class="nav-link" href="{{ url('/product-category') }}">Add Product Category</a>
+			  </li>
 			  <li class="nav-item">
 				<a class="nav-link" href="{{ url('/product-tag') }}">Add Product Tag</a>
 			  </li>
 			  
-			  <li class="nav-item">
-				<a class="nav-link" href="{{ url('/product-category') }}">Add Product Category</a>
-			  </li>
+			  
 			  
 			 
 			</ul>
@@ -240,7 +240,7 @@
 				
 		<li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-                <span class="menu-title">BLOG</span>
+                <span class="menu-title">Blogs</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
             </a>
@@ -276,7 +276,7 @@
 
         <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.pageseo.index') }}" >
-                <span class="menu-title">SEO MANAGER</span>
+                <span class="menu-title">Seo Manager </span>
                 <i class="mdi mdi-search-web menu-icon"></i>
             </a>
         </li>
@@ -313,7 +313,7 @@
 	
 		<li class="nav-item">
             <a class="nav-link" href="{{ url('/footer-new') }}" ">
-                <span class="menu-title">FOOTER</span>
+                <span class="menu-title">Footer</span>
                 <i class="mdi mdi-contacts menu-icon"></i>
             </a>
         </li>
