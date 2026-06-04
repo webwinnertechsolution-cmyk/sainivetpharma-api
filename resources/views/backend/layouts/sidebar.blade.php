@@ -504,4 +504,21 @@ a.nav-link {
     .sidebar .nav .nav-item:hover {
     background: rgb(26 92 46 / 0%);
 }
+    .sidebar  a.nav-link {
+    font-family: 'Nunito', sans-serif;
+    text-transform: capitalize;
+    font-size: 22px!important;
+}
+    .sidebar .nav .nav-item .nav-link .menu-title {
+    color: #ffffff;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 1;
+    vertical-align: middle;
+    white-space: normal;
+}
+    .sidebar .nav .nav-item .nav-link {
+    padding-bottom: 10px!important;
+    padding-top: 10px!important;
+}
 </style>
