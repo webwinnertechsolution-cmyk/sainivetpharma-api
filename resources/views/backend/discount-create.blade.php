@@ -26,7 +26,7 @@
     .page-card {
         background: #ffffff; border-radius: 12px;
         box-shadow: 0 4px 16px rgba(10,33,79,0.08);
-        overflow: hidden; border: 1px solid #e5e7eb;
+        border: 1px solid #e5e7eb;
         transition: all 0.3s ease; margin-bottom: 16px;
     }
     .page-card:hover { box-shadow: 0 12px 32px rgba(10,33,79,0.12); }
@@ -34,19 +34,23 @@
     .card-header-gradient {
         background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
         padding: 12px 20px; color: #ffffff;
+        border-radius: 12px 12px 0 0;
     }
     .card-header-warning {
         background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%);
         padding: 12px 20px; color: #ffffff;
+        border-radius: 12px 12px 0 0;
     }
     .card-header-dark {
         background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
         padding: 12px 20px; color: #ffffff;
+        border-radius: 12px 12px 0 0;
     }
     .card-header-plain {
         background: #f9fafb;
         padding: 10px 16px;
         border-bottom: 1px solid #e5e7eb;
+        border-radius: 12px 12px 0 0;
     }
     .card-header-title {
         font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700;
@@ -167,26 +171,7 @@
     }
     .summary-list li:last-child { border-bottom: none; }
     .summary-list li i { color: #1872B5; font-size: 11px; }
-          .form-check.form-switch {
-    width: 61%;
-    margin-left: 42px!important;
-}
-    .form-check .form-check-label {
-    display: block;
-    margin-left: 0;
-    font-size: 0.875rem;
-    line-height: 1.5;
-}
-    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
-    font-size: 9px!important;
-}
 
-.form-group label {
-    font-size: 12px;
-    line-height: 1;
-    vertical-align: top;
-    margin-bottom: 0.5rem;
-}
     @media (max-width: 1024px) {
         .two-col-form { grid-template-columns: 1fr; }
         .type-cards-grid { grid-template-columns: repeat(2, 1fr); }
@@ -423,7 +408,7 @@
                         </div>
                     </div>
 
-                    <div class="card-header-dark" style="border-top:1px solid #e5e7eb;">
+                    <div class="card-header-dark" style="border-top:1px solid #e5e7eb; border-radius:0;">
                         <h2 class="card-header-title"><i class="fas fa-gift"></i> Customer Gets</h2>
                     </div>
                     <div class="card-body">
