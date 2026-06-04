@@ -108,7 +108,7 @@
     <div class="page-header">
         <div>
             <h1 class="page-title">🏷️ Discounts</h1>
-            <p class="page-subtitle">Store ke discounts aur coupon codes manage karein</p>
+            <p class="page-subtitle">Manage the store's discounts and coupon codes.</p>
         </div>
         <a href="{{ route('discount.create') }}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Create Discount
@@ -246,7 +246,7 @@
                             <td colspan="8">
                                 <div class="empty-state">
                                     <i class="fas fa-tag"></i>
-                                    <p>Koi discount nahi mila.</p>
+                                    <p>No discounts found.</p>
                                     <a href="{{ route('discount.create') }}" class="btn btn-primary btn-sm" style="margin-top:10px;">
                                         <i class="fas fa-plus"></i> Create your first discount
                                     </a>
