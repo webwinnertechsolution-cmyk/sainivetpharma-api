@@ -1983,6 +1983,16 @@ public function contactSubmissions(Request $request)
         $dateTo = $request->date_to; // format: 2026-06-03
         $query->whereRaw('DATE(created_at) <= ?', [$dateTo]);
     }
+	
+	 dd([
+        'date_from' => $request->date_from,
+        'date_to'   => $request->date_to,
+        'sql'       => $query->toSql(),
+        'bindings'  => $query->getBindings(),
+        'first_record_created_at' => Contact::first()?->created_at,
+    ]);
+
+
 
     $contacts = $query->paginate(20)->withQueryString();
 
