@@ -164,7 +164,7 @@
 
         {{-- FORM CARD --}}
         <div class="page-card">
-            <div class="{{ $contactUs ? 'card-header-warning' : 'card-header-gradient' }}">
+            <div class="card-header-gradient">
                 <h2 class="card-header-title">
                     @if($contactUs)
                         <i class="fas fa-pen"></i> Edit Contact Us
