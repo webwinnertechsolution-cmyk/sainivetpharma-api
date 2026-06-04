@@ -191,7 +191,7 @@
         </a>
         <div>
             <h1 class="page-title">{{ isset($discount) ? '✏️ Edit Discount' : '🏷️ Create Discount' }}</h1>
-            <p class="page-subtitle">{{ isset($discount) ? 'Existing discount ko update karein' : 'Naya discount ya coupon code banayein' }}</p>
+            <p class="page-subtitle">{{ isset($discount) ? 'Existing discount ko update karein' : 'Create a new discount or coupon code.' }}</p>
         </div>
     </div>
 
@@ -207,29 +207,29 @@
     @if(!isset($discount))
     <div class="page-card" id="typeSelector">
         <div class="card-header-gradient">
-            <h2 class="card-header-title"><i class="fas fa-th-large"></i> Discount Type Chunein</h2>
+            <h2 class="card-header-title"><i class="fas fa-th-large"></i> Select a Discount Type.</h2>
         </div>
         <div class="card-body">
             <div class="type-cards-grid">
                 <div class="type-card" onclick="selectType('amount_off_products')" id="type_amount_off_products">
                     <i class="fas fa-tag" style="color:#1872B5;"></i>
                     <h6>Amount off products</h6>
-                    <small>Specific products ya collections par discount</small>
+                    <small>Apply discounts to specific products or collections.</small>
                 </div>
                 <div class="type-card" onclick="selectType('buy_x_get_y')" id="type_buy_x_get_y">
                     <i class="fas fa-gift" style="color:#0891b2;"></i>
                     <h6>Buy X Get Y</h6>
-                    <small>X kharido, Y free ya discounted pao</small>
+                    <small>Buy X, get Y free or at a discounted price.</small>
                 </div>
                 <div class="type-card" onclick="selectType('amount_off_order')" id="type_amount_off_order">
                     <i class="fas fa-shopping-cart" style="color:#b45309;"></i>
                     <h6>Amount off order</h6>
-                    <small>Poore order par discount lagao</small>
+                    <small>Apply a discount to the entire order.</small>
                 </div>
                 <div class="type-card" onclick="selectType('free_shipping')" id="type_free_shipping">
                     <i class="fas fa-truck" style="color:#059669;"></i>
                     <h6>Free shipping</h6>
-                    <small>Order par free shipping offer karein</small>
+                    <small>Offer free shipping on the order.</small>
                 </div>
             </div>
         </div>
