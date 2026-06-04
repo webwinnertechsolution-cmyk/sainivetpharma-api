@@ -192,7 +192,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">🎯 Promotional Banner Management</h1>
-        <p class="page-subtitle">Homepage par dikhne wala promotional banner manage karein</p>
+        <p class="page-subtitle">Manage the promotional banner displayed on the homepage.</p>
     </div>
 
     {{-- Alerts --}}
