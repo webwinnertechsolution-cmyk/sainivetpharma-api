@@ -352,6 +352,66 @@
         <div style="padding:0;">
             @if($contacts->count() > 0)
                 <div class="table-wrapper">
+				{{-- Date Filter --}}
+					<div class="page-card" style="margin-bottom: 14px;">
+						<div class="card-header-dark" style="padding: 10px 16px;">
+							<h2 class="card-header-title">
+								<i class="fas fa-filter"></i> Filter by Date
+							</h2>
+						</div>
+						<div style="padding: 14px 16px;">
+							<form method="GET" action="{{ route('contact.submissions') }}"
+								  style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
+
+								<div style="display: flex; flex-direction: column; gap: 4px;">
+									<label style="font-family:'Sora',sans-serif; font-size:10px; font-weight:700; color:#0a214f;">
+										<i class="fas fa-calendar-alt"></i> From Date
+									</label>
+									<input type="date" name="date_from"
+										   value="{{ request('date_from') }}"
+										   style="padding:7px 10px; border:1px solid #e5e7eb; border-radius:6px;
+												  font-size:11px; font-family:'Nunito',sans-serif; color:#374151;
+												  background:#f9fafb; outline:none; cursor:pointer;">
+								</div>
+
+								<div style="display: flex; flex-direction: column; gap: 4px;">
+									<label style="font-family:'Sora',sans-serif; font-size:10px; font-weight:700; color:#0a214f;">
+										<i class="fas fa-calendar-alt"></i> To Date
+									</label>
+									<input type="date" name="date_to"
+										   value="{{ request('date_to') }}"
+										   style="padding:7px 10px; border:1px solid #e5e7eb; border-radius:6px;
+												  font-size:11px; font-family:'Nunito',sans-serif; color:#374151;
+												  background:#f9fafb; outline:none; cursor:pointer;">
+								</div>
+
+								<div style="display:flex; gap:8px; align-items:flex-end; padding-bottom:1px;">
+									<button type="submit" class="btn btn-info btn-sm">
+										<i class="fas fa-search"></i> Filter
+									</button>
+									@if(request('date_from') || request('date_to'))
+										<a href="{{ route('contact.submissions') }}" class="btn btn-secondary btn-sm">
+											<i class="fas fa-times"></i> Clear
+										</a>
+									@endif
+								</div>
+
+								@if(request('date_from') || request('date_to'))
+									<div style="display:flex; align-items:center;">
+										<span style="font-size:10px; background:#fef3c7; color:#92400e; padding:4px 10px;
+													 border-radius:20px; font-weight:700; font-family:'Sora',sans-serif;
+													 border:1px solid #fcd34d;">
+											<i class="fas fa-filter"></i>
+											Filter active:
+											@if(request('date_from')) From {{ \Carbon\Carbon::parse(request('date_from'))->format('d M Y') }} @endif
+											@if(request('date_to')) To {{ \Carbon\Carbon::parse(request('date_to'))->format('d M Y') }} @endif
+										</span>
+									</div>
+								@endif
+
+							</form>
+						</div>
+					</div>
                     <table>
                         <thead>
                             <tr>
