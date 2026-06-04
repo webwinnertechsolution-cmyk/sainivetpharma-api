@@ -349,7 +349,7 @@
             </div>
         </div>
 	</div>
-	
+	{{---
 <div class="page-card" style="margin-bottom: 14px;">
 			<div class="card-header-dark" style="padding: 10px 16px;">
 				<h2 class="card-header-title">
@@ -409,7 +409,7 @@
 				</form>
 			</div>
 		</div>
-		
+		--}}
         <div style="padding:0;">
             @if($contacts->count() > 0)
 			
