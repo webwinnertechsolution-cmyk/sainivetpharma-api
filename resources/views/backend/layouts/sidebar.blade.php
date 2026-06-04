@@ -535,4 +535,8 @@ a.nav-link {
     padding-block: 7px!important;
     font-size: 13px!important;
 }
+    .sidebar .nav .nav-item.active > .nav-link .menu-title {
+    color: #ffffff;
+    font-family: 'Nunito', sans-serif!important;
+}
 </style>
