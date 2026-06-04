@@ -64,6 +64,9 @@
     width: 35%!important;
     height: 74px!important;
 }
+        .footer {
+    background: #FFF!important;
+}
 	</style>
 	
 </head>
