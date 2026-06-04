@@ -296,6 +296,26 @@
         margin: 14px 0 10px; display: flex; align-items: center; gap: 8px;
     }
     .section-divider::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+        .form-check.form-switch {
+    width: 61%;
+    margin-left: 42px!important;
+}
+    .form-check .form-check-label {
+    display: block;
+    margin-left: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+    .btn.btn-sm, .ajax-upload-dragdrop .btn-sm.ajax-file-upload, .btn-group-sm > .btn, .ajax-upload-dragdrop .btn-group-sm > .ajax-file-upload {
+    font-size: 9px!important;
+}
+
+.form-group label {
+    font-size: 12px;
+    line-height: 1;
+    vertical-align: top;
+    margin-bottom: 0.5rem;
+}
 </style>
 
 <div class="page-container">
