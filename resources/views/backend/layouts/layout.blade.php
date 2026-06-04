@@ -48,6 +48,9 @@
         .navbar {
     background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
 }
+        .navbar .navbar-brand-wrapper {
+    background: #ff000000;
+}
 	</style>
 	
 </head>
