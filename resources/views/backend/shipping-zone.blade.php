@@ -161,7 +161,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">🌍 Shipping Zones</h1>
-        <p class="page-subtitle">Store ke shipping zones aur rates manage karein</p>
+        <p class="page-subtitle">Manage the store's shipping zones and rates.</p>
     </div>
 
     {{-- Alerts --}}
