@@ -88,11 +88,168 @@
     .empty-state h5 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 6px; }
     .empty-state p { font-size: 11px; margin: 0; }
 
+    /* ===== IMPROVED PAGINATION STYLES ===== */
     .pagination-wrapper {
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 12px 16px; border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 16px;
+        border-top: 1px solid #e5e7eb;
+        background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+        flex-wrap: wrap;
+        gap: 16px;
     }
-    .pagination-info { font-size: 10px; color: #6b7280; }
+
+    .pagination-info {
+        font-size: 11px;
+        color: #374151;
+        font-weight: 600;
+        font-family: 'Sora', sans-serif;
+    }
+
+    .pagination-controls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Pagination Links */
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .pagination li {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    /* Page Link Base Styles */
+    .pagination a,
+    .pagination span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 28px;
+        height: 28px;
+        padding: 0 6px;
+        font-size: 10px;
+        font-family: 'Sora', sans-serif;
+        font-weight: 600;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        color: #374151;
+        background: #ffffff;
+        cursor: pointer;
+    }
+
+    /* Active Page */
+    .pagination .active span {
+        background: linear-gradient(135deg, #1872B5 0%, #0284c7 100%);
+        color: #ffffff;
+        border-color: #1872B5;
+        box-shadow: 0 2px 8px rgba(24,114,181,0.25);
+    }
+
+    /* Hover State */
+    .pagination a:hover {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border-color: #0284c7;
+        color: #0284c7;
+        transform: translateY(-1px);
+    }
+
+    /* Disabled State */
+    .pagination .disabled span {
+        background: #f3f4f6;
+        color: #d1d5db;
+        border-color: #e5e7eb;
+        cursor: not-allowed;
+    }
+
+    /* Previous/Next Buttons */
+    .pagination a[rel="prev"],
+    .pagination a[rel="next"] {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        color: #374151;
+        border-color: #d1d5db;
+    }
+
+    .pagination a[rel="prev"]:hover,
+    .pagination a[rel="next"]:hover {
+        background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+        color: #ffffff;
+        border-color: #0284c7;
+    }
+
+    .pagination a[rel="prev"] i,
+    .pagination a[rel="next"] i {
+        font-size: 9px;
+        margin: 0 2px;
+    }
+
+    /* Dots/Ellipsis */
+    .pagination .pagination-dots span {
+        background: transparent;
+        border: none;
+        cursor: default;
+    }
+
+    .pagination .pagination-dots span:hover {
+        background: transparent;
+        transform: none;
+    }
+
+    /* Responsive Pagination */
+    @media (max-width: 768px) {
+        .pagination-wrapper {
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pagination-info {
+            order: 1;
+            width: 100%;
+            text-align: center;
+        }
+
+        .pagination-controls {
+            order: 2;
+        }
+
+        .pagination a,
+        .pagination span {
+            min-width: 24px;
+            height: 24px;
+            font-size: 9px;
+            padding: 0 4px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .pagination {
+            gap: 2px;
+        }
+
+        .pagination a,
+        .pagination span {
+            min-width: 20px;
+            height: 20px;
+            font-size: 8px;
+            padding: 0 3px;
+        }
+
+        .pagination-info {
+            font-size: 10px;
+        }
+    }
 
     /* Delete Modal */
     .del-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
@@ -257,12 +414,17 @@
                     </table>
                 </div>
 
+                {{-- IMPROVED PAGINATION --}}
                 @if($contacts->hasPages())
                 <div class="pagination-wrapper">
-                    <span class="pagination-info">
-                        Showing {{ $contacts->firstItem() }} to {{ $contacts->lastItem() }} of {{ $contacts->total() }} submissions
-                    </span>
-                    <div>{{ $contacts->links() }}</div>
+                    <div class="pagination-info">
+                        <i class="fas fa-list"></i>
+                        Showing <strong>{{ $contacts->firstItem() }}</strong> to <strong>{{ $contacts->lastItem() }}</strong> 
+                        of <strong>{{ $contacts->total() }}</strong> submissions
+                    </div>
+                    <div class="pagination-controls">
+                        {{ $contacts->links('pagination::bootstrap-4') }}
+                    </div>
                 </div>
                 @endif
 
