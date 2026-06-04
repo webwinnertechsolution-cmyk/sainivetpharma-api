@@ -189,7 +189,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">📋 Terms of Service Management</h1>
-        <p class="page-subtitle">Website ke terms of service manage karein</p>
+        <p class="page-subtitle">Manage the website's Terms of Service.</p>
     </div>
 
     {{-- Alerts --}}
