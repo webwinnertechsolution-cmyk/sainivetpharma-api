@@ -143,7 +143,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">📞 Contact Us Management</h1>
-        <p class="page-subtitle">Website ke contact page ki details manage karein</p>
+        <p class="page-subtitle">Manage the details displayed on the website's Contact Page.</p>
     </div>
 
     {{-- Alerts --}}
@@ -270,7 +270,7 @@
                 <div class="form-group">
                     <label class="form-label">Google Map Embed URL</label>
                     <small style="color:#9ca3af; font-size:10px; display:block; margin-bottom:5px;">
-                        Google Maps → Share → Embed a map → sirf <code>src="..."</code> ki value paste karo
+                        Google Maps → Share → Embed a map → paste only the value of src="...".
                     </small>
                     <textarea name="map_embed" rows="3"
                         class="form-control @error('map_embed') is-invalid @enderror"
@@ -405,7 +405,7 @@
                 <div class="card-body">
                     <code class="api-code">/api/contact-us</code>
                     <p style="font-size:10px; color:#9ca3af; margin-top:8px; margin-bottom:0;">
-                        GET request — frontend yahan se data fetch karega
+                        GET Request — the frontend will fetch data from this endpoint.
                     </p>
                 </div>
             </div>
