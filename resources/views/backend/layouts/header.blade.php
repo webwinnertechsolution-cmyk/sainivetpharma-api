@@ -4,10 +4,10 @@
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
         <a class="navbar-brand brand-logo" href="{{ url('/dashboard') }}">
-            <img src="{{ asset('public/backend/assets/images/logo2.webp') }}" alt="logo" /> 
+            <img src="https://api.sainivetpharma.com/uploads/logo/1776854215_logo.png" alt="logo" /> 
         </a>
         <a class="navbar-brand brand-logo-mini" href="{{ url('/dashboard') }}">
-            <img src="{{ asset('backend/assets/images/logo-mini.svg') }}" alt="logo" />
+            <img src="https://api.sainivetpharma.com/uploads/logo/1776854215_logo.png" alt="logo" />
         </a>
     </div>
     
