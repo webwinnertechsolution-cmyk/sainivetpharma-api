@@ -482,7 +482,7 @@ a.nav-link {
 	background: rgb(26 92 46 / 22%);
 }
     .sidebar .nav {
-    background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
+    background: #ff000000;
     Color: white;
 }
     .sidebar {
