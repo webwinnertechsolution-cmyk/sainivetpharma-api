@@ -525,4 +525,9 @@ a.nav-link {
     font-size: 14px!important;
     color: #fff!important;
 }
+    .sidebar .nav.sub-menu .nav-item .nav-link {
+    color: white;
+    padding-block: 7px!important;
+    font-size: 13px!important;
+}
 </style>
