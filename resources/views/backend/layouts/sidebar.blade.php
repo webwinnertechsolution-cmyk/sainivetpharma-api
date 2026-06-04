@@ -142,26 +142,26 @@
 		
 		<li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#faqMenu" aria-expanded="false" aria-controls="faqMenu">
-                <span class="menu-title">Other Pages</span>
+                <span class="menu-title">Discount</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
             </a>
             <div class="collapse" id="faqMenu">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/admin/privacy-policy') }}">Privacy Policy</a>
+                        <a class="nav-link" href="{{ url('/discount') }}">Discount</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('faq') }}">FAQ</a>
+                        <a class="nav-link" href="{{ route('/shipping-zone') }}">Shipping Zone</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/admin/terms-of-service') }}">Terms Of Services</a>
+                        <a class="nav-link" href="{{ url('/shipping-method') }}">Shipping Method</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/gallery') }}">Gallery</a>
+                        <a class="nav-link" href="{{ url('/shipping-rate') }}">Shipping Rate</a>
                     </li>
                 </ul>
-            </div>
+            </div> 
         </li>
 		
 			  <!--<li class="nav-item">-->
