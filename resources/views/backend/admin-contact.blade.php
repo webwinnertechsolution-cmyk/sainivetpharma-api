@@ -348,11 +348,9 @@
                 <span class="table-count">Total: {{ $contacts->total() }}</span>
             </div>
         </div>
-
-        <div style="padding:0;">
-            @if($contacts->count() > 0)
-			
-					<div class="page-card" style="margin-bottom: 14px;">
+	</div>
+	
+<div class="page-card" style="margin-bottom: 14px;">
 			<div class="card-header-dark" style="padding: 10px 16px;">
 				<h2 class="card-header-title">
 					<i class="fas fa-filter"></i> Filter by Date
@@ -411,6 +409,11 @@
 				</form>
 			</div>
 		</div>
+		
+        <div style="padding:0;">
+            @if($contacts->count() > 0)
+			
+					
 
                 <div class="table-wrapper">
 				
