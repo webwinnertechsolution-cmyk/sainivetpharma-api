@@ -521,4 +521,8 @@ a.nav-link {
     padding-bottom: 10px!important;
     padding-top: 10px!important;
 }
+    .sidebar .nav .nav-item .nav-link i.menu-icon {
+    font-size: 14px!important;
+    color: #fff!important;
+}
 </style>
