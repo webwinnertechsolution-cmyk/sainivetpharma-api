@@ -60,6 +60,10 @@
         .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .dropdown-toggle:after {
     color: #fff!important;
 }
+        .navbar .navbar-brand-wrapper .navbar-brand img {
+    width: 35%!important;
+    height: 74px!important;
+}
 	</style>
 	
 </head>
