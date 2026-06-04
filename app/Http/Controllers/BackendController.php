@@ -1975,27 +1975,23 @@ public function contactSubmissions(Request $request)
     $query = Contact::orderBy('created_at', 'desc');
 
     if ($request->filled('date_from')) {
-        $dateFrom = $request->date_from; // format: 2026-06-02
-        $query->whereRaw('DATE(created_at) >= ?', [$dateFrom]);
+        $query->whereRaw('DATE(created_at) >= ?', [$request->date_from]);
     }
 
     if ($request->filled('date_to')) {
-        $dateTo = $request->date_to; // format: 2026-06-03
-        $query->whereRaw('DATE(created_at) <= ?', [$dateTo]);
+        $query->whereRaw('DATE(created_at) <= ?', [$request->date_to]);
     }
-	
-	 dd([
+
+    dd([
         'date_from' => $request->date_from,
         'date_to'   => $request->date_to,
         'sql'       => $query->toSql(),
         'bindings'  => $query->getBindings(),
-        'first_record_created_at' => Contact::first()?->created_at,
+        'count'     => $query->count(),
+        'sample'    => Contact::first()?->getRawOriginal('created_at'),
     ]);
 
-
-
     $contacts = $query->paginate(20)->withQueryString();
-
     return view('backend.contact-submissions', compact('contacts'));
 }
 
