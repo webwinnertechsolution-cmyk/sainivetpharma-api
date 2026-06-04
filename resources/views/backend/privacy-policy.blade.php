@@ -191,7 +191,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">🔒 Privacy Policy Management</h1>
-        <p class="page-subtitle">Website ki privacy policy manage karein</p>
+        <p class="page-subtitle">Manage the website's Privacy Policy.</p>
     </div>
 
     {{-- Alerts --}}
