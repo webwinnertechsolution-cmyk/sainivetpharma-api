@@ -58,7 +58,7 @@
     }
     .card-header-plain .card-header-title { color: #0a214f; }
 
-    .card-body { padding: 16px; }
+    .card-body { padding: 16px 16px 16px 20px; }
 
     /* Form elements */
     .form-label {
@@ -85,8 +85,8 @@
         font-family: 'Nunito', sans-serif; color: #374151;
     }
 
-    .form-check { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-    .form-check-input { width: 14px; height: 14px; accent-color: #1872B5; cursor: pointer; }
+    .form-check { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; padding-left: 4px; }
+    .form-check-input { width: 14px; height: 14px; min-width: 14px; accent-color: #1872B5; cursor: pointer; flex-shrink: 0; }
     .form-check-label { font-size: 11px; color: #374151; font-family: 'Nunito', sans-serif; cursor: pointer; }
 
     hr { border: none; border-top: 1px solid #e5e7eb; margin: 12px 0; }
