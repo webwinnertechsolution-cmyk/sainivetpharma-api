@@ -85,7 +85,7 @@
         font-family: 'Nunito', sans-serif; color: #374151;
     }
 
-    .form-check { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; padding-left: 4px; }
+    .form-check { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; padding-left: 8px; }
     .form-check-input { width: 14px; height: 14px; min-width: 14px; accent-color: #1872B5; cursor: pointer; flex-shrink: 0; }
     .form-check-label { font-size: 11px; color: #374151; font-family: 'Nunito', sans-serif; cursor: pointer; }
 
