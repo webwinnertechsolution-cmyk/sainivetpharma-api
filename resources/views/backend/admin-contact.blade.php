@@ -1,280 +1,416 @@
 @extends('backend.layouts.layout')
+@section('title', 'Contact Submissions')
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h2 class="mb-4">📧 Contact Form Submissions</h2>
-            
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
 
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap');
 
-            <!-- Contact Submissions List -->
-            <div class="card">
-                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">All Contact Submissions</h5>
-                    <span class="badge bg-primary fs-6">{{ $contacts->total() }} Total Contacts</span>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width: 50px;">ID</th>
-                                    <th style="width: 150px;">Name</th>
-                                    <th style="width: 180px;">Email</th>
-                                    <th style="width: 120px;">Phone</th>
-                                    <th>Product</th>
-                                    <th style="width: 200px;">Message</th>
-                                    <th style="width: 150px;">Submitted At</th>
-                                    <th style="width: 120px;" class="text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($contacts as $contact)
-                                <tr>
-                                    <td>{{ $contact->id }}</td>
-                                    <td>
-                                        <strong>{{ $contact->name }}</strong>
-                                        @if($contact->address)
-                                            <br><small class="text-muted">📍 {{ Str::limit($contact->address, 25) }}</small>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="mailto:{{ $contact->email }}" class="text-decoration-none">
-                                            <i class="fas fa-envelope"></i> {{ $contact->email }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="tel:{{ $contact->phone }}" class="text-decoration-none">
-                                            <i class="fas fa-phone"></i> {{ $contact->phone }}
-                                        </a>
-                                    </td>
-                                    <td>{{ $contact->product_name ?: '-' }}</td>
-                                    <td>{{ Str::limit($contact->message, 50) ?: '-' }}</td>
-                                    <td>
-                                        <small>{{ $contact->created_at->format('d M Y') }}</small><br>
-                                        <small class="text-muted">{{ $contact->created_at->format('h:i A') }}</small>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" 
-                                                class="btn btn-sm btn-info mb-1" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#viewModal{{ $contact->id }}"
-                                                title="View Full Details">
+    * { box-sizing: border-box; }
+    body { font-family: 'Nunito', sans-serif; background: #f5f7fa; }
+
+    .page-container { max-width: 1400px; margin: 0 auto; padding: 0; }
+
+    .page-header { margin-bottom: 14px; }
+    .page-title { font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 800; color: #0a214f; margin-bottom: 4px; letter-spacing: -0.02em; }
+    .page-subtitle { font-size: 10px; color: #6b7280; font-weight: 500; }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        border: 1px solid #6ee7b7; color: #065f46;
+        padding: 10px 12px; border-radius: 8px; margin-bottom: 14px;
+        display: flex; align-items: center; justify-content: space-between;
+        font-weight: 500; font-size: 11px;
+    }
+    .alert-danger {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        border: 1px solid #fca5a5; color: #7f1d1d;
+        padding: 10px 12px; border-radius: 8px; margin-bottom: 14px;
+        display: flex; align-items: center; justify-content: space-between;
+        font-weight: 500; font-size: 11px;
+    }
+
+    .page-card {
+        background: #ffffff; border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(10,33,79,0.08);
+        overflow: hidden; border: 1px solid #e5e7eb;
+        transition: all 0.3s ease; margin-bottom: 16px;
+    }
+    .page-card:hover { box-shadow: 0 12px 32px rgba(10,33,79,0.12); }
+
+    .card-header-dark {
+        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        padding: 12px 20px; color: #ffffff;
+    }
+    .card-header-title {
+        font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700;
+        margin: 0; display: flex; align-items: center; gap: 8px;
+    }
+    .card-header-row { display: flex; justify-content: space-between; align-items: center; }
+    .table-count { font-size: 10px; background: rgba(255,255,255,0.2); color: #fff; padding: 2px 10px; border-radius: 20px; font-weight: 700; }
+
+    /* Table */
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    thead tr { background: #f9fafb; }
+    thead th {
+        padding: 9px 12px; font-family: 'Sora', sans-serif; font-weight: 700;
+        color: #0a214f; font-size: 10px; border-bottom: 2px solid #e5e7eb; white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f3f4f6; transition: background 0.15s; }
+    tbody tr:hover { background: #f9fafb; }
+    tbody td { padding: 9px 12px; color: #374151; vertical-align: middle; font-size: 11px; }
+
+    .badge-id { background: #e0e7ff; color: #3730a3; font-size: 10px; padding: 3px 8px; border-radius: 20px; font-family: 'Sora', sans-serif; font-weight: 700; display: inline-block; }
+
+    .contact-name { font-weight: 700; color: #0a214f; font-size: 11px; }
+    .contact-address { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+    .contact-link { color: #1872B5; text-decoration: none; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }
+    .contact-link:hover { text-decoration: underline; color: #1872B5; }
+
+    .btn {
+        padding: 6px 13px; border-radius: 6px; font-family: 'Sora', sans-serif;
+        font-weight: 700; font-size: 10px; border: none; cursor: pointer;
+        transition: all 0.3s ease; display: inline-flex; align-items: center;
+        gap: 5px; text-decoration: none;
+    }
+    .btn-info      { background: linear-gradient(135deg, #0284c7, #38bdf8); color: white; box-shadow: 0 4px 12px rgba(2,132,199,0.3); }
+    .btn-info:hover { transform: translateY(-1px); color: white; }
+    .btn-success   { background: linear-gradient(135deg, #059669, #34d399); color: white; box-shadow: 0 4px 12px rgba(5,150,105,0.3); }
+    .btn-success:hover { transform: translateY(-1px); color: white; }
+    .btn-danger    { background: linear-gradient(135deg, #ef4444, #f87171); color: white; }
+    .btn-danger:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.3); color: white; }
+    .btn-secondary { background: #e5e7eb; color: #1f2937; border: none; }
+    .btn-secondary:hover { background: #d1d5db; transform: translateY(-1px); color: #1f2937; }
+    .btn-sm { padding: 4px 8px; font-size: 10px; }
+
+    .empty-state { text-align: center; padding: 50px 20px; color: #6b7280; }
+    .empty-state i { font-size: 40px; display: block; margin-bottom: 12px; opacity: 0.3; }
+    .empty-state h5 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+    .empty-state p { font-size: 11px; margin: 0; }
+
+    .pagination-wrapper {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 12px 16px; border-top: 1px solid #e5e7eb;
+    }
+    .pagination-info { font-size: 10px; color: #6b7280; }
+
+    /* Delete Modal */
+    .del-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; }
+    .del-modal-overlay.show { display: flex; }
+
+    /* View Modal */
+    .view-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998; align-items: center; justify-content: center; }
+    .view-modal-overlay.show { display: flex; }
+    .view-modal-box {
+        background: #fff; border-radius: 12px; width: 580px; max-width: 95vw;
+        overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-height: 90vh; display: flex; flex-direction: column;
+    }
+    .view-modal-header {
+        background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
+        padding: 12px 16px; color: white;
+        display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .view-modal-header h6 { font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 700; margin: 0; }
+    .view-modal-body { padding: 16px; overflow-y: auto; flex: 1; }
+    .view-modal-footer {
+        padding: 10px 16px; display: flex; gap: 8px; justify-content: flex-end;
+        border-top: 1px solid #f3f4f6; flex-shrink: 0;
+    }
+
+    .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .info-item { }
+    .info-label {
+        font-family: 'Sora', sans-serif; font-size: 10px; font-weight: 700;
+        color: #0a214f; margin-bottom: 4px; display: flex; align-items: center; gap: 5px;
+    }
+    .info-value {
+        font-size: 11px; color: #374151; background: #f9fafb;
+        padding: 7px 10px; border-radius: 6px; border: 1px solid #e5e7eb;
+        min-height: 30px; word-break: break-word;
+    }
+    .info-value a { color: #1872B5; text-decoration: none; }
+    .info-value a:hover { text-decoration: underline; }
+    .info-value.message-box { max-height: 120px; overflow-y: auto; white-space: pre-wrap; line-height: 1.6; }
+    .info-value.empty { color: #9ca3af; font-style: italic; }
+
+    .section-divider {
+        font-family: 'Sora', sans-serif; font-size: 9px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af;
+        margin: 14px 0 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-divider::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+</style>
+
+<div class="page-container">
+
+    {{-- Header --}}
+    <div class="page-header">
+        <h1 class="page-title">📬 Contact Form Submissions</h1>
+        <p class="page-subtitle">Visitors dwara submit kiye gaye contact forms</p>
+    </div>
+
+    {{-- Alerts --}}
+    @if(session('success'))
+        <div class="alert-success">
+            <span>✅ {{ session('success') }}</span>
+            <button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:14px;color:#065f46;">✕</button>
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="alert-danger">
+            <span>⚠️ {{ session('error') }}</span>
+            <button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:14px;color:#7f1d1d;">✕</button>
+        </div>
+    @endif
+
+    {{-- Table Card --}}
+    <div class="page-card">
+        <div class="card-header-dark">
+            <div class="card-header-row">
+                <h2 class="card-header-title"><i class="fas fa-envelope-open-text"></i> All Submissions</h2>
+                <span class="table-count">Total: {{ $contacts->total() }}</span>
+            </div>
+        </div>
+
+        <div style="padding:0;">
+            @if($contacts->count() > 0)
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:50px;">ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Product</th>
+                                <th>Message</th>
+                                <th style="width:100px;">Date</th>
+                                <th style="width:120px; text-align:center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($contacts as $contact)
+                            <tr>
+                                <td style="text-align:center;">
+                                    <span class="badge-id">#{{ $contact->id }}</span>
+                                </td>
+                                <td>
+                                    <div class="contact-name">{{ $contact->name }}</div>
+                                    @if($contact->address)
+                                        <div class="contact-address"><i class="fas fa-map-marker-alt"></i> {{ Str::limit($contact->address, 25) }}</div>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="mailto:{{ $contact->email }}" class="contact-link">
+                                        <i class="fas fa-envelope"></i> {{ Str::limit($contact->email, 25) }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="tel:{{ $contact->phone }}" class="contact-link">
+                                        <i class="fas fa-phone"></i> {{ $contact->phone }}
+                                    </a>
+                                </td>
+                                <td style="color:#6b7280;">{{ $contact->product_name ?: '—' }}</td>
+                                <td style="color:#6b7280;">{{ Str::limit($contact->message, 50) ?: '—' }}</td>
+                                <td>
+                                    <div style="font-size:10px; color:#374151;">{{ $contact->created_at->format('d M Y') }}</div>
+                                    <div style="font-size:10px; color:#9ca3af;">{{ $contact->created_at->format('h:i A') }}</div>
+                                </td>
+                                <td style="text-align:center;">
+                                    <div style="display:flex; gap:5px; align-items:center; justify-content:center;">
+                                        <button type="button" class="btn btn-info btn-sm"
+                                            onclick="openViewModal(
+                                                '{{ $contact->id }}',
+                                                '{{ addslashes($contact->name) }}',
+                                                '{{ addslashes($contact->email) }}',
+                                                '{{ addslashes($contact->phone) }}',
+                                                '{{ addslashes($contact->address ?? '') }}',
+                                                '{{ addslashes($contact->product_name ?? '') }}',
+                                                '{{ addslashes($contact->message ?? '') }}',
+                                                '{{ $contact->created_at->format('d M Y, h:i A') }}'
+                                            )">
                                             <i class="fas fa-eye"></i> View
                                         </button>
-                                        <form action="{{ route('admin.contacts.delete', $contact->id) }}" 
-                                              method="POST" 
-                                              class="d-inline"
-                                              onsubmit="return confirm('Are you sure you want to delete this contact?');">
+                                        <form action="{{ route('admin.contacts.delete', $contact->id) }}"
+                                              method="POST" class="d-inline"
+                                              onsubmit="return confirmDelete(event, '{{ addslashes($contact->name) }}')">
                                             @csrf
-                                            <button type="submit" 
-                                                    class="btn btn-sm btn-danger mb-1"
-                                                    title="Delete">
-                                                <i class="fas fa-trash"></i> Delete
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="fas fa-trash"></i> Del
                                             </button>
                                         </form>
-                                        
-                                        <!-- View Modal -->
-                                        <div class="modal fade" id="viewModal{{ $contact->id }}" tabindex="-1">
-                                            <div class="modal-dialog modal-lg">
-                                                <div class="modal-content">
-                                                    <div class="modal-header bg-primary text-white">
-                                                        <h5 class="modal-title">
-                                                            <i class="fas fa-info-circle"></i> Contact Details #{{ $contact->id }}
-                                                        </h5>
-                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="info-box mb-3">
-                                                                    <label class="fw-bold text-primary">
-                                                                        <i class="fas fa-user"></i> Name:
-                                                                    </label>
-                                                                    <p>{{ $contact->name }}</p>
-                                                                </div>
-                                                                
-                                                                <div class="info-box mb-3">
-                                                                    <label class="fw-bold text-primary">
-                                                                        <i class="fas fa-envelope"></i> Email:
-                                                                    </label>
-                                                                    <p><a href="mailto:{{ $contact->email }}">{{ $contact->email }}</a></p>
-                                                                </div>
-                                                                
-                                                                <div class="info-box mb-3">
-                                                                    <label class="fw-bold text-primary">
-                                                                        <i class="fas fa-phone"></i> Phone:
-                                                                    </label>
-                                                                    <p><a href="tel:{{ $contact->phone }}">{{ $contact->phone }}</a></p>
-                                                                </div>
-                                                            </div>
-                                                            
-                                                            <div class="col-md-6">
-                                                                <div class="info-box mb-3">
-                                                                    <label class="fw-bold text-primary">
-                                                                        <i class="fas fa-map-marker-alt"></i> Address:
-                                                                    </label>
-                                                                    <p>{{ $contact->address ?: 'Not provided' }}</p>
-                                                                </div>
-                                                                
-                                                                <div class="info-box mb-3">
-                                                                    <label class="fw-bold text-primary">
-                                                                        <i class="fas fa-box"></i> Product Name:
-                                                                    </label>
-                                                                    <p>{{ $contact->product_name ?: 'Not provided' }}</p>
-                                                                </div>
-                                                                
-                                                                <div class="info-box mb-3">
-                                                                    <label class="fw-bold text-primary">
-                                                                        <i class="fas fa-clock"></i> Submitted:
-                                                                    </label>
-                                                                    <p>{{ $contact->created_at->format('d M Y, h:i A') }}</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="info-box mb-3">
-                                                            <label class="fw-bold text-primary">
-                                                                <i class="fas fa-comment"></i> Message:
-                                                            </label>
-                                                            <div class="message-box p-3 bg-light rounded">
-                                                                {{ $contact->message ?: 'No message provided' }}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <a href="mailto:{{ $contact->email }}" class="btn btn-success">
-                                                            <i class="fas fa-reply"></i> Reply via Email
-                                                        </a>
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                            Close
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-5">
-                                        <div class="text-muted">
-                                            <i class="fas fa-inbox fa-3x mb-3"></i>
-                                            <h5>No Contact Submissions Yet!</h5>
-                                            <p class="mb-0">When someone fills the contact form, it will appear here.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Pagination -->
-                    @if($contacts->hasPages())
-                        <div class="mt-4 d-flex justify-content-center">
-                            {{ $contacts->links() }}
-                        </div>
-                    @endif
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <h5>Koi submission nahi mili</h5>
+                                        <p>Jab visitors form submit karenge, yahan dikhega.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                @if($contacts->hasPages())
+                <div class="pagination-wrapper">
+                    <span class="pagination-info">
+                        Showing {{ $contacts->firstItem() }} to {{ $contacts->lastItem() }} of {{ $contacts->total() }} submissions
+                    </span>
+                    <div>{{ $contacts->links() }}</div>
+                </div>
+                @endif
+
+            @else
+                <div class="empty-state">
+                    <i class="fas fa-envelope"></i>
+                    <h5>Koi submission nahi mili</h5>
+                    <p>Jab visitors form submit karenge, yahan dikhega.</p>
+                </div>
+            @endif
+        </div>
+    </div>
+
+</div>
+
+{{-- View Modal --}}
+<div class="view-modal-overlay" id="viewModal">
+    <div class="view-modal-box">
+        <div class="view-modal-header">
+            <h6><i class="fas fa-info-circle"></i> Contact Details <span id="modalId"></span></h6>
+            <button style="background:none;border:none;color:white;font-size:16px;cursor:pointer;" onclick="closeViewModal()">✕</button>
+        </div>
+        <div class="view-modal-body">
+            <div class="section-divider">Personal Info</div>
+            <div class="info-row">
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-user" style="color:#1872B5;"></i> Name</div>
+                    <div class="info-value" id="modalName"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-clock" style="color:#1872B5;"></i> Submitted At</div>
+                    <div class="info-value" id="modalDate"></div>
                 </div>
             </div>
+            <div class="info-row">
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-envelope" style="color:#1872B5;"></i> Email</div>
+                    <div class="info-value" id="modalEmail"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-phone" style="color:#1872B5;"></i> Phone</div>
+                    <div class="info-value" id="modalPhone"></div>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-map-marker-alt" style="color:#1872B5;"></i> Address</div>
+                    <div class="info-value" id="modalAddress"></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label"><i class="fas fa-box" style="color:#1872B5;"></i> Product</div>
+                    <div class="info-value" id="modalProduct"></div>
+                </div>
+            </div>
+            <div class="section-divider">Message</div>
+            <div class="info-label"><i class="fas fa-comment" style="color:#1872B5;"></i> Message</div>
+            <div class="info-value message-box" id="modalMessage"></div>
+        </div>
+        <div class="view-modal-footer">
+            <button class="btn btn-secondary btn-sm" onclick="closeViewModal()">
+                <i class="fas fa-times"></i> Close
+            </button>
+            <a id="modalReplyBtn" href="#" class="btn btn-success btn-sm">
+                <i class="fas fa-reply"></i> Reply via Email
+            </a>
         </div>
     </div>
 </div>
 
-<style>
-.table td {
-    vertical-align: middle;
-}
+{{-- Delete Confirm Modal --}}
+<div class="del-modal-overlay" id="deleteModal">
+    <div style="background:#fff; border-radius:12px; width:310px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+        <div style="background:linear-gradient(135deg,#ef4444,#f87171); padding:12px 16px; color:white; display:flex; align-items:center; justify-content:space-between;">
+            <h6 style="font-family:'Sora',sans-serif; font-size:12px; font-weight:700; margin:0;">
+                <i class="fas fa-exclamation-triangle"></i> Confirm Delete
+            </h6>
+            <button style="background:none; border:none; color:white; font-size:15px; cursor:pointer;" onclick="closeDeleteModal()">✕</button>
+        </div>
+        <div style="padding:18px 16px; text-align:center;">
+            <p style="font-size:11px; color:#374151; margin:0 0 6px;">Delete karna chahte hain?</p>
+            <strong id="deleteItemName" style="color:#ef4444; font-size:12px;"></strong>
+            <p style="font-size:10px; color:#9ca3af; margin-top:6px;">Yeh action undo nahi hoga.</p>
+        </div>
+        <div style="padding:10px 16px; display:flex; gap:8px; justify-content:center; border-top:1px solid #f3f4f6;">
+            <button class="btn btn-secondary btn-sm" onclick="closeDeleteModal()">Cancel</button>
+            <button class="btn btn-danger btn-sm" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> Haan, Delete
+            </button>
+        </div>
+    </div>
+</div>
 
-.card {
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border: none;
-}
-
-.info-box label {
-    margin-bottom: 5px;
-    display: block;
-}
-
-.info-box p {
-    margin-bottom: 0;
-    padding: 8px 12px;
-    background: #f8f9fa;
-    border-radius: 5px;
-}
-
-.message-box {
-    max-height: 200px;
-    overflow-y: auto;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
-.btn-sm {
-    font-size: 0.875rem;
-}
-
-/* Alert auto-fade */
-.alert {
-    animation: slideIn 0.5s ease-in-out;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Hover effect on table rows */
-.table-hover tbody tr:hover {
-    background-color: #f8f9fa;
-    cursor: pointer;
-}
-
-/* Badge styling */
-.badge {
-    padding: 8px 15px;
-}
-
-/* Modal improvements */
-.modal-header {
-    border-bottom: 2px solid rgba(255,255,255,0.2);
-}
-
-.modal-footer {
-    border-top: 2px solid #dee2e6;
-}
-</style>
-
-<!-- Auto-dismiss alerts after 5 seconds -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-        const alerts = document.querySelectorAll('.alert');
-        alerts.forEach(function(alert) {
-            const bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        });
+    // View Modal
+    function openViewModal(id, name, email, phone, address, product, message, date) {
+        document.getElementById('modalId').textContent = '#' + id;
+        document.getElementById('modalName').textContent = name || '—';
+        document.getElementById('modalDate').textContent = date || '—';
+        document.getElementById('modalPhone').textContent = phone || '—';
+        document.getElementById('modalProduct').textContent = product || 'Not provided';
+
+        const emailEl = document.getElementById('modalEmail');
+        emailEl.innerHTML = email ? '<a href="mailto:' + email + '">' + email + '</a>' : '—';
+
+        const addrEl = document.getElementById('modalAddress');
+        addrEl.textContent = address || 'Not provided';
+        if (!address) addrEl.classList.add('empty'); else addrEl.classList.remove('empty');
+
+        const msgEl = document.getElementById('modalMessage');
+        msgEl.textContent = message || 'No message provided';
+        if (!message) msgEl.classList.add('empty'); else msgEl.classList.remove('empty');
+
+        document.getElementById('modalReplyBtn').href = 'mailto:' + email;
+        document.getElementById('viewModal').classList.add('show');
+    }
+    function closeViewModal() {
+        document.getElementById('viewModal').classList.remove('show');
+    }
+
+    // Delete Modal
+    let pendingDeleteForm = null;
+    function confirmDelete(e, name) {
+        e.preventDefault();
+        pendingDeleteForm = e.target;
+        document.getElementById('deleteItemName').textContent = '"' + name + '"';
+        document.getElementById('deleteModal').classList.add('show');
+        return false;
+    }
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('show');
+        pendingDeleteForm = null;
+    }
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (pendingDeleteForm) pendingDeleteForm.submit();
+    });
+
+    // Close modals on overlay click
+    document.getElementById('viewModal').addEventListener('click', function(e) {
+        if (e.target === this) closeViewModal();
+    });
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) closeDeleteModal();
+    });
+
+    // Auto dismiss alerts
+    setTimeout(() => {
+        document.querySelectorAll('.alert-success, .alert-danger').forEach(el => el.remove());
     }, 5000);
-});
 </script>
 
 @endsection
