@@ -39,7 +39,7 @@
         {{-- HOME  --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#homeMenu" aria-expanded="false" aria-controls="homeMenu">
-                <span class="menu-title">HOME</span>
+                <span class="menu-title">Home</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-lock menu-icon"></i>
             </a>
