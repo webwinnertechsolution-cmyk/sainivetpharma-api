@@ -54,6 +54,9 @@
         .content-wrapper {
     background: #fff!important;
 }
+        .navbar .navbar-menu-wrapper .navbar-toggler {
+    color: #ffffff!important;
+}
 	</style>
 	
 </head>
