@@ -282,7 +282,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">🖼️ Gallery Management</h1>
-        <p class="page-subtitle">Manage image and video galleries displayed on the website</p>
+        <p class="page-subtitle">Manage the image and video galleries displayed on the website.</p>
     </div>
 
     {{-- Alerts --}}
