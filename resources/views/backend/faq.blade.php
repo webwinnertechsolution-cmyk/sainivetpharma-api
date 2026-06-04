@@ -146,7 +146,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">❓ FAQ Management</h1>
-        <p class="page-subtitle">Website ke frequently asked questions manage karein</p>
+        <p class="page-subtitle">Manage the website's Frequently Asked Questions (FAQs).</p>
     </div>
 
     {{-- Alerts --}}
