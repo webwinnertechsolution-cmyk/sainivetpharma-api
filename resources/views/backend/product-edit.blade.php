@@ -741,7 +741,7 @@
                                 <label for="cta_enquire_now">✉️ Enquire Now</label>
                             </div>
                         </div>
-                        <span class="form-hint">Frontend pe sirf yahi button dikhega</span>
+                        <span class="form-hint">Only this button will be displayed on the frontend.</span>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Featured</label>
