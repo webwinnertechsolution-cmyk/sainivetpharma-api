@@ -1971,18 +1971,21 @@ public function contactSubmissions(Request $request)
     if (!Session::has('user_id')) {
         return redirect()->route('login')->with('error', 'Please login first');
     }
-    
+
     $query = Contact::orderBy('created_at', 'desc');
 
     if ($request->filled('date_from')) {
-    $query->whereDate('created_at', '>=', \Carbon\Carbon::parse($request->date_from)->format('Y-m-d'));
-}
-if ($request->filled('date_to')) {
-    $query->whereDate('created_at', '<=', \Carbon\Carbon::parse($request->date_to)->format('Y-m-d'));
-}
+        $dateFrom = $request->date_from; // format: 2026-06-02
+        $query->whereRaw('DATE(created_at) >= ?', [$dateFrom]);
+    }
+
+    if ($request->filled('date_to')) {
+        $dateTo = $request->date_to; // format: 2026-06-03
+        $query->whereRaw('DATE(created_at) <= ?', [$dateTo]);
+    }
 
     $contacts = $query->paginate(20)->withQueryString();
-    
+
     return view('backend.contact-submissions', compact('contacts'));
 }
 
