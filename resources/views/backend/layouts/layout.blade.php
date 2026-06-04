@@ -46,10 +46,10 @@
     background: #930e0ee8;
 }
         .navbar {
-    background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
+    background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%)!important;
 }
         .navbar .navbar-brand-wrapper {
-    background: #ff000000;
+    background: #ff000000!important;
 }
 	</style>
 	
