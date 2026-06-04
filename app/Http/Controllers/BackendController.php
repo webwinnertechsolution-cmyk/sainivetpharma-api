@@ -1975,11 +1975,11 @@ public function contactSubmissions(Request $request)
     $query = Contact::orderBy('created_at', 'desc');
 
     if ($request->filled('date_from')) {
-        $query->whereDate('created_at', '>=', $request->date_from);
-    }
-    if ($request->filled('date_to')) {
-        $query->whereDate('created_at', '<=', $request->date_to);
-    }
+    $query->whereDate('created_at', '>=', \Carbon\Carbon::parse($request->date_from)->format('Y-m-d'));
+}
+if ($request->filled('date_to')) {
+    $query->whereDate('created_at', '<=', \Carbon\Carbon::parse($request->date_to)->format('Y-m-d'));
+}
 
     $contacts = $query->paginate(20)->withQueryString();
     
