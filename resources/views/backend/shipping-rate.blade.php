@@ -221,10 +221,10 @@
         <div class="alert-warning-box">
             <i class="fas fa-exclamation-triangle"></i>
             @if($zones->isEmpty())
-                Pehle <a href="{{ route('shipping.zone') }}" style="color:#92400e;font-weight:700;">Shipping Zone add karo</a>.
+                Pehle <a href="{{ route('shipping.zone') }}" style="color:#92400e;font-weight:700;">Add a Shipping Zone.</a>.
             @endif
             @if($methods->isEmpty())
-                Pehle <a href="{{ route('shipping.method') }}" style="color:#92400e;font-weight:700;">Shipping Method add karo</a>.
+                Pehle <a href="{{ route('shipping.method') }}" style="color:#92400e;font-weight:700;">Add a Shipping Method.</a>.
             @endif
         </div>
     @endif
@@ -336,7 +336,7 @@
                                        value="{{ old('min_cart_value', isset($editRate) ? $editRate->min_cart_value : '') }}"
                                        min="0" step="0.01" placeholder="500">
                             </div>
-                            <div class="form-hint">Is amount ke upar free/discounted shipping milegi</div>
+                            <div class="form-hint">Orders above this amount will qualify for free or discounted shipping.</div>
                         </div>
                     </div>
 
@@ -432,7 +432,7 @@
                 @if($rates->isEmpty())
                     <div class="empty-state">
                         <i class="fas fa-rupee-sign"></i>
-                        <p>Koi rate nahi mila. Naya rate add karo!</p>
+                        <p>No rates found. Add a new rate!</p>
                     </div>
                 @else
                     <table>
@@ -535,12 +535,12 @@
         <div class="modal-box-body">
             <p>Delete karna chahte hain?</p>
             <strong id="deleteItemName"></strong>
-            <p class="note">Yeh action undo nahi hoga.</p>
+            <p class="note">This action cannot be undone.</p>
         </div>
         <div class="modal-box-footer">
             <button class="btn btn-secondary btn-sm" onclick="closeDeleteModal()">Cancel</button>
             <button class="btn btn-danger btn-sm" id="confirmDeleteBtn">
-                <i class="fas fa-trash"></i> Haan, Delete
+                <i class="fas fa-trash"></i> Yes, Delete.
             </button>
         </div>
     </div>
