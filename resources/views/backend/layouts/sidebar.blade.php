@@ -125,49 +125,19 @@
             </a>
         </li>
 
-        
-		
-		
-        {{-- Icons --}}
-        <!-- <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-                <span class="menu-title">SERVICES</span>
-				 <i class="menu-arrow"></i>
-                <i class="mdi mdi-lock menu-icon"></i>
-            </a>
-            <div class="collapse" id="icons">
-                <ul class="nav flex-column sub-menu">
-                   <li class="nav-item">
-                        <a class="nav-link" href="{{ url('/threedscanning') }}">3D SCANING</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ ('/threedprinting') }}">3D PRINTING</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ ('/plasticfabrication') }}">PLASTIC FABRICATION</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ ('/routercutting') }}">ROUTER CUTTING</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ ('/prototyping') }}">PROTOTYPING</a>
-                    </li>
-					<li class="nav-item">
-                        <a class="nav-link" href="{{ ('/reverseengineering') }}">REVERSE ENGINEERING</a>
-                    </li>
-                </ul>
-            </div>
-        </li> -->
-       
-      <!--	   
-		<li class="nav-item">
-            <a class="nav-link" href="{{ url('/industry') }}" ">
-                <span class="menu-title">INDUSTRIES</span>
+         <li class="nav-item">
+            <a class="nav-link" href="{{ url('/contact-us-page') }}" ">
+                <span class="menu-title">Contact Us</span>
                 <i class="mdi mdi-contacts menu-icon"></i>
             </a>
         </li>
-		-->
-		
+
+         <li class="nav-item">
+            <a class="nav-link" href="{{ route('contact.submissions') }}" ">
+                <span class="menu-title">Email Submissions</span>
+                <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+        </li>
 
 		
 		<li class="nav-item">
