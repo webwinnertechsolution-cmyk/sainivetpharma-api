@@ -501,4 +501,7 @@ a.nav-link {
     color: #fff!important;
     background: transparent;
 }
+    .sidebar .nav .nav-item:hover {
+    background: rgb(26 92 46 / 0%);
+}
 </style>
