@@ -57,6 +57,9 @@
         .navbar .navbar-menu-wrapper .navbar-toggler {
     color: #ffffff!important;
 }
+        .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .dropdown-toggle:after {
+    color: #fff!important;
+}
 	</style>
 	
 </head>
