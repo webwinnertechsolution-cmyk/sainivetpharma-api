@@ -323,7 +323,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">📬 Contact Form Submissions</h1>
-        <p class="page-subtitle">Visitors dwara submit kiye gaye contact forms</p>
+        <p class="page-subtitle">Contact forms submitted by website visitors.</p>
     </div>
 
     {{-- Alerts --}}
