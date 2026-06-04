@@ -162,7 +162,7 @@
     {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">🚚 Shipping Methods</h1>
-        <p class="page-subtitle">Store ke shipping methods aur delivery options manage karein</p>
+        <p class="page-subtitle">Manage the store's shipping methods and delivery options.</p>
     </div>
 
     {{-- Alerts --}}
