@@ -497,4 +497,8 @@ a.nav-link {
     background: #30674d00!important;
     Color: white;
 }
+    .sidebar .nav.sub-menu .nav-item .nav-link.active {
+    color: #fff!important;
+    background: transparent;
+}
 </style>
