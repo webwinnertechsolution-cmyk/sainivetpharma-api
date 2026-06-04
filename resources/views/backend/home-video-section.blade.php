@@ -251,7 +251,7 @@
     <div class="alert-info-box">
         <span style="font-size:18px;flex-shrink:0;">💡</span>
         <div>
-            <strong>Shortcode Usage:</strong> Section ID note karo aur Next.js page mein use karo:<br>
+            <strong>Shortcode Usage:</strong> Note the Section ID and use it in the Next.js page.<br>
             <code>&lt;VideoSection sectionId={1} /&gt;</code>
         </div>
     </div>
@@ -359,7 +359,7 @@
                 <div class="form-group">
                     <label class="form-label">
                         {{ isset($editSection) ? 'Add More Videos' : 'Upload Videos' }}
-                        <small>Ek saath multiple files select kar sakte ho</small>
+                        <small>You can select multiple files at once.</small>
                     </label>
 
                     <div class="upload-box">
@@ -367,7 +367,7 @@
                         <input type="file" name="videos[]" class="form-control"
                             accept="video/*" multiple
                             style="font-size:11px;">
-                        <div style="font-size:10px;color:#6b7280;margin-top:4px;">mp4, webm, mov — Ctrl/Cmd + Click se multiple select karo</div>
+                        <div style="font-size:10px;color:#6b7280;margin-top:4px;">mp4, webm, mov — use Ctrl/Cmd + Click to select multiple files.</div>
                     </div>
 
                     <div class="upload-box">
@@ -375,7 +375,7 @@
                         <input type="file" name="thumbnails[]" class="form-control"
                             accept="image/*" multiple
                             style="font-size:11px;">
-                        <div style="font-size:10px;color:#6b7280;margin-top:4px;">Videos ke order mein thumbnails upload karo</div>
+                        <div style="font-size:10px;color:#6b7280;margin-top:4px;">Upload thumbnails in the same order as the videos.</div>
                     </div>
 
                     {{-- Dynamic Title Fields --}}
