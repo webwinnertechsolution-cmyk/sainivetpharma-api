@@ -1,4 +1,3 @@
-
 @extends('backend.layouts.layout')
 @section('title', 'Contact Us')
 @section('content')
@@ -293,9 +292,6 @@
                 {{-- Actions --}}
                 <div class="btn-group-custom">
                     @if($contactUs)
-                        <a href="{{ route('contact.us.index') }}" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancel
-                        </a>
                         <form action="{{ route('contact.us.delete', $contactUs->id) }}" method="POST"
                             class="d-inline"
                             onsubmit="return confirmDelete(event, 'Contact Us')">
