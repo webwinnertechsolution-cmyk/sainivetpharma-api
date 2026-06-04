@@ -21,7 +21,7 @@
         </div>
         
         <ul class="navbar-nav navbar-nav-right">
-            {{-- Fullscreen Button --}}
+            {{-- Fullscreen Button --}} 
             <li class="nav-item d-none d-lg-block full-screen-link">
                 <a class="nav-link">
                     <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
