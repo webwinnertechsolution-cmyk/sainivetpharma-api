@@ -1982,14 +1982,7 @@ public function contactSubmissions(Request $request)
               ->orWhere('phone', 'like', "%{$search}%");
         });
     }
-	
-	if ($request->filled('date_from')) {
-    dd([
-        'date_from_raw' => $request->date_from,
-        'date_to_raw'   => $request->date_to,
-        'sample_record' => Contact::first()?->getRawOriginal('created_at'),
-    ]);
-}
+
 
 if ($request->filled('date_from')) {
     $dateFrom = \Carbon\Carbon::createFromFormat('d-m-Y', $request->date_from)->format('Y-m-d');
