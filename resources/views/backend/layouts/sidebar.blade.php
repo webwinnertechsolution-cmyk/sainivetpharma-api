@@ -223,18 +223,20 @@
                 <i class="mdi mdi-format-list-bulleted menu-icon"></i>
             </a>
             <div class="collapse" id="auth">
-                <ul class="nav flex-column sub-menu">
-                   
-                   <li class="nav-item">
-                <a class="nav-link" href="{{ route('blog') }}">All Blogs</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('blog.category') }}">Blog Categories</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('blog.tag') }}">Blog Tags</a>
-            </li>
-                </ul>
+               <ul class="nav flex-column sub-menu">
+					<li class="nav-item">
+						<a class="nav-link" href="{{ route('blog') }}">All Blogs</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ route('blog.create') }}">Add New blog</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ route('blog.category') }}">Blog Categories</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ route('blog.tag') }}">Blog Tags</a>
+					</li>
+				</ul>
             </div>
         </li>
 		
