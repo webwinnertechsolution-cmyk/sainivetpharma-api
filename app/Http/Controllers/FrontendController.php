@@ -1702,11 +1702,7 @@ public function apiProductReviewStore(Request $request, $productId)
 public function apiPageSeo($route)
 {
     $seo = \App\Models\PageSeo::where('route_name', $route)->first();
-    
-    if (!$seo) {
-        return response()->json(['error' => 'Not found'], 404);
-    }
-    
+    if (!$seo) return response()->json(['error' => 'Not found'], 404);
     return response()->json($seo);
 }
 
