@@ -312,7 +312,7 @@ Route::post('/gallery/media/info/{id}', [BackendController::class, 'galleryUpdat
     Route::post('/pageseo', [\App\Http\Controllers\Admin\PageSeoController::class, 'store'])->name('admin.pageseo.store');
     Route::get('/pageseo/{id}/edit', [\App\Http\Controllers\Admin\PageSeoController::class, 'edit'])->name('admin.pageseo.edit');
     Route::put('/pageseo/{id}', [\App\Http\Controllers\Admin\PageSeoController::class, 'update'])->name('admin.pageseo.update');
-
+Route::delete('/pageseo/{id}', [\App\Http\Controllers\Admin\PageSeoController::class, 'destroy'])->name('admin.pageseo.destroy');
 
 
 
