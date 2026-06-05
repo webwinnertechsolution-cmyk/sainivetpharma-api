@@ -191,7 +191,7 @@
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
                                     {{-- Delete: uncomment when admin.pageseo.destroy route is defined --}}
-                                    {{-- <form action="{{ route('admin.pageseo.destroy', $seo->id) }}"
+                                  <form action="{{ route('admin.pageseo.destroy', $seo->id) }}"
                                           method="POST" class="d-inline"
                                           onsubmit="return confirmDelete(event, '{{ addslashes($seo->page_name) }}')">
                                         @csrf
@@ -199,7 +199,7 @@
                                         <button type="submit" class="btn btn-danger btn-sm">
                                             <i class="fas fa-trash"></i> Del
                                         </button>
-                                    </form> --}}
+                                    </form> 
                                 </div>
                             </td>
                         </tr>
