@@ -3788,56 +3788,54 @@ public function blog()
     }
     
     $blogs = Blog::with(['categories', 'tags'])->orderBy('created_at', 'desc')->get();
+    
+    // ✅ CHANGED: Sirf blogs pass karo, categories/tags ki zaroorat nahi list page mein
+    return view('backend.blog-index', compact('blogs'));
+}
+
+public function blogCreate()
+{
+    if (!Session::has('user_id')) {
+        return redirect()->route('login')->with('error', 'Please login first');
+    }
+    
     $categories = BlogCategory::orderBy('name', 'asc')->get();
     $tags = BlogTag::orderBy('name', 'asc')->get();
     
-    return view('backend.blog', compact('blogs', 'categories', 'tags'));
+    // ✅ NEW METHOD: Alag create page
+    return view('backend.blog-create', compact('categories', 'tags'));
 }
-
-
-
-
 
 public function blogStore(Request $request)
 {
-    // DEBUG - Remove after testing
-    \Log::info('Blog Store Method Called');
-    \Log::info('Request Data:', $request->all());
-    
     if (!Session::has('user_id')) {
         return redirect()->route('login')->with('error', 'Please login first');
     }
 
-    // Validation
     try {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:blogs,slug', // ✅ ADD THIS LINE
-            'excerpt' => 'nullable|string',
-            'content' => 'required|string',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'image_alt_tag' => 'nullable|string|max:255',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string|max:500',
-            'meta_keywords' => 'nullable|string',
-            'og_title' => 'nullable|string|max:255',
-            'og_description' => 'nullable|string',
-            'og_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'og_image_alt_tag' => 'nullable|string|max:255',
-            'status' => 'required|in:draft,published',
-            'categories' => 'nullable|array',
-            'categories.*' => 'exists:blog_categories,id',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:blog_tags,id',
+            'title'             => 'required|string|max:255',
+            'slug'              => 'required|string|max:255|unique:blogs,slug',
+            'excerpt'           => 'nullable|string',
+            'content'           => 'required|string',
+            'featured_image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image_alt_tag'     => 'nullable|string|max:255',
+            'meta_title'        => 'nullable|string|max:255',
+            'meta_description'  => 'nullable|string|max:500',
+            'meta_keywords'     => 'nullable|string',
+            'og_title'          => 'nullable|string|max:255',
+            'og_description'    => 'nullable|string',
+            'og_image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'og_image_alt_tag'  => 'nullable|string|max:255',
+            'status'            => 'required|in:draft,published',
+            'categories'        => 'nullable|array',
+            'categories.*'      => 'exists:blog_categories,id',
+            'tags'              => 'nullable|array',
+            'tags.*'            => 'exists:blog_tags,id',
         ]);
         
-        \Log::info('Validation passed');
-        
     } catch (\Illuminate\Validation\ValidationException $e) {
-        \Log::error('Validation failed:', $e->errors());
-        return redirect()->back()
-                        ->withErrors($e->errors())
-                        ->withInput();
+        return redirect()->back()->withErrors($e->errors())->withInput();
     }
 
     try {
@@ -3845,82 +3843,48 @@ public function blogStore(Request $request)
         if ($request->hasFile('featured_image')) {
             $image = $request->file('featured_image');
             $featuredImageName = time() . '_featured_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            
             $uploadPath = public_path('uploads/blogs');
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0755, true);
-            }
-            
+            if (!file_exists($uploadPath)) mkdir($uploadPath, 0755, true);
             $image->move($uploadPath, $featuredImageName);
-            \Log::info('Featured image uploaded to: ' . $uploadPath . '/' . $featuredImageName);
         }
 
         $ogImageName = null;
         if ($request->hasFile('og_image')) {
             $ogImage = $request->file('og_image');
             $ogImageName = time() . '_og_' . uniqid() . '.' . $ogImage->getClientOriginalExtension();
-            
             $ogUploadPath = public_path('uploads/blogs/og');
-            if (!file_exists($ogUploadPath)) {
-                mkdir($ogUploadPath, 0755, true);
-            }
-            
+            if (!file_exists($ogUploadPath)) mkdir($ogUploadPath, 0755, true);
             $ogImage->move($ogUploadPath, $ogImageName);
-            \Log::info('OG image uploaded to: ' . $ogUploadPath . '/' . $ogImageName);
         }
 
         $blog = Blog::create([
-            'title' => $request->title,
-            'slug' => $request->slug, // ✅ ADD THIS LINE
-            'excerpt' => $request->excerpt,
-            'content' => $request->content,
-            'featured_image' => $featuredImageName,
-            'image_alt_tag' => $request->image_alt_tag,
-            'meta_title' => $request->meta_title ?: $request->title,
+            'title'            => $request->title,
+            'slug'             => $request->slug,
+            'excerpt'          => $request->excerpt,
+            'content'          => $request->content,
+            'featured_image'   => $featuredImageName,
+            'image_alt_tag'    => $request->image_alt_tag,
+            'meta_title'       => $request->meta_title ?: $request->title,
             'meta_description' => $request->meta_description,
-            'meta_keywords' => $request->meta_keywords,
-            'og_title' => $request->og_title ?: $request->title,
-            'og_description' => $request->og_description,
-            'og_image' => $ogImageName,
+            'meta_keywords'    => $request->meta_keywords,
+            'og_title'         => $request->og_title ?: $request->title,
+            'og_description'   => $request->og_description,
+            'og_image'         => $ogImageName,
             'og_image_alt_tag' => $request->og_image_alt_tag,
-            'status' => $request->status,
-            'published_at' => $request->status === 'published' ? now() : now(),
+            'status'           => $request->status,
+            'published_at'     => now(),
         ]);
 
-        \Log::info('Blog created with ID: ' . $blog->id);
+        if ($request->has('categories')) $blog->categories()->attach($request->categories);
+        if ($request->has('tags'))       $blog->tags()->attach($request->tags);
 
-        // Attach categories and tags
-        if ($request->has('categories')) {
-            $blog->categories()->attach($request->categories);
-            \Log::info('Categories attached');
-        }
-        
-        if ($request->has('tags')) {
-            $blog->tags()->attach($request->tags);
-            \Log::info('Tags attached');
-        }
-
-        \Log::info('Blog created successfully!');
-        
+        // ✅ CHANGED: blog.create se redirect, blog list pe jao
         return redirect()->route('blog')->with('success', 'Blog post created successfully!');
         
     } catch (\Exception $e) {
-        \Log::error('Blog creation failed: ' . $e->getMessage());
-        \Log::error('Stack trace: ' . $e->getTraceAsString());
-        
-        return redirect()->route('blog')->with('error', 'Failed to create blog: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Failed to create blog: ' . $e->getMessage())->withInput();
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 public function blogEdit($id)
 {
@@ -3928,17 +3892,13 @@ public function blogEdit($id)
         return redirect()->route('login')->with('error', 'Please login first');
     }
     
-    $blog = Blog::with(['categories', 'tags'])->findOrFail($id);
-    $blogs = Blog::with(['categories', 'tags'])->orderBy('created_at', 'desc')->get();
+    $editBlog   = Blog::with(['categories', 'tags'])->findOrFail($id);
     $categories = BlogCategory::orderBy('name', 'asc')->get();
-    $tags = BlogTag::orderBy('name', 'asc')->get();
+    $tags       = BlogTag::orderBy('name', 'asc')->get();
     
-    return view('backend.blog', [
-        'blogs' => $blogs,
-        'editBlog' => $blog,
-        'categories' => $categories,
-        'tags' => $tags
-    ]);
+    // ✅ CHANGED: Same create page use karo, $editBlog pass karo
+    // Ab blogs list pass karne ki zaroorat nahi
+    return view('backend.blog-create', compact('editBlog', 'categories', 'tags'));
 }
 
 public function blogUpdate(Request $request, $id)
@@ -3948,92 +3908,65 @@ public function blogUpdate(Request $request, $id)
     }
 
     $request->validate([
-        'title' => 'required|string|max:255',
-        'slug' => 'required|string|max:255|unique:blogs,slug,' . $id, // ✅ ADD THIS LINE
-        'excerpt' => 'nullable|string',
-        'content' => 'required|string',
-        'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        'image_alt_tag' => 'nullable|string|max:255',
-        'meta_title' => 'nullable|string|max:255',
-        'meta_description' => 'nullable|string|max:500',
-        'meta_keywords' => 'nullable|string',
-        'og_title' => 'nullable|string|max:255',
-        'og_description' => 'nullable|string',
-        'og_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        'og_image_alt_tag' => 'nullable|string|max:255',
-        'status' => 'required|in:draft,published',
-        'categories' => 'nullable|array',
-        'categories.*' => 'exists:blog_categories,id',
-        'tags' => 'nullable|array',
-        'tags.*' => 'exists:blog_tags,id',
+        'title'             => 'required|string|max:255',
+        'slug'              => 'required|string|max:255|unique:blogs,slug,' . $id,
+        'excerpt'           => 'nullable|string',
+        'content'           => 'required|string',
+        'featured_image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'image_alt_tag'     => 'nullable|string|max:255',
+        'meta_title'        => 'nullable|string|max:255',
+        'meta_description'  => 'nullable|string|max:500',
+        'meta_keywords'     => 'nullable|string',
+        'og_title'          => 'nullable|string|max:255',
+        'og_description'    => 'nullable|string',
+        'og_image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        'og_image_alt_tag'  => 'nullable|string|max:255',
+        'status'            => 'required|in:draft,published',
+        'categories'        => 'nullable|array',
+        'categories.*'      => 'exists:blog_categories,id',
+        'tags'              => 'nullable|array',
+        'tags.*'            => 'exists:blog_tags,id',
     ]);
 
     try {
         $blog = Blog::findOrFail($id);
 
-        // Handle featured image upload
         if ($request->hasFile('featured_image')) {
-            $oldImagePath = public_path('uploads/blogs/' . $blog->featured_image);
-            if ($blog->featured_image && file_exists($oldImagePath)) {
-                unlink($oldImagePath);
-                \Log::info('Deleted old featured image: ' . $oldImagePath);
-            }
+            $oldPath = public_path('uploads/blogs/' . $blog->featured_image);
+            if ($blog->featured_image && file_exists($oldPath)) unlink($oldPath);
             
             $image = $request->file('featured_image');
             $featuredImageName = time() . '_featured_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            
             $uploadPath = public_path('uploads/blogs');
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0755, true);
-            }
-            
+            if (!file_exists($uploadPath)) mkdir($uploadPath, 0755, true);
             $image->move($uploadPath, $featuredImageName);
             $blog->featured_image = $featuredImageName;
-            \Log::info('New featured image uploaded: ' . $uploadPath . '/' . $featuredImageName);
         }
 
-        // Handle OG image upload
         if ($request->hasFile('og_image')) {
-            $oldOgImagePath = public_path('uploads/blogs/og/' . $blog->og_image);
-            if ($blog->og_image && file_exists($oldOgImagePath)) {
-                unlink($oldOgImagePath);
-                \Log::info('Deleted old OG image: ' . $oldOgImagePath);
-            }
+            $oldOgPath = public_path('uploads/blogs/og/' . $blog->og_image);
+            if ($blog->og_image && file_exists($oldOgPath)) unlink($oldOgPath);
             
             $ogImage = $request->file('og_image');
             $ogImageName = time() . '_og_' . uniqid() . '.' . $ogImage->getClientOriginalExtension();
-            
             $ogUploadPath = public_path('uploads/blogs/og');
-            if (!file_exists($ogUploadPath)) {
-                mkdir($ogUploadPath, 0755, true);
-            }
-            
+            if (!file_exists($ogUploadPath)) mkdir($ogUploadPath, 0755, true);
             $ogImage->move($ogUploadPath, $ogImageName);
             $blog->og_image = $ogImageName;
-            \Log::info('New OG image uploaded: ' . $ogUploadPath . '/' . $ogImageName);
         }
 
-        // ✅ REMOVE THIS SECTION (Model already handles it):
-        // // Generate slug
-        // $blog->slug = Str::slug($request->title);
-        // $count = Blog::where('slug', 'LIKE', "{$blog->slug}%")->where('id', '!=', $id)->count();
-        // if ($count > 0) {
-        //     $blog->slug = "{$blog->slug}-" . ($count + 1);
-        // }
-
-        // Update other fields
-        $blog->title = $request->title;
-        $blog->slug = $request->slug; // ✅ ADD THIS LINE
-        $blog->excerpt = $request->excerpt;
-        $blog->content = $request->content;
-        $blog->image_alt_tag = $request->image_alt_tag;
-        $blog->meta_title = $request->meta_title ?: $request->title;
-        $blog->meta_description = $request->meta_description;
-        $blog->meta_keywords = $request->meta_keywords;
-        $blog->og_title = $request->og_title ?: $request->title;
-        $blog->og_description = $request->og_description;
-        $blog->og_image_alt_tag = $request->og_image_alt_tag;
-        $blog->status = $request->status;
+        $blog->title           = $request->title;
+        $blog->slug            = $request->slug;
+        $blog->excerpt         = $request->excerpt;
+        $blog->content         = $request->content;
+        $blog->image_alt_tag   = $request->image_alt_tag;
+        $blog->meta_title      = $request->meta_title ?: $request->title;
+        $blog->meta_description= $request->meta_description;
+        $blog->meta_keywords   = $request->meta_keywords;
+        $blog->og_title        = $request->og_title ?: $request->title;
+        $blog->og_description  = $request->og_description;
+        $blog->og_image_alt_tag= $request->og_image_alt_tag;
+        $blog->status          = $request->status;
         
         if ($request->status === 'published' && !$blog->published_at) {
             $blog->published_at = now();
@@ -4041,28 +3974,15 @@ public function blogUpdate(Request $request, $id)
         
         $blog->save();
 
-        // Sync categories and tags
-        if ($request->has('categories')) {
-            $blog->categories()->sync($request->categories);
-        } else {
-            $blog->categories()->detach();
-        }
-        
-        if ($request->has('tags')) {
-            $blog->tags()->sync($request->tags);
-        } else {
-            $blog->tags()->detach();
-        }
+        $blog->categories()->sync($request->categories ?? []);
+        $blog->tags()->sync($request->tags ?? []);
 
         return redirect()->route('blog')->with('success', 'Blog post updated successfully!');
-    } catch (\Exception $e) {
-        \Log::error('Blog update failed: ' . $e->getMessage());
-        \Log::error('Stack trace: ' . $e->getTraceAsString());
         
-        return redirect()->route('blog')->with('error', 'Failed to update blog: ' . $e->getMessage());
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Failed to update blog: ' . $e->getMessage())->withInput();
     }
 }
-
 
 public function blogDelete($id)
 {
@@ -4073,12 +3993,12 @@ public function blogDelete($id)
     try {
         $blog = Blog::findOrFail($id);
         
-        if ($blog->featured_image && file_exists(public_path('../uploads/blogs/' . $blog->featured_image))) {
-            unlink(public_path('../uploads/blogs/' . $blog->featured_image));
+        if ($blog->featured_image && file_exists(public_path('uploads/blogs/' . $blog->featured_image))) {
+            unlink(public_path('uploads/blogs/' . $blog->featured_image));
         }
         
-        if ($blog->og_image && file_exists(public_path('../uploads/blogs/og/' . $blog->og_image))) {
-            unlink(public_path('../uploads/blogs/og/' . $blog->og_image));
+        if ($blog->og_image && file_exists(public_path('uploads/blogs/og/' . $blog->og_image))) {
+            unlink(public_path('uploads/blogs/og/' . $blog->og_image));
         }
         
         $blog->delete();
@@ -4088,101 +4008,6 @@ public function blogDelete($id)
         return redirect()->route('blog')->with('error', 'Failed to delete blog: ' . $e->getMessage());
     }
 }
-
-// ============================================
-// CATEGORY MANAGEMENT
-// ============================================
-
-public function blogCategory()
-{
-    if (!Session::has('user_id')) {
-        return redirect()->route('login')->with('error', 'Please login first');
-    }
-    
-    $categories = BlogCategory::withCount('blogs')->orderBy('created_at', 'desc')->get();
-    return view('backend.blog-category', compact('categories'));
-}
-
-public function blogCategoryStore(Request $request)
-{
-    if (!Session::has('user_id')) {
-        return redirect()->route('login')->with('error', 'Please login first');
-    }
-
-    $request->validate([
-        'name' => 'required|string|max:255|unique:blog_categories,name',
-    ]);
-
-    try {
-        BlogCategory::create(['name' => $request->name]);
-        return redirect()->route('blog.category')->with('success', 'Category created successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('blog.category')->with('error', 'Failed to create category: ' . $e->getMessage());
-    }
-}
-
-public function blogCategoryDelete($id)
-{
-    if (!Session::has('user_id')) {
-        return redirect()->route('login')->with('error', 'Please login first');
-    }
-
-    try {
-        $category = BlogCategory::findOrFail($id);
-        $category->delete();
-        return redirect()->route('blog.category')->with('success', 'Category deleted successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('blog.category')->with('error', 'Failed to delete category: ' . $e->getMessage());
-    }
-}
-
-// ============================================
-// TAG MANAGEMENT
-// ============================================
-
-public function blogTag()
-{
-    if (!Session::has('user_id')) {
-        return redirect()->route('login')->with('error', 'Please login first');
-    }
-    
-    $tags = BlogTag::withCount('blogs')->orderBy('created_at', 'desc')->get();
-    return view('backend.blog-tag', compact('tags'));
-}
-
-public function blogTagStore(Request $request)
-{
-    if (!Session::has('user_id')) {
-        return redirect()->route('login')->with('error', 'Please login first');
-    }
-
-    $request->validate([
-        'name' => 'required|string|max:255|unique:blog_tags,name',
-    ]);
-
-    try {
-        BlogTag::create(['name' => $request->name]);
-        return redirect()->route('blog.tag')->with('success', 'Tag created successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('blog.tag')->with('error', 'Failed to create tag: ' . $e->getMessage());
-    }
-}
-
-public function blogTagDelete($id)
-{
-    if (!Session::has('user_id')) {
-        return redirect()->route('login')->with('error', 'Please login first');
-    }
-
-    try {
-        $tag = BlogTag::findOrFail($id);
-        $tag->delete();
-        return redirect()->route('blog.tag')->with('success', 'Tag deleted successfully!');
-    } catch (\Exception $e) {
-        return redirect()->route('blog.tag')->with('error', 'Failed to delete tag: ' . $e->getMessage());
-    }
-}
-
 
 // BackendController.php mein add karein
 public function contacts()
