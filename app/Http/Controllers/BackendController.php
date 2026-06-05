@@ -1974,6 +1974,7 @@ public function contactSubmissions(Request $request)
 
     $query = Contact::orderBy('created_at', 'desc');
 
+    // Search filter
     if ($request->filled('search')) {
         $search = $request->search;
         $query->where(function($q) use ($search) {
@@ -1982,21 +1983,16 @@ public function contactSubmissions(Request $request)
               ->orWhere('phone', 'like', "%{$search}%");
         });
     }
-	
-	if ($request->filled('date_from')) {
-    dd([
-    'date_from' => $request->date_from,
-    'date_to'   => $request->date_to,
-]);
-}
 
-if ($request->filled('date_from')) {
-    $query->whereDate('created_at', '>=', $request->date_from);
-}
+    // ✅ From Date filter (dd() HATA DIYA)
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
 
-if ($request->filled('date_to')) {
-    $query->whereDate('created_at', '<=', $request->date_to);
-}
+    // ✅ To Date filter
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
 
     $contacts = $query->paginate(20)->withQueryString();
 
