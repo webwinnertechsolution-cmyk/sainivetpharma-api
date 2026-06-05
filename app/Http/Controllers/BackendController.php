@@ -1982,16 +1982,15 @@ public function contactSubmissions(Request $request)
               ->orWhere('phone', 'like', "%{$search}%");
         });
     }
+	
 
 
 if ($request->filled('date_from')) {
-    $dateFrom = \Carbon\Carbon::createFromFormat('d-m-Y', $request->date_from)->format('Y-m-d');
-    $query->whereDate('created_at', '>=', $dateFrom);
+    $query->whereDate('created_at', '>=', $request->date_from);
 }
 
 if ($request->filled('date_to')) {
-    $dateTo = \Carbon\Carbon::createFromFormat('d-m-Y', $request->date_to)->format('Y-m-d');
-    $query->whereDate('created_at', '<=', $dateTo);
+    $query->whereDate('created_at', '<=', $request->date_to);
 }
 
     $contacts = $query->paginate(20)->withQueryString();
