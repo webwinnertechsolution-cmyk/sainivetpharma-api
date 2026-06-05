@@ -290,12 +290,14 @@ Route::post('/gallery/media/info/{id}', [BackendController::class, 'galleryUpdat
     Route::post('/experience-the-power/update/{id}', [BackendController::class, 'experienceThePowerUpdate'])->name('experience.the.power.update');
     Route::post('/experience-the-power/delete/{id}', [BackendController::class, 'experienceThePowerDelete'])->name('experience.the.power.delete');
 
-    // Blog Admin
-    Route::get('/admin-blog', [BackendController::class, 'blog'])->name('blog');
-    Route::post('/blog/store', [BackendController::class, 'blogStore'])->name('blog.store');
-    Route::get('/blog/edit/{id}', [BackendController::class, 'blogEdit'])->name('blog.edit');
-    Route::post('/blog/update/{id}', [BackendController::class, 'blogUpdate'])->name('blog.update');
-    Route::post('/blog/delete/{id}', [BackendController::class, 'blogDelete'])->name('blog.delete');
+   
+// Blog Admin
+Route::get('/admin-blog', [BackendController::class, 'blog'])->name('blog');
+Route::get('/blog/create', [BackendController::class, 'blogCreate'])->name('blog.create'); // ← ADD THIS
+Route::post('/blog/store', [BackendController::class, 'blogStore'])->name('blog.store');
+Route::get('/blog/edit/{id}', [BackendController::class, 'blogEdit'])->name('blog.edit');
+Route::post('/blog/update/{id}', [BackendController::class, 'blogUpdate'])->name('blog.update');
+Route::post('/blog/delete/{id}', [BackendController::class, 'blogDelete'])->name('blog.delete');
     
     Route::get('/blog-category', [BackendController::class, 'blogCategory'])->name('blog.category');
     Route::post('/blog-category/store', [BackendController::class, 'blogCategoryStore'])->name('blog.category.store');
