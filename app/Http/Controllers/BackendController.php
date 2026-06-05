@@ -4527,7 +4527,8 @@ public function product()
     }
     
     $products = Product::with(['categories', 'tags', 'images', 'variants'])
-                       ->orderBy('created_at', 'desc')->get();
+                       ->orderBy('created_at', 'desc')
+                       ->paginate(15); // ← paginate add kiya
     
     return view('backend.product', compact('products'));
 }
