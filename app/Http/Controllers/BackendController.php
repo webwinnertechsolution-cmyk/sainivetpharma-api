@@ -3805,7 +3805,7 @@ public function blogCreate()
     $tags = BlogTag::orderBy('name', 'asc')->get();
     $blogs = Blog::with(['categories', 'tags'])->orderBy('created_at', 'desc')->get();
     
-    return view('backend.blog', compact('categories', 'tags', 'blogs'));
+    return view('backend.blog-create', compact('categories', 'tags', 'blogs')); // ← blog-create
 }
 
 
@@ -3944,12 +3944,7 @@ public function blogEdit($id)
     $categories = BlogCategory::orderBy('name', 'asc')->get();
     $tags = BlogTag::orderBy('name', 'asc')->get();
     
-    return view('backend.blog', [
-        'blogs' => $blogs,
-        'editBlog' => $blog,
-        'categories' => $categories,
-        'tags' => $tags
-    ]);
+    return view('backend.blog-create', compact('blog', 'blogs', 'categories', 'tags', 'editBlog' )); // ← blog-create
 }
 
 public function blogUpdate(Request $request, $id)
