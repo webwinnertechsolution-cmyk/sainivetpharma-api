@@ -291,11 +291,12 @@ Route::post('/gallery/media/info/{id}', [BackendController::class, 'galleryUpdat
     Route::post('/experience-the-power/delete/{id}', [BackendController::class, 'experienceThePowerDelete'])->name('experience.the.power.delete');
 
     // Blog Admin
-    Route::get('/admin-blog', [BackendController::class, 'blog'])->name('blog');
-    Route::post('/blog/store', [BackendController::class, 'blogStore'])->name('blog.store');
-    Route::get('/blog/edit/{id}', [BackendController::class, 'blogEdit'])->name('blog.edit');
-    Route::post('/blog/update/{id}', [BackendController::class, 'blogUpdate'])->name('blog.update');
-    Route::post('/blog/delete/{id}', [BackendController::class, 'blogDelete'])->name('blog.delete');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/create', [BlogController::class, 'create'])->name('blog.create');
+Route::post('/blog/store', [BlogController::class, 'store'])->name('blog.store');
+Route::get('/blog/edit/{id}', [BlogController::class, 'edit'])->name('blog.edit');
+Route::post('/blog/update/{id}', [BlogController::class, 'update'])->name('blog.update');
+Route::post('/blog/delete/{id}', [BlogController::class, 'destroy'])->name('blog.delete');
     
     Route::get('/blog-category', [BackendController::class, 'blogCategory'])->name('blog.category');
     Route::post('/blog-category/store', [BackendController::class, 'blogCategoryStore'])->name('blog.category.store');
