@@ -1699,7 +1699,16 @@ public function apiProductReviewStore(Request $request, $productId)
     ], 201);
 }
 
-
+public function apiPageSeo($route)
+{
+    $seo = \App\Models\PageSeo::where('route_name', $route)->first();
+    
+    if (!$seo) {
+        return response()->json(['error' => 'Not found'], 404);
+    }
+    
+    return response()->json($seo);
+}
 
 
 
