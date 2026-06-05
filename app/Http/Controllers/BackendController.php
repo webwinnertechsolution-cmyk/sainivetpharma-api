@@ -1983,7 +1983,12 @@ public function contactSubmissions(Request $request)
         });
     }
 	
-
+	if ($request->filled('date_from')) {
+    dd([
+    'date_from' => $request->date_from,
+    'date_to'   => $request->date_to,
+]);
+}
 
 if ($request->filled('date_from')) {
     $query->whereDate('created_at', '>=', $request->date_from);
