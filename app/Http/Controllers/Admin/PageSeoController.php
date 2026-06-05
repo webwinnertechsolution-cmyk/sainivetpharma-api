@@ -66,7 +66,18 @@ class PageSeoController extends Controller
 
         return redirect()->route('admin.pageseo.index')->with('success', 'New Page SEO created successfully.');
     }
-
+public function destroy($id)
+{
+    $pageSeo = PageSeo::findOrFail($id);
+    
+    // Delete OG image if exists
+    if ($pageSeo->og_image && file_exists(public_path('uploads/pages/' . $pageSeo->og_image))) {
+        unlink(public_path('uploads/pages/' . $pageSeo->og_image));
+    }
+    
+    $pageSeo->delete();
+    return redirect()->route('admin.pageseo.index')->with('success', 'Page SEO deleted successfully.');
+}
     public function update(Request $request, $id)
     {
         $request->validate([
