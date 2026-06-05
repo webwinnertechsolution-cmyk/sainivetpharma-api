@@ -3935,16 +3935,15 @@ public function blogStore(Request $request)
 
 public function blogEdit($id)
 {
-    if (!Session::has('user_id')) {
-        return redirect()->route('login')->with('error', 'Please login first');
-    }
-    
     $blog = Blog::with(['categories', 'tags'])->findOrFail($id);
-    $blogs = Blog::with(['categories', 'tags'])->orderBy('created_at', 'desc')->get();
     $categories = BlogCategory::orderBy('name', 'asc')->get();
     $tags = BlogTag::orderBy('name', 'asc')->get();
     
-    return view('backend.blog-create', compact('blog', 'blogs', 'categories', 'tags', 'editBlog' )); // ← blog-create
+    return view('backend.blog-create', [
+        'editBlog' => $blog,  // ← editBlog naam zaruri hai
+        'categories' => $categories,
+        'tags' => $tags
+    ]);
 }
 
 public function blogUpdate(Request $request, $id)
