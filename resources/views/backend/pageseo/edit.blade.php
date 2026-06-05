@@ -236,7 +236,7 @@
                     <input type="file" class="form-control" name="og_image" accept="image/*">
                     @if($pageSeo->og_image)
                         <div class="og-image-preview mt-2">
-                            <img src="{{ asset('public/uploads/pages/' . $pageSeo->og_image) }}" alt="Current OG Image">
+                           <img src="{{ asset('uploads/pages/' . $pageSeo->og_image) }}" alt="Current OG Image">
                         </div>
                         <div style="font-size:10px;color:#9ca3af;margin-top:4px;">Current image shown above. Upload a new one to replace.</div>
                     @endif
