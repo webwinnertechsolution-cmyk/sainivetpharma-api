@@ -56,10 +56,6 @@
         background: #f9fafb; padding: 12px 16px;
         border-bottom: 1.5px solid #e5e7eb;
     }
-    .card-header-primary {
-        background: linear-gradient(135deg, #0a214f 0%, #1872B5 100%);
-        padding: 12px 20px; color: #ffffff;
-    }
     .card-header-info {
         background: linear-gradient(135deg, #1e40af, #3b82f6);
         padding: 12px 20px; color: #ffffff;
@@ -72,7 +68,6 @@
         font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700;
         margin: 0; display: flex; align-items: center; gap: 8px; color: #0a214f;
     }
-    .card-header-primary .card-header-title,
     .card-header-info .card-header-title,
     .card-header-success .card-header-title { color: #ffffff; }
 
@@ -398,7 +393,7 @@
                     <div class="form-group">
                         <label class="form-label">OG Title</label>
                         <input type="text" class="form-control"
-                               name="og_title"
+                               id="og_title" name="og_title"
                                value="{{ old('og_title', isset($editBlog) ? $editBlog->og_title : '') }}"
                                placeholder="Title for social sharing">
                         <small class="form-hint">Leave empty to use post title</small>
@@ -500,7 +495,7 @@ document.getElementById('title').addEventListener('input', function(e) {
     if (!metaTitle.value) {
         metaTitle.value = e.target.value.substring(0, 60);
     }
-    const ogTitle = document.querySelector('[name="og_title"]');
+    const ogTitle = document.getElementById('og_title');
     if (ogTitle && !ogTitle.value) {
         ogTitle.value = e.target.value;
     }
@@ -549,7 +544,7 @@ window.addEventListener('DOMContentLoaded', updateSlugPreview);
 
 // Auto-dismiss alerts
 setTimeout(() => {
-    document.querySelectorAll('.alert-success,.alert-danger,.alert-validation').forEach(el => el.remove());
+    document.querySelectorAll('.alert-success, .alert-danger, .alert-validation').forEach(el => el.remove());
 }, 5000);
 </script>
 
