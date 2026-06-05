@@ -57,7 +57,7 @@ Route::post('/products/{productId}/reviews', [FrontendController::class, 'apiPro
 Route::post('/google/login', [FrontendController::class, 'googleLoginOrRegister']);
 Route::get('/google/user/{firebase_uid}', [FrontendController::class, 'googleGetUser']);
 
-
+Route::get('/page-seo/{route}', [FrontendController::class, 'apiPageSeo']);
 
     /* Category */ 
     Route::get('/shop', [FrontendController::class, 'apiShop']);
