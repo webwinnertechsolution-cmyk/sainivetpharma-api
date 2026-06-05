@@ -1974,24 +1974,25 @@ public function contactSubmissions(Request $request)
 
     $query = Contact::orderBy('created_at', 'desc');
 
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('phone', 'like', "%{$search}%");
+        });
+    }
+
     if ($request->filled('date_from')) {
-        $query->whereRaw('DATE(created_at) >= ?', [$request->date_from]);
+        $query->whereDate('created_at', '>=', $request->date_from);
     }
 
     if ($request->filled('date_to')) {
-        $query->whereRaw('DATE(created_at) <= ?', [$request->date_to]);
+        $query->whereDate('created_at', '<=', $request->date_to);
     }
 
-    dd([
-        'date_from' => $request->date_from,
-        'date_to'   => $request->date_to,
-        'sql'       => $query->toSql(),
-        'bindings'  => $query->getBindings(),
-        'count'     => $query->count(),
-        'sample'    => Contact::first()?->getRawOriginal('created_at'),
-    ]);
-
     $contacts = $query->paginate(20)->withQueryString();
+
     return view('backend.contact-submissions', compact('contacts'));
 }
 
@@ -4189,31 +4190,13 @@ public function blogTagDelete($id)
 }
 
 
-
-public function contacts(Request $request)
+// BackendController.php mein add karein
+public function contacts()
 {
-    $query = Contact::orderBy('created_at', 'desc');
-
-    if ($request->filled('date_from')) {
-        $query->whereDate('created_at', '>=', $request->date_from);
-    }
-
-    if ($request->filled('date_to')) {
-        $query->whereDate('created_at', '<=', $request->date_to);
-    }
-
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function($q) use ($search) {
-            $q->where('name', 'like', '%' . $search . '%')
-              ->orWhere('email', 'like', '%' . $search . '%')
-              ->orWhere('phone', 'like', '%' . $search . '%');
-        });
-    }
-
-    $contacts = $query->paginate(20)->withQueryString();
+    $contacts = Contact::orderBy('created_at', 'desc')->paginate(20);
     return view('backend.admin-contact', compact('contacts'));
 }
+
 public function contactDelete($id)
 {
     $contact = Contact::findOrFail($id);
