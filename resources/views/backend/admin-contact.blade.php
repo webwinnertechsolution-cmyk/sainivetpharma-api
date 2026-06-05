@@ -349,67 +349,63 @@
             </div>
         </div>
 	</div>
-	{{---
-<div class="page-card" style="margin-bottom: 14px;">
-			<div class="card-header-dark" style="padding: 10px 16px;">
-				<h2 class="card-header-title">
-					<i class="fas fa-filter"></i> Filter by Date
-				</h2>
-			</div>
-			<div style="padding: 14px 16px;">
-				<form method="GET" action="{{ route('contact.submissions') }}"
-					  style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
+	{{-- FILTER FORM --}}
+<div style="padding: 12px 16px; border-bottom: 1px solid #f3f4f6; background: #f9fafb;">
+    <form method="GET" action="{{ route('admin.contacts') }}"
+          style="display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;">
 
-					<div style="display: flex; flex-direction: column; gap: 4px;">
-						<label style="font-family:'Sora',sans-serif; font-size:10px; font-weight:700; color:#0a214f;">
-							<i class="fas fa-calendar-alt"></i> From Date
-						</label>
-						<input type="date" name="date_from"
-							   value="{{ request('date_from') }}"
-							   style="padding:7px 10px; border:1px solid #e5e7eb; border-radius:6px;
-									  font-size:11px; font-family:'Nunito',sans-serif; color:#374151;
-									  background:#f9fafb; outline:none; cursor:pointer;">
-					</div>
+        <div style="flex: 1; min-width: 180px;">
+            <label style="font-family:'Sora',sans-serif; font-size:10px; font-weight:700; color:#0a214f; display:block; margin-bottom:5px;">
+                <i class="fas fa-search"></i> Search
+            </label>
+            <input type="text" name="search" value="{{ request('search') }}"
+                placeholder="Name, email, phone..."
+                style="width:100%; border:1.5px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:11px; font-family:'Nunito',sans-serif; background:#fff; color:#374151; outline:none;">
+        </div>
 
-					<div style="display: flex; flex-direction: column; gap: 4px;">
-						<label style="font-family:'Sora',sans-serif; font-size:10px; font-weight:700; color:#0a214f;">
-							<i class="fas fa-calendar-alt"></i> To Date
-						</label>
-						<input type="date" name="date_to"
-							   value="{{ request('date_to') }}"
-							   style="padding:7px 10px; border:1px solid #e5e7eb; border-radius:6px;
-									  font-size:11px; font-family:'Nunito',sans-serif; color:#374151;
-									  background:#f9fafb; outline:none; cursor:pointer;">
-					</div>
+        <div style="min-width: 145px;">
+            <label style="font-family:'Sora',sans-serif; font-size:10px; font-weight:700; color:#0a214f; display:block; margin-bottom:5px;">
+                <i class="fas fa-calendar-alt"></i> From Date
+            </label>
+            <input type="date" name="date_from" value="{{ request('date_from') }}"
+                style="width:100%; border:1.5px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:11px; font-family:'Nunito',sans-serif; background:#fff; color:#374151; outline:none;">
+        </div>
 
-					<div style="display:flex; gap:8px; align-items:flex-end; padding-bottom:1px;">
-						<button type="submit" class="btn btn-info btn-sm">
-							<i class="fas fa-search"></i> Filter
-						</button>
-						@if(request('date_from') || request('date_to'))
-							<a href="{{ route('contact.submissions') }}" class="btn btn-secondary btn-sm">
-								<i class="fas fa-times"></i> Clear
-							</a>
-						@endif
-					</div>
+        <div style="min-width: 145px;">
+            <label style="font-family:'Sora',sans-serif; font-size:10px; font-weight:700; color:#0a214f; display:block; margin-bottom:5px;">
+                <i class="fas fa-calendar-alt"></i> To Date
+            </label>
+            <input type="date" name="date_to" value="{{ request('date_to') }}"
+                style="width:100%; border:1.5px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:11px; font-family:'Nunito',sans-serif; background:#fff; color:#374151; outline:none;">
+        </div>
 
-					@if(request('date_from') || request('date_to'))
-						<div style="display:flex; align-items:center;">
-							<span style="font-size:10px; background:#fef3c7; color:#92400e; padding:4px 10px;
-										 border-radius:20px; font-weight:700; font-family:'Sora',sans-serif;
-										 border:1px solid #fcd34d;">
-								<i class="fas fa-filter"></i>
-								Filter active:
-								@if(request('date_from')) From {{ \Carbon\Carbon::parse(request('date_from'))->format('d M Y') }} @endif
-								@if(request('date_to')) To {{ \Carbon\Carbon::parse(request('date_to'))->format('d M Y') }} @endif
-							</span>
-						</div>
-					@endif
+        <div style="display: flex; gap: 8px; align-items: flex-end; padding-bottom: 1px;">
+            <button type="submit" class="btn btn-info btn-sm">
+                <i class="fas fa-search"></i> Filter
+            </button>
+            @if(request('search') || request('date_from') || request('date_to'))
+                <a href="{{ route('admin.contacts') }}" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-times"></i> Reset
+                </a>
+            @endif
+        </div>
 
-				</form>
-			</div>
-		</div>
-		--}}
+        @if(request('search') || request('date_from') || request('date_to'))
+            <div style="width: 100%; display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap;">
+                <span style="font-size:10px; background:#fef3c7; color:#92400e; padding:3px 10px;
+                             border-radius:20px; font-weight:700; font-family:'Sora',sans-serif;
+                             border:1px solid #fcd34d;">
+                    <i class="fas fa-filter"></i> Filter active
+                    @if(request('search')) · "{{ request('search') }}" @endif
+                    @if(request('date_from')) · From {{ \Carbon\Carbon::parse(request('date_from'))->format('d M Y') }} @endif
+                    @if(request('date_to')) · To {{ \Carbon\Carbon::parse(request('date_to'))->format('d M Y') }} @endif
+                    · <strong>{{ $contacts->total() }}</strong> results
+                </span>
+            </div>
+        @endif
+
+    </form>
+</div>
         <div style="padding:0;">
             @if($contacts->count() > 0)
 			
