@@ -367,16 +367,22 @@
             <label style="font-family:'Sora',sans-serif; font-size:10px; font-weight:700; color:#0a214f; display:block; margin-bottom:5px;">
                 <i class="fas fa-calendar-alt"></i> From Date
             </label>
-            <input type="date" name="date_from" value="{{ request('date_from') }}"
-                style="width:100%; border:1.5px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:11px; font-family:'Nunito',sans-serif; background:#fff; color:#374151; outline:none;">
+            <input
+    type="date"
+    name="date_from"
+    value="{{ request('date_from') }}"
+    style="width:100%; border:1.5px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:11px; font-family:'Nunito',sans-serif; background:#fff; color:#374151; outline:none;">
         </div>
 
         <div style="min-width: 145px;">
             <label style="font-family:'Sora',sans-serif; font-size:10px; font-weight:700; color:#0a214f; display:block; margin-bottom:5px;">
                 <i class="fas fa-calendar-alt"></i> To Date
             </label>
-            <input type="date" name="date_to" value="{{ request('date_to') }}"
-                style="width:100%; border:1.5px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:11px; font-family:'Nunito',sans-serif; background:#fff; color:#374151; outline:none;">
+          <input
+    type="date"
+    name="date_to"
+    value="{{ request('date_to') }}"
+     style="width:100%; border:1.5px solid #e5e7eb; border-radius:6px; padding:7px 10px; font-size:11px; font-family:'Nunito',sans-serif; background:#fff; color:#374151; outline:none;">
         </div>
 
         <div style="display: flex; gap: 8px; align-items: flex-end; padding-bottom: 1px;">
