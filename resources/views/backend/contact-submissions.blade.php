@@ -23,59 +23,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
-             {{-- FILTER FORM --}}
-<form method="GET" action="{{ route('admin.contacts') }}">
-    <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 20px;">
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
-            
-            <div style="flex: 1; min-width: 180px;">
-                <label style="font-size: 11px; font-weight: 700; color: #374151; display: block; margin-bottom: 5px;">
-                    🔍 Search
-                </label>
-                <input type="text" name="search" value="{{ request('search') }}"
-                    placeholder="Name, email, phone..."
-                    style="width: 100%; border: 1.5px solid #e5e7eb; border-radius: 6px; padding: 7px 10px; font-size: 12px;">
-            </div>
 
-            <div style="min-width: 150px;">
-                <label style="font-size: 11px; font-weight: 700; color: #374151; display: block; margin-bottom: 5px;">
-                    📅 From Date
-                </label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}"
-                    style="width: 100%; border: 1.5px solid #e5e7eb; border-radius: 6px; padding: 7px 10px; font-size: 12px;">
-            </div>
-
-            <div style="min-width: 150px;">
-                <label style="font-size: 11px; font-weight: 700; color: #374151; display: block; margin-bottom: 5px;">
-                    📅 To Date
-                </label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}"
-                    style="width: 100%; border: 1.5px solid #e5e7eb; border-radius: 6px; padding: 7px 10px; font-size: 12px;">
-            </div>
-
-            <div style="display: flex; gap: 8px;">
-                <button type="submit"
-                    style="background: linear-gradient(135deg, #1872B5, #2596e1); color: white; border: none; padding: 7px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer;">
-                    Apply Filter
-                </button>
-                <a href="{{ route('admin.contacts') }}"
-                    style="background: #e5e7eb; color: #374151; padding: 7px 16px; border-radius: 6px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center;">
-                    Reset
-                </a>
-            </div>
-        </div>
-
-        @if(request('date_from') || request('date_to') || request('search'))
-        <div style="margin-top: 10px; font-size: 11px; color: #6b7280;">
-            Filtered results
-            @if(request('search')) — Search: <strong>{{ request('search') }}</strong> @endif
-            @if(request('date_from')) — From: <strong>{{ request('date_from') }}</strong> @endif
-            @if(request('date_to')) — To: <strong>{{ request('date_to') }}</strong> @endif
-            · Total: <strong>{{ $contacts->total() }}</strong> records
-        </div>
-        @endif
-    </div>
-</form>
             <!-- Contact Submissions Table -->
             <div class="card">
                 <div class="card-body">
