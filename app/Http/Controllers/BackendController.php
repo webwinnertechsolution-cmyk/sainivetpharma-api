@@ -3795,7 +3795,18 @@ public function blog()
 }
 
 
-
+public function blogCreate()
+{
+    if (!Session::has('user_id')) {
+        return redirect()->route('login')->with('error', 'Please login first');
+    }
+    
+    $categories = BlogCategory::orderBy('name', 'asc')->get();
+    $tags = BlogTag::orderBy('name', 'asc')->get();
+    $blogs = Blog::with(['categories', 'tags'])->orderBy('created_at', 'desc')->get();
+    
+    return view('backend.blog', compact('categories', 'tags', 'blogs'));
+}
 
 
 public function blogStore(Request $request)
