@@ -164,11 +164,11 @@
 
     {{-- Stats --}}
     @php
-        $total     = $products->count();
-        $published = $products->where('status','published')->count();
-        $draft     = $products->where('status','draft')->count();
-        $featured  = $products->where('is_featured',1)->count();
-    @endphp
+		$total     = $products->total();   // ← sirf yeh line change karo
+		$published = $products->where('status','published')->count();
+		$draft     = $products->where('status','draft')->count();
+		$featured  = $products->where('is_featured',1)->count();
+	@endphp
     <div class="stats-row">
         <div class="stat-card blue">
             <div class="stat-number">{{ $total }}</div>
@@ -319,6 +319,41 @@
                 </table>
             </div>
         </div>
+		
+		
+        {{-- PAGINATION --}}
+        @if($products->hasPages())
+        <div style="padding: 14px 16px; border-top: 1px solid #f3f4f6; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div style="font-size: 11px; color: #6b7280; font-weight: 500;">
+                Showing <strong>{{ $products->firstItem() }}</strong> to <strong>{{ $products->lastItem() }}</strong> of <strong>{{ $products->total() }}</strong> products
+            </div>
+            <div style="display: flex; gap: 4px; align-items: center;">
+                {{-- Previous --}}
+                @if($products->onFirstPage())
+                    <span style="padding: 5px 10px; border-radius: 6px; background: #f3f4f6; color: #9ca3af; font-size: 11px; font-weight: 700;">← Prev</span>
+                @else
+                    <a href="{{ $products->previousPageUrl() }}" style="padding: 5px 10px; border-radius: 6px; background: #1872B5; color: white; font-size: 11px; font-weight: 700; text-decoration: none;">← Prev</a>
+                @endif
+
+                {{-- Page Numbers --}}
+                @foreach($products->getUrlRange(max(1, $products->currentPage()-2), min($products->lastPage(), $products->currentPage()+2)) as $page => $url)
+                    @if($page == $products->currentPage())
+                        <span style="padding: 5px 10px; border-radius: 6px; background: #0a214f; color: white; font-size: 11px; font-weight: 700;">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}" style="padding: 5px 10px; border-radius: 6px; background: #f3f4f6; color: #374151; font-size: 11px; font-weight: 700; text-decoration: none;">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                {{-- Next --}}
+                @if($products->hasMorePages())
+                    <a href="{{ $products->nextPageUrl() }}" style="padding: 5px 10px; border-radius: 6px; background: #1872B5; color: white; font-size: 11px; font-weight: 700; text-decoration: none;">Next →</a>
+                @else
+                    <span style="padding: 5px 10px; border-radius: 6px; background: #f3f4f6; color: #9ca3af; font-size: 11px; font-weight: 700;">Next →</span>
+                @endif
+            </div>
+        </div>
+        @endif
+		
     </div>
 
 </div>
