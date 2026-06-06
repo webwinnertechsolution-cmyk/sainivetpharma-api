@@ -158,11 +158,20 @@
                             Page Type (Route) <span class="text-danger">*</span>
                             <small>Select the type of page</small>
                         </label>
-                        <input type="text" class="form-control @error('route_name') is-invalid @enderror" 
-    name="route_name" 
-    value="{{ old('route_name') }}"
-    placeholder="e.g. about, contact, home, collections"
-    required>
+                   <select class="form-select @error('route_name') is-invalid @enderror" name="route_name" required>
+                            <option value="" disabled selected>Select Page Type</option>
+                            <option value="home"          {{ old('route_name') == 'home'                    ? 'selected' : '' }}>Home Page</option>
+                            <option value="about"         {{ old('route_name') == 'about'                   ? 'selected' : '' }}>About Us</option>
+                            <option value="contact"       {{ old('route_name') == 'contact'                 ? 'selected' : '' }}>Contact Us</option>
+                            <option value="services.wear-liners"   {{ old('route_name') == 'services.wear-liners'  ? 'selected' : '' }}>Service: Wear Liners</option>
+                            <option value="services.conveyor-guards" {{ old('route_name') == 'services.conveyor-guards' ? 'selected' : '' }}>Service: Conveyor Guards</option>
+                            <option value="service.detail"{{ old('route_name') == 'service.detail'          ? 'selected' : '' }}>Service Detail (Dynamic)</option>
+                            <option value="frontend.blog" {{ old('route_name') == 'frontend.blog'           ? 'selected' : '' }}>Blog Index</option>
+                            <option value="industries"    {{ old('route_name') == 'industries'              ? 'selected' : '' }}>Industries</option>
+                            <option value="faq"           {{ old('route_name') == 'faq'                     ? 'selected' : '' }}>FAQ</option>
+                            <option value="shop"          {{ old('route_name') == 'shop'                    ? 'selected' : '' }}>Shop</option>
+                            <option value="shop-new"      {{ old('route_name') == 'shop-new'                ? 'selected' : '' }}>Shop New</option>
+                        </select>
                         @error('route_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
