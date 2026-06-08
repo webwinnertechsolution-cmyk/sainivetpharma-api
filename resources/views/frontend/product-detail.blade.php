@@ -60,8 +60,9 @@ body{font-family:'DM Sans',sans-serif;color:var(--txt);background:var(--bg);marg
 .slide{
     min-width:100%;height:100%;display:flex;
     align-items:center;justify-content:center;
-    padding:0px;flex-shrink:0;
+    padding:20px;flex-shrink:0;
 }
+
 .slide img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .4s;}
 .slider-wrap:hover .slide img{transform:scale(1.04);}
 .arrow-btn{
@@ -79,12 +80,9 @@ body{font-family:'DM Sans',sans-serif;color:var(--txt);background:var(--bg);marg
 .badge-sale{background:var(--red);color:#fff;display:none;}
 .badge-feat{background:var(--acc);color:#fff;}
 /* ── THUMBNAIL CAROUSEL ── */
-.thumbs-wrap {
-    position: relative;
-    margin-top: 11px;
-    padding: 0 32px;
-    display: flex;
-    justify-content: center;
+.thumbs-wrap{
+    position:relative;margin-top:11px;
+    padding:0 32px; /* Arrow space */
 }
 .thumbs{
     display:flex;
@@ -96,6 +94,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--txt);background:var(--bg);marg
     /* Hide scrollbar */
     -ms-overflow-style: none;
     scrollbar-width: none;
+    
     /* Constrain to 5 items visible */
     width:100%;
     max-width:calc((66px + 8px) * 8);
@@ -147,6 +146,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--txt);background:var(--bg);marg
 /* ══════════════════════════════
    RIGHT — PRODUCT INFO
 ══════════════════════════════ */
+.prod-tab-content{color:#171717 !important ;}
 .pd-title{font-size:26px;line-height:1.25;margin:0 0 12px;font-weight:600;}
 @media(max-width:600px){.pd-title{font-size:20px;}}
 .pd-sku{font-size:12.5px;color:var(--mut);margin-bottom:14px;}
@@ -211,7 +211,7 @@ span#vg-label-text{font-size:14px;font-weight:800;color:black;letter-spacing:nor
 .meta-tbl td:first-child{font-weight:600;color:var(--mut);width:38%;background:#f9fafb;border-right:1px solid var(--bdr);}
 
 /* ── Chips ── */
-.chip-cat{background:var(--pl);color:var(--p);border:1px solid #b6dfc2;border-radius:20px;padding:3px 11px;font-size:10.5px;font-weight:500;text-decoration:none;}
+.chip-cat{background:var(--pl);color:var(--p);border:1px solid #b6dfc2;border-radius:20px;padding:3px 11px;font-size:12.5px;font-weight:500;text-decoration:none;}
 .chip-cat:hover{background:#c8ecd4;color:var(--p);}
 
 /* ── Description box ── */
@@ -313,7 +313,7 @@ span.vc-off{display:none;}
 /* ══════════════════════════════════════
    SIMILAR PRODUCTS SECTION
 ══════════════════════════════════════ */
-.similar-section{max-width:1240px;margin:0 auto;padding:0 15px 60px;}
+.similar-section{max-width:1240px;margin:0 auto;padding:0 20px 60px;}
 .similar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding-bottom:14px;border-bottom:2px solid var(--bdr);}
 .similar-title{font-size:24px;font-weight:400;color:var(--txt);display:flex;align-items:center;gap:10px;}
 .similar-title::before{content:'';display:inline-block;width:4px;height:26px;background:var(--p);border-radius:2px;}
@@ -327,18 +327,10 @@ span.vc-off{display:none;}
 
 /* ── MOBILE/TABLET: Carousel Layout ── */
 @media(max-width:860px){
-    .similar-section {
-    padding-right: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-    .similar-head {
-    padding-right: 18px;
-    gap: 40px;
-}
-    .similar-grid-wrap{position:relative;overflow:hidden;padding:0 15px;}
-.similar-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .similar-section{padding-right:0;}
+    .similar-head{padding-right:18px;}
+    .similar-grid-wrap{position:relative;overflow:hidden;padding:0 40px;}
+    .similar-grid{display:flex !important;gap:14px;padding-bottom:12px;}
     .similar-grid-track{display:flex;gap:14px;width:100%;transition:transform .4s cubic-bezier(.4,0,.2,1);}
     
     /* Carousel Arrows */
@@ -346,27 +338,27 @@ span.vc-off{display:none;}
         position:absolute;top:50%;transform:translateY(-50%);
         width:36px;height:36px;border-radius:50%;
         background:rgba(255,255,255,.92);border:1.5px solid var(--bdr);
-        display:none !important;align-items:center;justify-content:center;
+        display:flex;align-items:center;justify-content:center;
         cursor:pointer;z-index:10;color:#444;font-size:16px;
         box-shadow:0 2px 8px rgba(0,0,0,.12);transition:all .2s;
     }
     .similar-carousel-arrow:hover{background:var(--p);color:#fff;border-color:var(--p);}
-    .similar-carousel-arrow.prev{ display:none !important; left:8px;}
-    .similar-carousel-arrow.next{  display:none !important; right:8px;}
+    .similar-carousel-arrow.prev{left:8px;}
+    .similar-carousel-arrow.next{right:8px;}
     .similar-carousel-arrow:disabled{opacity:.4;cursor:not-allowed;}
     .similar-carousel-arrow:disabled:hover{background:rgba(255,255,255,.92);color:#444;border-color:var(--bdr);}
 	
 
 }
- 
- 
-/* custom css mobile responsive */ 
 
+{ custom mobile css } 
+ 
+ 
 @media (max-width: 767px) {
   .thumbs-wrap {
     position: relative;
     margin-top: 11px;
-    padding: 0 5px;
+    padding: 0 16px;
     width: 100%;
     box-sizing: border-box;
   }
@@ -386,45 +378,19 @@ span.vc-off{display:none;}
     gap: 24px;
     align-items: stretch;
   }
-  .slide video {width:300px !important; object-fit:contain;transition:transform .4s;}
-
-/*
-.sim-card:nth-child(1) {
-    display: block;
-    width: 100%;
-    flex-shrink: 0;
-}
-
-.sim-card:nth-child(2) {
-    display: block;
-    width: 100%;
-    flex-shrink: 0;
-}
-
-.sim-card:nth-child(3) {
-    display: none;
-}
-
-.sim-card:nth-child(4) {
-    display: none;
-}
-
-.sim-card:nth-child(5) {
-    display: none;
-}
-*/
+  .slide img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .4s;}
 
 }
 
 .sim-card{background:#fff;border-radius:12px;border:1.5px solid var(--bdr);overflow:hidden;transition:all .22s;position:relative;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;flex-direction:column;text-decoration:none;color:inherit;}
 @media(max-width:860px){
-    .sim-card{width: auto; flex-shrink:0;}
+    .sim-card{width:250px;flex-shrink:0;}
 }
 .sim-card:hover{border-color:var(--p);box-shadow:0 8px 28px rgba(26,92,46,.15);transform:translateY(-3px);}
 .sim-badge{position:absolute;top:9px;left:9px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;z-index:2;letter-spacing:.03em;text-transform:uppercase;}
 .sim-badge.sale{background:#dc2626;color:#fff;}
 .sim-badge.feat{background:#f59e0b;color:#fff;}
-.sim-img-wrap{aspect-ratio:1;background:#f9fafb;display:flex;align-items:center;justify-content:center;padding:0px;overflow:hidden;text-decoration:none;color:inherit;}
+.sim-img-wrap{aspect-ratio:1;background:#f9fafb;display:flex;align-items:center;justify-content:center;padding:14px;overflow:hidden;text-decoration:none;color:inherit;}
 .sim-img-wrap img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .35s;}
 .sim-card:hover .sim-img-wrap img{transform:scale(1.07);}
 .sim-no-img{font-size:32px;color:#d1d5db;}
@@ -454,57 +420,6 @@ select.sim-size-sel:focus{border-color:var(--p);}
 .sim-stock.in .sim-dot{background:#10b981;}
 .sim-stock.out .sim-dot{background:#dc2626;}
 a.sim-btn{display:none;}
-
-
-/* ── Video Thumbnail Play Overlay ── */
-.vid-thumb-wrap { cursor: pointer; }
-.vid-play-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.35);
-    transition: background .2s;
-    border-radius: 6px;
-}
-.thumb:hover .vid-play-overlay,
-.thumb.on .vid-play-overlay {
-    background: rgba(26,92,46,0.55);
-}
-.vid-play-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.92);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    transition: transform .2s, background .2s;
-    padding-left: 2px; /* optical centering */
-}
-.thumb:hover .vid-play-btn {
-    transform: scale(1.15);
-    background: #fff;
-}
-.thumb.on .vid-play-btn {
-    background: var(--p);
-}
-.thumb.on .vid-play-btn svg path {
-    fill: white;
-}
-.sim-overview {
-    font-size: 12px;
-    color: #6b7280;
-    line-height: 1.4;
-    margin-bottom: 8px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
 </style>
 
 {{-- Breadcrumb --}}
@@ -549,7 +464,7 @@ a.sim-btn{display:none;}
                     <span class="badge-tag badge-sale">{{ round((($product->price-$product->sale_price)/$product->price)*100) }}% OFF</span>
                 @endif
             </div>
-  
+
             @if($imgs->count() > 1)
             <button class="arrow-btn arrow-prev" onclick="slidePrev()" aria-label="Previous">
                 <i class="fas fa-chevron-left"></i>
@@ -557,14 +472,14 @@ a.sim-btn{display:none;}
             @endif
 
             <div class="slider-track" id="slider-track">
-                 @foreach($imgs as $im)
+                @foreach($imgs as $im)
 <div class="slide">
     @if(($im['type'] ?? 'image') === 'video')
         <video
             src="{{ $im['src'] }}"
             controls
             preload="metadata"
-            style="max-width:100%; width:98%; max-height:100%;border-radius:8px;outline:none;"
+            style="max-width:100%;max-height:100%;border-radius:8px;outline:none;"
             playsinline>
             Your browser does not support video.
         </video>
@@ -591,25 +506,11 @@ a.sim-btn{display:none;}
             <div class="thumbs" id="thumbs">
                @foreach($imgs as $i=>$im)
 <div class="thumb {{ $i===0?'on':'' }}" onclick="goSlide({{ $i }})">
-   @if(($im['type'] ?? 'image') === 'video')
-    <div class="vid-thumb-wrap" style="position:relative;width:100%;height:100%;background:#111;border-radius:6px;overflow:hidden;">
-        {{-- Poster/preview frame --}}
-        <video
-            src="{{ $im['src'] }}#t=0.5"
-            preload="metadata"
-            muted
-            playsinline
-            style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;">
-        </video>
-        {{-- Play button overlay --}}
-        <div class="vid-play-overlay">
-            <div class="vid-play-btn">
-                <svg viewBox="0 0 24 24" fill="green" width="18" height="18">
-                    <path d="M8 5v14l11-7z"/>
-                </svg>
-            </div>
+    @if(($im['type'] ?? 'image') === 'video')
+        <div style="width:100%;height:100%;display:flex;align-items:center;
+                    justify-content:center;background:#1a1a1a;border-radius:6px;">
+            <span style="font-size:22px;">▶️</span>
         </div>
-    </div>
     @else
         <img src="{{ $im['src'] }}" alt="{{ $im['alt'] }}">
     @endif
@@ -860,12 +761,8 @@ a.sim-btn{display:none;}
                     @endif
                 </a>
                 <div class="sim-body">
-   <a href="{{ route('product.detail', $rp->slug) }}" class="sim-title">{{ $rp->title }}</a>
-{{-- @if($rpCat)<div class="sim-brand">{{ $rpCat }}</div>@endif --}}
-
-@if($rp->overview)
-<p class="sim-overview">{{ Str::limit($rp->overview, 80, '...') }}</p>
-    @endif
+                    <a href="{{ route('product.detail', $rp->slug) }}" class="sim-title">{{ $rp->title }}</a>
+                    @if($rpCat)<div class="sim-brand">{{ $rpCat }}</div>@endif
                     <div class="sim-price-row">
                         @if($rpEffPrice)
                             <span class="sim-price" id="sim-price-{{ $rp->id }}">₹{{ number_format($rpEffPrice, 0) }}</span>
@@ -987,9 +884,8 @@ a.sim-btn{display:none;}
 ══════════════════════════════════════════════════════════════ */
 (function () {
     // ✏️ Apne fixed header ki exact height yahan likhو (px mein)
-var HEADER_H  = 1;
-var TOP_GAP   = 1;
-var maxMove   = 1; // gallery ko bilkul move mat karo// header ke neeche thoda breathing room
+    var HEADER_H  = 88;
+    var TOP_GAP   = 16; // header ke neeche thoda breathing room
 
     var gallery = document.getElementById('pdGallery');
     var pdInfo  = document.getElementById('pdInfo');
@@ -1290,7 +1186,7 @@ window.addEventListener('resize', updateThumbButtons);
         const cards = grid.querySelectorAll('.sim-card');
         if (!cards.length) return;
         
-        const cardWidth = cards[2].offsetWidth;
+        const cardWidth = cards[0].offsetWidth;
         const gap = 14;
         const itemSize = cardWidth + gap;
         const scrollAmount = itemSize * 8; // 5 items at a time
