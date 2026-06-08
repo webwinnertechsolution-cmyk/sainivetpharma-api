@@ -75,8 +75,8 @@
 }
 .br-card img {
     max-width: 100%;
-    width: 150px;
-    height: 80px;
+    width: 150px !important;
+    height: 80px !important;
     max-height: 90px;
     object-fit: cover;
     filter: grayscale(30%);
@@ -84,6 +84,23 @@
     transition: all .22s ease;
     user-select: none;
     -webkit-user-drag: none;
+}
+
+.br-card {
+    flex: 0 0 calc((100% - 84px) / 7);
+    min-width: 0;
+    /* background: #fff; */
+    /* border-radius: 12px; */
+    border: 1.5px solid #e5e7eb;
+    /* padding: 10px; */
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .22s ease;
+    text-decoration: none;
+    cursor: pointer;
+    pointer-events: auto;
 }
 .brand-card:hover img {
     filter: grayscale(0%);
