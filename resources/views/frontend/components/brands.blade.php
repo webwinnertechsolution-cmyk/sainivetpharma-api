@@ -56,39 +56,31 @@
 
 /* Brand Card */
 .brand-card {
-        flex: 0 0 calc((100% - 84px) / 7);
-    min-width: 0;
-    /* background: #fff; */
-    /* border-radius: 12px; */
+    background: #ffffff00;
     border: 1.5px solid #e5e7eb;
-    /* padding: 10px; */
-    height: 80px;
-    display: flex;
+    border-radius: 12px;
+    padding: 5px;
+    display: flex !important;
     align-items: center;
     justify-content: center;
+    height: 80px;
     transition: all .22s ease;
     text-decoration: none;
-    cursor: pointer;
-    pointer-events: auto;
+    margin: 4px 8px;
 }
 .brand-card:hover {
     border-color: #1a5c2e;
     box-shadow: 0 4px 18px rgba(26,92,46,.15);
     transform: translateY(-2px);
 }
-.br-card img {
+.brand-card img {
     max-width: 100%;
-    width: 150px !important;
-    height: 80px !important;
-    max-height: 90px;
-    object-fit: cover;
+    max-height:80px;
+    object-fit: contain;
     filter: grayscale(30%);
     opacity: 0.85;
-    transition: all .22s ease;
-    user-select: none;
-    -webkit-user-drag: none;
+    transition: all .22s;
 }
-
 .brand-card:hover img {
     filter: grayscale(0%);
     opacity: 1;
