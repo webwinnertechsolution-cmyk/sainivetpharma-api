@@ -73,13 +73,17 @@
     box-shadow: 0 4px 18px rgba(26,92,46,.15);
     transform: translateY(-2px);
 }
-.brand-card img {
+.br-card img {
     max-width: 100%;
-    max-height:80px;
-    object-fit: contain;
+    width: 150px;
+    height: 80px;
+    max-height: 90px;
+    object-fit: cover;
     filter: grayscale(30%);
     opacity: 0.85;
-    transition: all .22s;
+    transition: all .22s ease;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 .brand-card:hover img {
     filter: grayscale(0%);
