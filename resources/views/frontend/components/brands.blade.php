@@ -56,22 +56,17 @@
 
 /* Brand Card */
 .brand-card {
-    background: #fff;
+    background: #ffffff00;
     border: 1.5px solid #e5e7eb;
     border-radius: 12px;
-    padding: 0; /* remove extra spacing */
-    height: 90px;
-    overflow: hidden;
-}
-
-.brand-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* logo crop nahi hoga */
-    padding: 8px; /* optional */
-    filter: grayscale(30%);
-    opacity: 0.85;
-    transition: all .22s;
+    padding: 5px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    transition: all .22s ease;
+    text-decoration: none;
+    margin: 4px 8px;
 }
 .brand-card:hover {
     border-color: #1a5c2e;
