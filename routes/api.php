@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\CheckoutController;
 
 Route::middleware(\App\Http\Middleware\ApiCors::class)->group(function () {
     
@@ -58,7 +59,11 @@ Route::post('/google/login', [FrontendController::class, 'googleLoginOrRegister'
 Route::get('/google/user/{firebase_uid}', [FrontendController::class, 'googleGetUser']);
 
 Route::get('/page-seo/{route}', [FrontendController::class, 'apiPageSeo']);
+Route::post('/checkout/calculate',   [CheckoutController::class, 'apiCalculateCheckout']);
+Route::post('/checkout/place-order', [CheckoutController::class, 'apiPlaceOrder']);
+Route::get('/checkout/order/{orderNumber}', [CheckoutController::class, 'apiGetOrder']);
 
+    
     /* Category */ 
     Route::get('/shop', [FrontendController::class, 'apiShop']);
     Route::get('/categories', [FrontendController::class, 'apiCategories']);
