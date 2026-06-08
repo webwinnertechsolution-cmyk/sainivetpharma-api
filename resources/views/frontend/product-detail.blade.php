@@ -420,6 +420,9 @@ select.sim-size-sel:focus{border-color:var(--p);}
 .sim-stock.in .sim-dot{background:#10b981;}
 .sim-stock.out .sim-dot{background:#dc2626;}
 a.sim-btn{display:none;}
+.prod-tab-content {
+    color: #171717 !important;
+}
 </style>
 
 {{-- Breadcrumb --}}
