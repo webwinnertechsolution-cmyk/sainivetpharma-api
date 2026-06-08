@@ -56,17 +56,20 @@
 
 /* Brand Card */
 .brand-card {
-    background: #ffffff00;
+        flex: 0 0 calc((100% - 84px) / 7);
+    min-width: 0;
+    /* background: #fff; */
+    /* border-radius: 12px; */
     border: 1.5px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 5px;
-    display: flex !important;
+    /* padding: 10px; */
+    height: 80px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    height: 80px;
     transition: all .22s ease;
     text-decoration: none;
-    margin: 4px 8px;
+    cursor: pointer;
+    pointer-events: auto;
 }
 .brand-card:hover {
     border-color: #1a5c2e;
@@ -86,22 +89,6 @@
     -webkit-user-drag: none;
 }
 
-.br-card {
-    flex: 0 0 calc((100% - 84px) / 7);
-    min-width: 0;
-    /* background: #fff; */
-    /* border-radius: 12px; */
-    border: 1.5px solid #e5e7eb;
-    /* padding: 10px; */
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .22s ease;
-    text-decoration: none;
-    cursor: pointer;
-    pointer-events: auto;
-}
 .brand-card:hover img {
     filter: grayscale(0%);
     opacity: 1;
