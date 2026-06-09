@@ -49,25 +49,21 @@ body{font-family:'DM Sans',sans-serif;color:var(--txt);background:var(--bg);marg
 .slider-wrap{
     position:relative;background:#fff;
     border:1px solid var(--bdr);border-radius:var(--rad);
-    overflow:hidden;
-    aspect-ratio: 1 / 1;
+    overflow:hidden;aspect-ratio:1;
     display:flex;align-items:center;justify-content:center;
     box-shadow:0 4px 24px rgba(0,0,0,.07);
-    width: 100%;
-    max-width: 100%;
 }
 .slider-track{
     display:flex;width:100%;height:100%;
     transition:transform .4s cubic-bezier(.4,0,.2,1);
 }
 .slide{
-    min-width:100%;width:100%;height:100%;display:flex;
+    min-width:100%;height:100%;display:flex;
     align-items:center;justify-content:center;
-    padding:16px;flex-shrink:0;
-    box-sizing: border-box;
+    padding:20px;flex-shrink:0;
 }
 
-.slide img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;transition:transform .4s;display:block;}
+.slide img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .4s;}
 .slider-wrap:hover .slide img{transform:scale(1.04);}
 .arrow-btn{
     position:absolute;top:50%;transform:translateY(-50%);
@@ -359,253 +355,31 @@ span.vc-off{display:none;}
  
  
 @media (max-width: 767px) {
-  /* ===== GALLERY FIX FOR MOBILE ===== */
-  #pdGallery {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto;
-    padding: 0 12px;
-    box-sizing: border-box;
-  }
-
-  .slider-wrap {
-    width: 100% !important;
-    max-width: 100% !important;
-    aspect-ratio: 1 / 1;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .slider-track {
-    width: 100% !important;
-    height: 100% !important;
-  }
-
-  .slide {
-    min-width: 100% !important;
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0 !important;
-    flex-shrink: 0;
-  }
-
-  .slide img {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
-    display: block;
-  }
-
-  .slide video {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
-  }
-
-  /* Thumbnails mobile fix */
   .thumbs-wrap {
     position: relative;
     margin-top: 11px;
-    padding: 0 8px;
+    padding: 0 16px;
     width: 100%;
     box-sizing: border-box;
   }
 
-  .thumbs {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    padding: 4px 0;
-  }
-
-  .thumbs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .thumb {
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-    border: 2px solid var(--bdr);
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    background: #fff;
-    transition: border-color 0.2s, transform 0.15s;
-  }
-
-  .thumb.on {
-    border-color: var(--p);
-    transform: translateY(-2px);
-  }
-
-  .thumb img {
+  #pdGallery {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 2px;
-  }
-
-  /* Arrow buttons mobile fix */
-  .arrow-btn {
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .arrow-btn i {
-    font-size: 14px;
-  }
-
-  /* Grid mobile fix */
-  .pd-grid {
-    width: 100% !important;
-    max-width: 100% !important;
+    max-width: 410px;
     margin: 0 auto;
-    padding: 16px 12px 32px;
+  }
+
+  .pd-grid {
+    max-width: 410px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
     align-items: stretch;
-    box-sizing: border-box;
   }
+  .slide img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .4s;}
 
-  .pd-info {
-    width: 100%;
-    padding: 0 4px;
-  }
-
-  /* Product title mobile */
-  .pd-title {
-    font-size: 18px !important;
-    line-height: 1.3 !important;
-    margin-bottom: 8px !important;
-  }
-
-  /* Price box mobile */
-  .price-box {
-    margin-bottom: 12px !important;
-  }
-
-  .price-main {
-    font-size: 20px !important;
-  }
-
-  /* Variant cards mobile */
-  .variant-cards {
-    gap: 8px !important;
-    row-gap: 12px !important;
-  }
-
-  .variant-card {
-    min-width: 80px !important;
-    max-width: 120px !important;
-    padding: 8px 6px !important;
-  }
-
-  .vc-name {
-    font-size: 12px !important;
-  }
-
-  /* CTA buttons mobile */
-  .cta-row {
-    margin-bottom: 16px !important;
-  }
-
-  .cta-btn {
-    padding: 12px 16px !important;
-    font-size: 14px !important;
-  }
-
-  /* Meta table mobile */
-  .meta-tbl {
-    font-size: 12px !important;
-  }
-
-  .meta-tbl td {
-    padding: 8px 10px !important;
-  }
-
-  /* Description box mobile */
-  .desc-box {
-    margin-top: 8px !important;
-  }
-
-  .desc-head {
-    padding: 10px 14px !important;
-    font-size: 15px !important;
-  }
-
-  .desc-body {
-    padding: 14px 16px !important;
-    font-size: 13px !important;
-    line-height: 1.7 !important;
-  }
-
-  /* Breadcrumb mobile */
-  .bc-inner {
-    padding: 0 12px !important;
-    font-size: 12px !important;
-  }
-
-  /* Similar products mobile */
-  .similar-section {
-    padding: 0 12px 40px !important;
-  }
-
-  .similar-head {
-    padding-right: 12px !important;
-  }
-
-  .similar-title {
-    font-size: 18px !important;
-  }
-
-  .sim-card {
-    width: 200px !important;
-  }
-
-  /* Enquiry modal mobile */
-  .enq-modal {
-    max-width: calc(100vw - 24px) !important;
-    margin: 0 12px;
-  }
-
-  .enq-header {
-    padding: 18px 16px 14px !important;
-  }
-
-  .enq-header h3 {
-    font-size: 18px !important;
-  }
-
-  .enq-body {
-    padding: 14px 16px 20px !important;
-  }
-
-  .enq-form-row {
-    flex-direction: column !important;
-    gap: 0 !important;
-  }
-
-  .enq-field input,
-  .enq-field textarea {
-    padding: 10px 12px !important;
-    font-size: 16px !important; /* Prevents iOS zoom on focus */
-  }
 }
 
 .sim-card{background:#fff;border-radius:12px;border:1.5px solid var(--bdr);overflow:hidden;transition:all .22s;position:relative;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;flex-direction:column;text-decoration:none;color:inherit;}
