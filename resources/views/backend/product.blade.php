@@ -165,9 +165,6 @@
     {{-- Stats --}}
     @php
 		$total     = $products->total();   // ← sirf yeh line change karo
-		$published = $products->where('status','published')->count();
-		$draft     = $products->where('status','draft')->count();
-		$featured  = $products->where('is_featured',1)->count();
 	@endphp
     <div class="stats-row">
         <div class="stat-card blue">
