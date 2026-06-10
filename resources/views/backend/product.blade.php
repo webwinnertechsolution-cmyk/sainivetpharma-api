@@ -163,9 +163,12 @@
     @endif
 
     {{-- Stats --}}
-    @php
-		$total     = $products->total();   // ← sirf yeh line change karo
-	@endphp
+   @php
+    $total     = $totalProducts;
+    $published = $publishedCount;
+    $draft     = $draftCount;
+    $featured  = $featuredCount;
+@endphp
     <div class="stats-row">
         <div class="stat-card blue">
             <div class="stat-number">{{ $total }}</div>
