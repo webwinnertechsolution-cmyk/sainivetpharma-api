@@ -92,9 +92,8 @@
     background-color: green!important;
 	    padding-top: 10px !important;
 }
-.rl-slide-title {
-    color: #ffffff !important;
-}
+
+
 
 @media (max-width: 767px) {
 .rl-slider.slick-initialized.slick-slider {
