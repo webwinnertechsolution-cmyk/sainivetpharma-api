@@ -4530,11 +4530,17 @@ public function product()
         return redirect()->route('login')->with('error', 'Please login first');
     }
     
-    $products = Product::with(['categories', 'tags', 'images', 'variants'])
-                       ->orderBy('created_at', 'desc')
-                       ->paginate(15); // ← paginate add kiya
+    $products  = Product::with(['categories', 'tags', 'images', 'variants'])
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(15);
     
-    return view('backend.product', compact('products'));
+    // ✅ Ye alag se puri table se count karo
+    $totalProducts    = Product::count();
+    $publishedCount   = Product::where('status', 'published')->count();
+    $draftCount       = Product::where('status', 'draft')->count();
+    $featuredCount    = Product::where('is_featured', 1)->count();
+    
+    return view('backend.product', compact('products', 'totalProducts', 'publishedCount', 'draftCount', 'featuredCount'));
 }
 public function productEdit($id)
 {
