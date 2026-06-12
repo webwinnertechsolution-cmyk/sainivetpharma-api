@@ -32,12 +32,14 @@
 {{-- ✅ Brands Section --}}
 @include('frontend.components.brands')
 
+     @include('instagram', ['posts' => $instaPosts])
+
 	{{-- 	{!! render_product_section(2) !!} --}}
 
         {{-- Our Work Process Section 
         @include('frontend.components.our-work-process') --}}
 
-@include('instagram')
+
         
    {{-- Industries We Serve Section 
         @include('frontend.components.industries-we-serve') --}}
