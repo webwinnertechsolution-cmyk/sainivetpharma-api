@@ -40,7 +40,9 @@
    {{-- Industries We Serve Section 
         @include('frontend.components.industries-we-serve') --}}
 		
-		
+
+        {{-- Articles / Blog Section --}}
+@include('instagram.')
 		
 {{-- Articles / Blog Section --}}
 @include('frontend.components.home-blog')
