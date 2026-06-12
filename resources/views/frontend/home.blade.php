@@ -41,8 +41,8 @@
         @include('frontend.components.industries-we-serve') --}}
 		
 
-        {{-- Articles / Blog Section --}}
-@include('instagram.')
+{{-- @include ke upar yeh pass karo --}}
+@include('instagram', ['posts' => $instaPosts])
 		
 {{-- Articles / Blog Section --}}
 @include('frontend.components.home-blog')
