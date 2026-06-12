@@ -32,7 +32,7 @@
 {{-- ✅ Brands Section --}}
 @include('frontend.components.brands')
 
-     @include('instagram', ['posts' => $instaPosts])
+    @include('instagram')
 
 	{{-- 	{!! render_product_section(2) !!} --}}
 
