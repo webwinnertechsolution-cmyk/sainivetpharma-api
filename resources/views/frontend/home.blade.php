@@ -37,6 +37,8 @@
         {{-- Our Work Process Section 
         @include('frontend.components.our-work-process') --}}
 
+@include('instagram')
+        
    {{-- Industries We Serve Section 
         @include('frontend.components.industries-we-serve') --}}
 		
