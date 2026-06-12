@@ -26,6 +26,7 @@ use App\Mail\ContactConfirmationMail;
 use App\Mail\QuotationMail;
 use App\Models\PrivacyPolicy;
 use App\Models\TermsOfService;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
 class FrontendController extends Controller
