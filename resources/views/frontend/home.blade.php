@@ -40,9 +40,7 @@
    {{-- Industries We Serve Section 
         @include('frontend.components.industries-we-serve') --}}
 		
-
-{{-- @include ke upar yeh pass karo --}}
-@include('instagram', ['posts' => $instaPosts])
+		
 		
 {{-- Articles / Blog Section --}}
 @include('frontend.components.home-blog')
