@@ -19,7 +19,7 @@ use App\Models\ExperienceThePower;
 use App\Models\Industry;
 use App\Models\Contact;
 use App\Models\Product;
-use App\Models\ProductCategory;
+use App\Models\ProductCategory; 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactFormMail;
 use App\Mail\ContactConfirmationMail;
