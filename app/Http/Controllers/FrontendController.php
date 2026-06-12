@@ -66,10 +66,10 @@ class FrontendController extends Controller
         'products' => fn($q) => $q->where('status', 'published')
     ])->orderBy('name')->get();
 
- // ✅ SIRF YEH 3 LINES ADD KARO
-    $instaPosts = Cache::remember('insta_feed', 3600, function () {
-        return Http::get('https://feeds.behold.so/vXQ5XepduZCxb0ppvQDI')->json()['posts'] ?? [];
-    });
+ $instaPosts = Cache::remember('insta_feed', 3600, function () {
+    return Http::get('https://feeds.behold.so/vXQ5XepduZCxb0ppvQDI')->json()['posts'] ?? [];
+});
+dd($instaPosts); // temporary debug
 
     return view('frontend.home', compact(
         'sliders', 'whatWeDos', 'ourServices', 'workProcesses',
