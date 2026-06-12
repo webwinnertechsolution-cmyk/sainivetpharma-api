@@ -32,8 +32,7 @@
 {{-- ✅ Brands Section --}}
 @include('frontend.components.brands')
 
-    @include('instagram')
-
+  
 	{{-- 	{!! render_product_section(2) !!} --}}
 
         {{-- Our Work Process Section 
