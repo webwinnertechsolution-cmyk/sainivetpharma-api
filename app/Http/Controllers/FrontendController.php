@@ -70,13 +70,14 @@ $instaPosts = Cache::remember('insta_feed', 3600, function () {
     return Http::get('https://feeds.behold.so/vXQ5XepduZCxb0ppvQDI')->json()['posts'] ?? [];
 });
 
-    return view('frontend.home', compact(
-        'sliders', 'whatWeDos', 'ourServices', 'workProcesses',
-        'workProcessMain', 'industries', 'homeContact', 'logo',
-        'footerData', 'menus', 'homeCategories',
-        'brandSection', 'brands', 'homeLogos',
-        'allHomeProducts', 'homeProductCategories',
-    ));
+   return view('frontend.home', compact(
+    'sliders', 'whatWeDos', 'ourServices', 'workProcesses',
+    'workProcessMain', 'industries', 'homeContact', 'logo',
+    'footerData', 'menus', 'homeCategories',
+    'brandSection', 'brands', 'homeLogos',
+    'allHomeProducts', 'homeProductCategories',
+    'instaPosts',
+));
 }
 
     public function about()
