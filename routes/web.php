@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackendController;
 use App\Http\Controllers\FrontendController;
 
+use App\Http\Controllers\InstagramController;
+
+Route::get('/instagram', [InstagramController::class, 'index']);
 // -----------------------------------------------------------------------------
 // Frontend Routes (New)
 // -----------------------------------------------------------------------------
