@@ -66,10 +66,9 @@ class FrontendController extends Controller
         'products' => fn($q) => $q->where('status', 'published')
     ])->orderBy('name')->get();
 
- $instaPosts = Cache::remember('insta_feed', 3600, function () {
+$instaPosts = Cache::remember('insta_feed', 3600, function () {
     return Http::get('https://feeds.behold.so/vXQ5XepduZCxb0ppvQDI')->json()['posts'] ?? [];
 });
-dd($instaPosts); // temporary debug
 
     return view('frontend.home', compact(
         'sliders', 'whatWeDos', 'ourServices', 'workProcesses',
@@ -77,7 +76,6 @@ dd($instaPosts); // temporary debug
         'footerData', 'menus', 'homeCategories',
         'brandSection', 'brands', 'homeLogos',
         'allHomeProducts', 'homeProductCategories',
-        'instaPosts'  // ✅ SIRF YEH EK WORD ADD KARO
     ));
 }
 
