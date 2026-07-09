@@ -51,6 +51,7 @@ use App\Models\HomeLogo;
 use App\Models\FooterNew;
 use App\Models\PrivacyPolicy;
 use App\Models\TermsOfService;
+use App\Models\ReturnRefundPolicy;
 use App\Models\HomeVideoSection;
 use App\Models\AnnouncementBar;
 use App\Models\Discount;
@@ -5859,6 +5860,88 @@ public function termsOfServiceDelete($id)
     } 
 }
 
+    // ============================================
+// RETURN & REFUND POLICY MANAGEMENT
+// ============================================
+
+public function returnRefundPolicy()
+{
+    if (!Session::has('user_id')) {
+        return redirect()->route('login')->with('error', 'Please login first');
+    }
+    
+    $page = ReturnRefundPolicy::first();
+    $canAdd = ReturnRefundPolicy::count() < 1;
+    
+    return view('backend.return-refund-policy', compact('page', 'canAdd'));
+}
+
+public function returnRefundPolicyStore(Request $request)
+{
+    if (!Session::has('user_id')) {
+        return redirect()->route('login')->with('error', 'Please login first');
+    }
+
+    if (ReturnRefundPolicy::count() >= 1) {
+        return redirect()->route('return.refund.policy')->with('error', 'Return & Refund Policy already exists!');
+    }
+
+    $request->validate([
+        'heading' => 'required|string|max:255',
+        'description' => 'required|string|min:10',
+    ]);
+
+    try {
+        ReturnRefundPolicy::create([
+            'heading' => $request->heading,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('return.refund.policy')->with('success', 'Return & Refund Policy created successfully!');
+    } catch (\Exception $e) {
+        return redirect()->route('return.refund.policy')->with('error', 'Failed to create: ' . $e->getMessage());
+    }
+}
+
+public function returnRefundPolicyUpdate(Request $request, $id)
+{
+    if (!Session::has('user_id')) {
+        return redirect()->route('login')->with('error', 'Please login first');
+    }
+
+    $request->validate([
+        'heading' => 'required|string|max:255',
+        'description' => 'required|string',
+    ]);
+
+    try {
+        $page = ReturnRefundPolicy::findOrFail($id);
+        
+        $page->heading = $request->heading;
+        $page->description = $request->description;
+        $page->save();
+
+        return redirect()->route('return.refund.policy')->with('success', 'Return & Refund Policy updated successfully!');
+    } catch (\Exception $e) {
+        return redirect()->route('return.refund.policy')->with('error', 'Failed to update: ' . $e->getMessage());
+    }
+}
+
+public function returnRefundPolicyDelete($id)
+{
+    if (!Session::has('user_id')) {
+        return redirect()->route('login')->with('error', 'Please login first');
+    }
+
+    try {
+        $page = ReturnRefundPolicy::findOrFail($id);
+        $page->delete();
+
+        return redirect()->route('return.refund.policy')->with('success', 'Return & Refund Policy deleted successfully!');
+    } catch (\Exception $e) {
+        return redirect()->route('return.refund.policy')->with('error', 'Failed to delete: ' . $e->getMessage());
+    }
+}
 
 public function promotionalBanner()
 {
