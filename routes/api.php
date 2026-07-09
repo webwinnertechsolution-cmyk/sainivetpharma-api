@@ -81,5 +81,5 @@ Route::get('/checkout/order/{orderNumber}', [CheckoutController::class, 'apiGetO
     Route::get('/faqs', [FrontendController::class, 'apiFaqs']);
     Route::get('/industries', [FrontendController::class, 'apiIndustries']);
     Route::post('/contact', [FrontendController::class, 'apiContactSubmit']);
-    
+    Route::get('/return-refund-policy', [App\Http\Controllers\FrontendController::class, 'apiReturnRefundPolicy']);
 });
