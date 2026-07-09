@@ -433,6 +433,24 @@ Route::post('/return-refund-policy/store', [BackendController::class, 'returnRef
 Route::post('/return-refund-policy/update/{id}', [BackendController::class, 'returnRefundPolicyUpdate'])->name('return.refund.policy.update');
 Route::delete('/return-refund-policy/delete/{id}', [BackendController::class, 'returnRefundPolicyDelete'])->name('return.refund.policy.delete');
 
+
+
+
+// ============================================
+// RETURN & REFUND POLICY (ADMIN)
+// ============================================
+Route::prefix('admin')->group(function () {
+    Route::get('/return-refund-policy', [BackendController::class, 'returnRefundPolicy'])->name('admin.return.refund.policy');
+    Route::post('/return-refund-policy/store', [BackendController::class, 'returnRefundPolicyStore'])->name('admin.return.refund.policy.store');
+    Route::post('/return-refund-policy/update/{id}', [BackendController::class, 'returnRefundPolicyUpdate'])->name('admin.return.refund.policy.update');
+    Route::delete('/return-refund-policy/delete/{id}', [BackendController::class, 'returnRefundPolicyDelete'])->name('admin.return.refund.policy.delete');
+});
+
+// Frontend Return & Refund Policy
+Route::get('/return-refund-policy', [FrontendController::class, 'returnRefundPolicy'])->name('frontend.return.refund.policy');
+
+
+
 // -----------------------------------------------------------------------------
 // Catch-All Route (Must be last)
 // -----------------------------------------------------------------------------
