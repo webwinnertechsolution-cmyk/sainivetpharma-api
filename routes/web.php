@@ -425,29 +425,17 @@ Route::prefix('admin')->group(function () {
     Route::post('/terms-of-service/store', [BackendController::class, 'termsOfServiceStore'])->name('terms.of.service.store');
     Route::post('/terms-of-service/update/{id}', [BackendController::class, 'termsOfServiceUpdate'])->name('terms.of.service.update');
     Route::post('/terms-of-service/delete/{id}', [BackendController::class, 'termsOfServiceDelete'])->name('terms.of.service.delete');
+
+
+    // Return & Refund Policy
+Route::get('/admin/return-refund-policy', [BackendController::class, 'returnRefundPolicy'])->name('return.refund.policy');
+Route::post('/admin/return-refund-policy', [BackendController::class, 'returnRefundPolicyStore'])->name('return.refund.policy.store');
+Route::put('/admin/return-refund-policy/{id}', [BackendController::class, 'returnRefundPolicyUpdate'])->name('return.refund.policy.update');
+Route::delete('/admin/return-refund-policy/{id}', [BackendController::class, 'returnRefundPolicyDelete'])->name('return.refund.policy.delete');
 });
 
 
-Route::get('/return-refund-policy', [BackendController::class, 'returnRefundPolicy'])->name('return.refund.policy');
-Route::post('/return-refund-policy/store', [BackendController::class, 'returnRefundPolicyStore'])->name('return.refund.policy.store');
-Route::post('/return-refund-policy/update/{id}', [BackendController::class, 'returnRefundPolicyUpdate'])->name('return.refund.policy.update');
-Route::delete('/return-refund-policy/delete/{id}', [BackendController::class, 'returnRefundPolicyDelete'])->name('return.refund.policy.delete');
 
-
-
-
-// ============================================
-// RETURN & REFUND POLICY (ADMIN)
-// ============================================
-Route::prefix('admin')->group(function () {
-    Route::get('/return-refund-policy', [BackendController::class, 'returnRefundPolicy'])->name('admin.return.refund.policy');
-    Route::post('/return-refund-policy/store', [BackendController::class, 'returnRefundPolicyStore'])->name('admin.return.refund.policy.store');
-    Route::post('/return-refund-policy/update/{id}', [BackendController::class, 'returnRefundPolicyUpdate'])->name('admin.return.refund.policy.update');
-    Route::delete('/return-refund-policy/delete/{id}', [BackendController::class, 'returnRefundPolicyDelete'])->name('admin.return.refund.policy.delete');
-});
-
-// Frontend Return & Refund Policy
-Route::get('/return-refund-policy', [FrontendController::class, 'returnRefundPolicy'])->name('frontend.return.refund.policy');
 
 
 
