@@ -26,6 +26,7 @@ use App\Mail\ContactConfirmationMail;
 use App\Mail\QuotationMail;
 use App\Models\PrivacyPolicy;
 use App\Models\TermsOfService;
+use App\Models\ReturnRefundPolicy;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
@@ -667,6 +668,25 @@ $instaPosts = Cache::remember('insta_feed', 3600, function () {
 
         return view('frontend.terms-of-service', compact('logo', 'footerData', 'menus', 'page'));
     }
+
+    public function returnRefundPolicy()
+{
+    $logo       = Logo::first();
+    $footerData = FooterMain::first();
+    $page       = ReturnRefundPolicy::first();
+
+    if (!$page) {
+        abort(404);
+    }
+
+    $menus = \App\Models\Menu::whereNull('parent_id')
+            ->with('children.children')
+            ->where('is_active', 1)
+            ->orderBy('order')
+            ->get();
+
+    return view('frontend.return-refund-policy', compact('logo', 'footerData', 'menus', 'page'));
+}
 	
 	
 	
@@ -1552,7 +1572,16 @@ public function apiTermsOfService()
 }
 
 
- 
+ public function apiReturnRefundPolicy()
+{
+    $page = ReturnRefundPolicy::first();
+
+    if (!$page) {
+        return response()->json(['error' => 'Not found'], 404);
+    }
+
+    return response()->json($page);
+}
 
 public function apiFooterNew()
 {
