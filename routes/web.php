@@ -15,6 +15,7 @@ Route::get('/about-us', [FrontendController::class, 'about'])->name('about');
 Route::get('/services/wear-liners', [FrontendController::class, 'wearLiners'])->name('services.wear-liners');
 Route::get('/services/conveyor-guards', [FrontendController::class, 'conveyorGuards'])->name('services.conveyor-guards');
 Route::get('/services/{slug}', [FrontendController::class, 'serviceDetail'])->name('service.detail');
+Route::get('/return-refund-policy', [FrontendController::class, 'returnRefundPolicy'])->name('return-refund-policy');
 Route::post('/contact/submit', [FrontendController::class, 'contactSubmit'])->name('contact.submit');
 Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
 
@@ -426,7 +427,11 @@ Route::prefix('admin')->group(function () {
     Route::post('/terms-of-service/delete/{id}', [BackendController::class, 'termsOfServiceDelete'])->name('terms.of.service.delete');
 });
 
-Route::get('/return-refund-policy', [FrontendController::class, 'returnRefundPolicy'])->name('return-refund-policy');
+
+Route::get('/return-refund-policy', [BackendController::class, 'returnRefundPolicy'])->name('return.refund.policy');
+Route::post('/return-refund-policy/store', [BackendController::class, 'returnRefundPolicyStore'])->name('return.refund.policy.store');
+Route::post('/return-refund-policy/update/{id}', [BackendController::class, 'returnRefundPolicyUpdate'])->name('return.refund.policy.update');
+Route::delete('/return-refund-policy/delete/{id}', [BackendController::class, 'returnRefundPolicyDelete'])->name('return.refund.policy.delete');
 
 // -----------------------------------------------------------------------------
 // Catch-All Route (Must be last)
