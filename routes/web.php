@@ -425,6 +425,9 @@ Route::prefix('admin')->group(function () {
     Route::post('/terms-of-service/update/{id}', [BackendController::class, 'termsOfServiceUpdate'])->name('terms.of.service.update');
     Route::post('/terms-of-service/delete/{id}', [BackendController::class, 'termsOfServiceDelete'])->name('terms.of.service.delete');
 });
+
+Route::get('/return-refund-policy', [FrontendController::class, 'returnRefundPolicy'])->name('return-refund-policy');
+
 // -----------------------------------------------------------------------------
 // Catch-All Route (Must be last)
 // -----------------------------------------------------------------------------
