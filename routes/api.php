@@ -46,6 +46,7 @@ Route::get('/calculate-shipping', [FrontendController::class, 'apiCalculateShipp
 Route::get('/contact-us', [FrontendController::class, 'apiContactUs']);
 Route::get('/privacy-policy', [FrontendController::class, 'apiPrivacyPolicy']);
 Route::get('/terms-of-service', [FrontendController::class, 'apiTermsOfService']);
+    Route::get('/return-refund-policy', [FrontendController::class, 'apiReturnRefundPolicy']);
  Route::get('/general-faqs', [FrontendController::class, 'apiGeneralFaqs']);
  
  Route::get('/gallery/{id}', [FrontendController::class, 'apiGallery']);
