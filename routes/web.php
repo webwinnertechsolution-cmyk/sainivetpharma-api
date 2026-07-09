@@ -440,3 +440,13 @@ Route::get('/blog/category/{slug}', [FrontendController::class, 'blogCategory'])
 Route::get('/blog/tag/{slug}', [FrontendController::class, 'blogTag'])->name('frontend.blog.tag');
 // Moved here to act as a catch-all for blog slugs
 Route::get('/{slug}', [FrontendController::class, 'blogShow'])->name('frontend.blog.show');
+
+
+
+
+Route::get('/admin/return-refund-policy', [App\Http\Controllers\BackendController::class, 'returnRefundPolicy'])->name('return.refund.policy');
+Route::post('/admin/return-refund-policy/store', [App\Http\Controllers\BackendController::class, 'returnRefundPolicyStore'])->name('return.refund.policy.store');
+Route::post('/admin/return-refund-policy/update/{id}', [App\Http\Controllers\BackendController::class, 'returnRefundPolicyUpdate'])->name('return.refund.policy.update');
+Route::delete('/admin/return-refund-policy/delete/{id}', [App\Http\Controllers\BackendController::class, 'returnRefundPolicyDelete'])->name('return.refund.policy.delete');
+
+Route::get('/return-refund-policy', [App\Http\Controllers\FrontendController::class, 'returnRefundPolicy'])->name('frontend.return-refund-policy');
