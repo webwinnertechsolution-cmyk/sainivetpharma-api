@@ -51,20 +51,17 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id');
     }
 
-    // Generate Unique Order Number
+    // Generate Order Number: 1, 2, 3, 4, 5...
     public static function generateOrderNumber()
     {
-        $prefix = 'ORD';
-        $date = now()->format('Ymd');
-        $random = strtoupper(substr(uniqid(), -6));
-        $orderNumber = $prefix . '-' . $date . '-' . $random;
+        $lastOrderNumber = self::whereRaw(
+            "order_number REGEXP '^[0-9]+$'"
+        )
+        ->orderByRaw('CAST(order_number AS UNSIGNED) DESC')
+        ->value('order_number');
 
-        // Check if unique
-        while (self::where('order_number', $orderNumber)->exists()) {
-            $random = strtoupper(substr(uniqid(), -6));
-            $orderNumber = $prefix . '-' . $date . '-' . $random;
-        }
-
-        return $orderNumber;
+        return $lastOrderNumber
+            ? (string) ((int) $lastOrderNumber + 1)
+            : '1';
     }
 }
