@@ -66,7 +66,7 @@ use App\Models\ContactUs;
 use App\Models\Faq;
 use App\Models\Gallery;
 use App\Models\GalleryMedia;
-
+ use App\Models\Order;
 
 class BackendController extends Controller
 {
