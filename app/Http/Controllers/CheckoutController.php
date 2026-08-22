@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Customer;
 use Razorpay\Api\Api;
 
 class CheckoutController extends Controller
