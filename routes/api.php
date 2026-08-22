@@ -70,6 +70,14 @@ Route::get('/checkout/order/{orderNumber}', [CheckoutController::class, 'apiGetO
 Route::post('/checkout/razorpay/verify', [CheckoutController::class, 'apiRazorpayVerify']);
 Route::get('/checkout/razorpay/key', [CheckoutController::class, 'apiGetRazorpayKey']);
 
+    Route::get('/checkout/my-orders', [
+    CheckoutController::class,
+    'apiGetCustomerOrders'
+]);
+
+
+
+
     
     /* Category */ 
     Route::get('/shop', [FrontendController::class, 'apiShop']);
