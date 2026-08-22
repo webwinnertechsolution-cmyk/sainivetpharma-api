@@ -7765,6 +7765,95 @@ public function galleryUpdateMediaInfo(Request $request, $id)
 }
 
 
+/**
+ * Orders ki list dikhata hai
+ */
+public function orders(Request $request)
+{
+    $query = Order::with('items')->latest();
+ 
+    // Search by order number, name, email, phone
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('order_number', 'like', "%{$search}%")
+              ->orWhere('first_name', 'like', "%{$search}%")
+              ->orWhere('last_name', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('phone', 'like', "%{$search}%");
+        });
+    }
+ 
+    // Filter by order status
+    if ($request->filled('status')) {
+        $query->where('order_status', $request->status);
+    }
+ 
+    // Filter by payment status
+    if ($request->filled('payment_status')) {
+        $query->where('payment_status', $request->payment_status);
+    }
+ 
+    $orders = $query->paginate(20)->withQueryString();
+ 
+    $totalOrders   = Order::count();
+    $pendingOrders = Order::where('order_status', 'pending')->count();
+    $paidOrders    = Order::where('payment_status', 'paid')->count();
+ 
+    return view('backend.orders', compact(
+        'orders', 'totalOrders', 'pendingOrders', 'paidOrders'
+    ));
+}
+ 
+
+public function orderView($id)
+{
+    $order = Order::with('items')->findOrFail($id);
+ 
+    return view('backend.order-view', compact('order'));
+}
+ 
+
+public function orderUpdateStatus(Request $request, $id)
+{
+    $request->validate([
+        'order_status' => 'required|string|in:pending,processing,shipped,delivered,cancelled',
+    ]);
+ 
+    $order = Order::findOrFail($id);
+    $order->order_status = $request->order_status;
+    $order->save();
+ 
+    return redirect()->back()->with('success', 'Order status updated successfully.');
+}
+ 
+
+public function orderUpdatePaymentStatus(Request $request, $id)
+{
+    $request->validate([
+        'payment_status' => 'required|string|in:pending,paid,failed,refunded',
+    ]);
+ 
+    $order = Order::findOrFail($id);
+    $order->payment_status = $request->payment_status;
+ 
+    if ($request->payment_status === 'paid' && !$order->paid_at) {
+        $order->paid_at = now();
+    }
+ 
+    $order->save();
+ 
+    return redirect()->back()->with('success', 'Payment status updated successfully.');
+}
+ 
+
+public function orderDelete($id)
+{
+    $order = Order::findOrFail($id);
+    $order->delete();
+ 
+    return redirect()->route('orders')->with('success', 'Order deleted successfully.');
+}
 
     public function logout()
     {
