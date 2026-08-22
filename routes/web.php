@@ -162,7 +162,11 @@ Route::post('/gallery/media/info/{id}', [BackendController::class, 'galleryUpdat
 
 
 
-
+Route::get('/orders', [BackendController::class, 'orders'])->name('orders');
+Route::get('/orders/{id}', [BackendController::class, 'orderView'])->name('order.view');
+Route::post('/orders/{id}/status', [BackendController::class, 'orderUpdateStatus'])->name('order.update.status');
+Route::post('/orders/{id}/payment-status', [BackendController::class, 'orderUpdatePaymentStatus'])->name('order.update.payment.status');
+Route::post('/orders/{id}/delete', [BackendController::class, 'orderDelete'])->name('order.delete');
 	
 	
 
