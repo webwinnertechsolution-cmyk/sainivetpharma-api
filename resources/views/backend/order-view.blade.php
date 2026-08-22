@@ -129,7 +129,14 @@
                             <tr>
                                 <td>
                                     @if($item->product_image)
-                                        <img src="{{ asset('uploads/product/' . $item->product_image) }}" class="item-thumb" alt="{{ $item->product_name }}">
+                                        @php
+                                            $img = $item->product_image;
+                                            $imgUrl = \Illuminate\Support\Str::startsWith($img, ['http://', 'https://'])
+                                                ? $img
+                                                : asset('uploads/product/' . ltrim($img, '/'));
+                                        @endphp
+                                        <img src="{{ $imgUrl }}" class="item-thumb" alt="{{ $item->product_name }}"
+                                             onerror="this.onerror=null;this.src='{{ asset('uploads/products/' . ltrim($item->product_image, '/')) }}'">
                                     @else
                                         <div class="item-thumb"></div>
                                     @endif
