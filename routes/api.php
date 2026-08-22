@@ -60,9 +60,15 @@ Route::post('/google/login', [FrontendController::class, 'googleLoginOrRegister'
 Route::get('/google/user/{firebase_uid}', [FrontendController::class, 'googleGetUser']);
 
 Route::get('/page-seo/{route}', [FrontendController::class, 'apiPageSeo']);
+
+// ============================================
+// ✅ CHECKOUT ROUTES (SAINI VET PHARMA)
+// ============================================
 Route::post('/checkout/calculate',   [CheckoutController::class, 'apiCalculateCheckout']);
 Route::post('/checkout/place-order', [CheckoutController::class, 'apiPlaceOrder']);
 Route::get('/checkout/order/{orderNumber}', [CheckoutController::class, 'apiGetOrder']);
+Route::post('/checkout/razorpay/verify', [CheckoutController::class, 'apiRazorpayVerify']);
+Route::get('/checkout/razorpay/key', [CheckoutController::class, 'apiGetRazorpayKey']);
 
     
     /* Category */ 
