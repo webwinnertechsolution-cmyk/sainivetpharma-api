@@ -259,7 +259,22 @@ class CheckoutController extends Controller
             ], 400);
         }
     }
+public function apiGetCustomerOrders(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+    ]);
 
+    $orders = Order::with('items')
+        ->where('email', $request->email)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'orders' => $orders,
+    ]);
+}
     // ============================================
     // 4. GET ORDER DETAILS
     // ============================================
