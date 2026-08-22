@@ -13,13 +13,52 @@ use Razorpay\Api\Api;
 class CheckoutController extends Controller
 {
     // ============================================
+    // 0. CALCULATE CHECKOUT (subtotal + shipping)
+    // ============================================
+    public function apiCalculateCheckout(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'items' => 'required|array|min:1',
+            'items.*.id' => 'required|integer',
+            'items.*.quantity' => 'required|integer|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $subtotal = 0;
+
+        foreach ($request->items as $item) {
+            $product = Product::find($item['id']);
+            if ($product) {
+                $unitPrice = $product->sale_price ?? $product->price;
+                $subtotal += $unitPrice * $item['quantity'];
+            }
+        }
+
+        // Simple shipping logic — apni actual shipping-rate table ke hisaab se update kar lena
+        $shipping = $subtotal >= 999 ? 0 : 60;
+
+        return response()->json([
+            'success' => true,
+            'subtotal' => $subtotal,
+            'shipping' => $shipping,
+            'total' => $subtotal + $shipping,
+        ]);
+    }
+
+    // ============================================
     // 1. GET RAZORPAY KEY (For Frontend)
     // ============================================
     public function apiGetRazorpayKey(Request $request)
     {
         return response()->json([
             'success' => true,
-            'key' => env('RAZORPAY_KEY_ID'),
+            'key' => config('services.razorpay.key'),
         ]);
     }
 
@@ -45,7 +84,8 @@ class CheckoutController extends Controller
             'subtotal' => 'required|numeric|min:0',
             'shipping' => 'nullable|numeric|min:0',
             'total' => 'required|numeric|min:0',
-            'payment_method' => 'required|string|in:cod,bank_transfer,razorpay',
+            // 👇 FIX: frontend 'bank' bhejta hai, 'bank_transfer' nahi
+            'payment_method' => 'required|string|in:cod,bank,razorpay',
         ]);
 
         if ($validator->fails()) {
@@ -65,7 +105,7 @@ class CheckoutController extends Controller
             // Create Order
             $order = Order::create([
                 'order_number' => $orderNumber,
-                'order_status' => $request->payment_method === 'razorpay' ? 'pending' : 'pending',
+                'order_status' => 'pending',
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'first_name' => $request->first_name,
@@ -89,7 +129,7 @@ class CheckoutController extends Controller
             // Create Order Items
             foreach ($request->items as $item) {
                 $product = Product::find($item['id']);
-                
+
                 if (!$product) {
                     throw new \Exception("Product not found: {$item['id']}");
                 }
@@ -110,6 +150,29 @@ class CheckoutController extends Controller
                 ]);
             }
 
+            $razorpayOrderId = null;
+
+            // 👇 FIX: Razorpay payment method hai to Razorpay ke server pe bhi order banao
+            if ($request->payment_method === 'razorpay') {
+                $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
+
+                $razorpayOrder = $api->order->create([
+                    'receipt'  => $order->order_number,
+                    'amount'   => (int) round($order->total * 100), // paise mein
+                    'currency' => 'INR',
+                    'notes'    => [
+                        'order_id' => $order->id,
+                        'email'    => $order->email,
+                    ],
+                ]);
+
+                $razorpayOrderId = $razorpayOrder['id'];
+
+                // Razorpay order id ko save kar lo — verify step mein reference ke liye
+                $order->payment_transaction_id = $razorpayOrderId;
+                $order->save();
+            }
+
             DB::commit();
 
             return response()->json([
@@ -120,11 +183,15 @@ class CheckoutController extends Controller
                     'order_number' => $order->order_number,
                     'total' => $order->total,
                     'payment_method' => $order->payment_method,
+                    // 👇 frontend ko yehi chahiye Razorpay popup kholne ke liye
+                    'razorpay_order_id' => $razorpayOrderId,
                 ],
             ], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Order placement failed: ' . $e->getMessage());
+
             return response()->json([
                 'success' => false,
                 'message' => 'Order failed: ' . $e->getMessage(),
@@ -155,7 +222,7 @@ class CheckoutController extends Controller
             $order = Order::findOrFail($request->order_id);
 
             // Initialize Razorpay API
-            $api = new Api(env('RAZORPAY_KEY_ID'), env('RAZORPAY_KEY_SECRET'));
+            $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
 
             // Verify signature
             $attributes = [
@@ -181,6 +248,11 @@ class CheckoutController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            // Signature match nahi hui — payment fail maano
+            if (isset($order)) {
+                $order->update(['payment_status' => 'failed']);
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Payment verification failed: ' . $e->getMessage(),
