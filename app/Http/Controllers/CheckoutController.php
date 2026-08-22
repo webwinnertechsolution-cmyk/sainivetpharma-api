@@ -7,15 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\OrderStatusHistory;
-use App\Models\DiscountUsage;
 use App\Models\Product;
-use App\Models\ProductVariant;
-use App\Models\Discount;
-use App\Models\DiscountRule;
-use App\Models\ShippingRate;
-use App\Models\ShippingZone;
-use App\Models\ShippingMethod;
 use Razorpay\Api\Api;
 
 class CheckoutController extends Controller
@@ -32,16 +24,13 @@ class CheckoutController extends Controller
     }
 
     // ============================================
-    // 2. PLACE ORDER (Direct without payment)
+    // 2. PLACE ORDER
     // ============================================
     public function apiPlaceOrder(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            // Customer
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:50',
-            
-            // Shipping Address
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
@@ -50,18 +39,12 @@ class CheckoutController extends Controller
             'state' => 'required|string|max:255',
             'country' => 'required|string|max:255',
             'zip' => 'required|string|max:20',
-            
-            // Order Items
             'items' => 'required|array|min:1',
-            'items.*.id' => 'required',
+            'items.*.id' => 'required|integer',
             'items.*.quantity' => 'required|integer|min:1',
-            
-            // Pricing
             'subtotal' => 'required|numeric|min:0',
             'shipping' => 'nullable|numeric|min:0',
             'total' => 'required|numeric|min:0',
-            
-            // Payment
             'payment_method' => 'required|string|in:cod,bank_transfer,razorpay',
         ]);
 
@@ -82,38 +65,23 @@ class CheckoutController extends Controller
             // Create Order
             $order = Order::create([
                 'order_number' => $orderNumber,
-                'order_status' => $request->payment_method === 'razorpay' ? 'pending_payment' : 'pending',
-                'customer_type' => 'guest',
+                'order_status' => $request->payment_method === 'razorpay' ? 'pending' : 'pending',
                 'email' => $request->email,
                 'phone' => $request->phone,
-                
-                'shipping_first_name' => $request->first_name,
-                'shipping_last_name' => $request->last_name,
-                'shipping_address' => $request->address,
-                'shipping_apartment' => $request->apartment,
-                'shipping_city' => $request->city,
-                'shipping_state' => $request->state,
-                'shipping_country' => $request->country,
-                'shipping_zip' => $request->zip,
-                'shipping_phone' => $request->phone,
-                
-                'billing_first_name' => $request->first_name,
-                'billing_last_name' => $request->last_name,
-                'billing_address' => $request->address,
-                'billing_city' => $request->city,
-                'billing_state' => $request->state,
-                'billing_country' => $request->country,
-                'billing_zip' => $request->zip,
-                
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'address' => $request->address,
+                'apartment' => $request->apartment,
+                'city' => $request->city,
+                'state' => $request->state,
+                'country' => $request->country,
+                'zip' => $request->zip,
                 'subtotal' => $request->subtotal,
                 'shipping_cost' => $request->shipping ?? 0,
-                'tax_amount' => 0,
                 'total' => $request->total,
                 'currency' => 'INR',
-                
                 'payment_method' => $request->payment_method,
                 'payment_status' => 'pending',
-                
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ]);
@@ -126,41 +94,23 @@ class CheckoutController extends Controller
                     throw new \Exception("Product not found: {$item['id']}");
                 }
 
+                $unitPrice = $product->sale_price ?? $product->price;
+                $totalPrice = $unitPrice * $item['quantity'];
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $product->id,
                     'product_name' => $product->title,
                     'product_slug' => $product->slug,
                     'product_sku' => $product->sku,
-                    'unit_price' => $product->sale_price ?? $product->price,
-                    'quantity' => $item['quantity'],
-                    'total_price' => ($product->sale_price ?? $product->price) * $item['quantity'],
                     'product_image' => $product->featured_image,
+                    'unit_price' => $unitPrice,
+                    'quantity' => $item['quantity'],
+                    'total_price' => $totalPrice,
                 ]);
             }
 
-            // Create Status History
-            OrderStatusHistory::create([
-                'order_id' => $order->id,
-                'status_to' => $request->payment_method === 'razorpay' ? 'pending_payment' : 'pending',
-                'changed_by' => 'system',
-                'notes' => 'Order placed successfully',
-            ]);
-
             DB::commit();
-
-            // If Razorpay, return order ID for payment
-            if ($request->payment_method === 'razorpay') {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Order created. Ready for payment.',
-                    'order' => [
-                        'id' => $order->id,
-                        'order_number' => $order->order_number,
-                        'total' => $order->total,
-                    ],
-                ], 201);
-            }
 
             return response()->json([
                 'success' => true,
@@ -168,7 +118,6 @@ class CheckoutController extends Controller
                 'order' => [
                     'id' => $order->id,
                     'order_number' => $order->order_number,
-                    'status' => $order->order_status,
                     'total' => $order->total,
                     'payment_method' => $order->payment_method,
                 ],
@@ -215,7 +164,6 @@ class CheckoutController extends Controller
                 'razorpay_signature' => $request->razorpay_signature,
             ];
 
-            // This will throw exception if signature is invalid
             $api->utility->verifyPaymentSignature($attributes);
 
             // Signature verified - update order
@@ -226,23 +174,10 @@ class CheckoutController extends Controller
                 'paid_at' => now(),
             ]);
 
-            OrderStatusHistory::create([
-                'order_id' => $order->id,
-                'status_from' => 'pending_payment',
-                'status_to' => 'confirmed',
-                'changed_by' => 'razorpay',
-                'notes' => 'Payment verified. Transaction ID: ' . $request->razorpay_payment_id,
-            ]);
-
             return response()->json([
                 'success' => true,
                 'message' => 'Payment verified successfully!',
-                'order' => [
-                    'id' => $order->id,
-                    'order_number' => $order->order_number,
-                    'status' => $order->order_status,
-                    'payment_status' => $order->payment_status,
-                ],
+                'order' => $order,
             ]);
 
         } catch (\Exception $e) {
@@ -259,9 +194,7 @@ class CheckoutController extends Controller
     public function apiGetOrder($orderNumber)
     {
         try {
-            $order = Order::with(['items', 'statusHistories'])
-                ->where('order_number', $orderNumber)
-                ->first();
+            $order = Order::with('items')->where('order_number', $orderNumber)->first();
 
             if (!$order) {
                 return response()->json([
@@ -279,79 +212,6 @@ class CheckoutController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch order: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    // ============================================
-    // 5. CALCULATE CHECKOUT (For verification)
-    // ============================================
-    public function apiCalculateCheckout(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'items' => 'required|array|min:1',
-            'items.*.id' => 'required',
-            'items.*.quantity' => 'required|integer|min:1',
-            'country' => 'nullable|string|max:100',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        try {
-            $items = $request->items;
-            $subtotal = 0;
-            $calculatedItems = [];
-
-            // Calculate item prices
-            foreach ($items as $item) {
-                $product = Product::find($item['id']);
-                if (!$product) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Product not found: ' . $item['id']
-                    ], 404);
-                }
-
-                $unitPrice = $product->sale_price ?? $product->price;
-                $itemTotal = $unitPrice * $item['quantity'];
-
-                $calculatedItems[] = [
-                    'product_id' => $product->id,
-                    'product_name' => $product->title,
-                    'quantity' => $item['quantity'],
-                    'unit_price' => $unitPrice,
-                    'item_total' => $itemTotal,
-                ];
-
-                $subtotal += $itemTotal;
-            }
-
-            // Calculate shipping (simple logic - no free shipping for now)
-            $country = strtolower(trim($request->get('country', 'India')));
-            $shippingCost = $country === 'india' ? 0 : 100; // Flat rate outside India
-
-            $total = $subtotal + $shippingCost;
-
-            return response()->json([
-                'success' => true,
-                'summary' => [
-                    'subtotal' => round($subtotal, 2),
-                    'shipping_cost' => round($shippingCost, 2),
-                    'total' => round($total, 2),
-                    'currency' => 'INR',
-                ],
-                'items' => $calculatedItems,
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Calculation failed: ' . $e->getMessage()
             ], 500);
         }
     }
