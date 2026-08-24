@@ -167,8 +167,7 @@ Route::get('/orders/{id}', [BackendController::class, 'orderView'])->name('order
 Route::post('/orders/{id}/status', [BackendController::class, 'orderUpdateStatus'])->name('order.update.status');
 Route::post('/orders/{id}/payment-status', [BackendController::class, 'orderUpdatePaymentStatus'])->name('order.update.payment.status');
 Route::post('/orders/{id}/delete', [BackendController::class, 'orderDelete'])->name('order.delete');
-	
-	
+Route::get('/orders/{id}/invoice', [BackendController::class, 'orderInvoice'])->name('order.invoice');
 
     // Sliders
     Route::get('/slider', [BackendController::class, 'slider'])->name('slider');
