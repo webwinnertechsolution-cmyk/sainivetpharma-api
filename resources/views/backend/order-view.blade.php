@@ -96,9 +96,29 @@
             <h1 class="page-title">🧾 Order {{ $order->order_number }}</h1>
             <p class="page-subtitle">Placed on {{ $order->created_at->format('d M Y, h:i A') }}</p>
         </div>
-        <a href="{{ route('orders') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Back to Orders
-        </a>
+
+        <div style="
+            display:flex;
+            align-items:center;
+            gap:8px;
+            flex-wrap:wrap;
+        ">
+
+            <a
+                href="{{ route('order.invoice', $order->id) }}"
+                target="_blank"
+                class="btn btn-primary"
+            >
+                <i class="fas fa-print"></i>
+                Print Invoice
+            </a>
+
+            <a href="{{ route('orders') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Orders
+            </a>
+
+        </div>
     </div>
 
     @if(session('success'))
