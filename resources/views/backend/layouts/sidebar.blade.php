@@ -272,7 +272,7 @@
 		{{-- CONTACT Menu with Submenu --}}
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#contactMenu" aria-expanded="false" aria-controls="contactMenu">
-                <span class="menu-title">CONTACT</span>
+                <span class="menu-title">Contact</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-contacts menu-icon"></i>
             </a>
