@@ -343,7 +343,7 @@
  
         <!-- Logo -->
         <div class="logo-wrap">
-            <img src="https://api.sainivetpharma.com/uploads/logo/1776854215_logo.png"
+            <img src="https://api.sainivetpharma.com/uploads/logo/1781064546_logo.png"
                  alt="SainiVet Pharma">
         </div>
  
