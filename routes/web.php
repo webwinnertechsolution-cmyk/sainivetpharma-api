@@ -10,7 +10,7 @@ Route::get('/instagram', [InstagramController::class, 'index']);
 // -----------------------------------------------------------------------------
 // Frontend Routes (New)
 // -----------------------------------------------------------------------------
-Route::get('/', [FrontendController::class, 'index'])->name('home');
+Route::get('/admin', [FrontendController::class, 'index'])->name('home');
 Route::get('/about-us', [FrontendController::class, 'about'])->name('about');
 Route::get('/services/wear-liners', [FrontendController::class, 'wearLiners'])->name('services.wear-liners');
 Route::get('/services/conveyor-guards', [FrontendController::class, 'conveyorGuards'])->name('services.conveyor-guards');
