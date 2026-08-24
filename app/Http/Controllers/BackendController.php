@@ -7812,7 +7812,23 @@ public function orderView($id)
  
     return view('backend.order-view', compact('order'));
 }
- 
+
+
+// ============================================
+// ORDER INVOICE
+// ============================================
+public function orderInvoice($id)
+{
+    if (!Session::has('user_id')) {
+        return redirect()->route('login')
+            ->with('error', 'Please login first');
+    }
+
+    $order = Order::with('items')->findOrFail($id);
+
+    return view('backend.order-invoice', compact('order'));
+}
+    
 
 public function orderUpdateStatus(Request $request, $id)
 {
