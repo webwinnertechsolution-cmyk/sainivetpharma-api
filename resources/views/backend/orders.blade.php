@@ -781,15 +781,33 @@
                             {{-- Actions --}}
                             <td style="text-align:center;">
 
-                                <a
-                                    href="{{ route('order.view', $order->id) }}"
-                                    class="btn btn-primary btn-sm"
-                                >
+                                <div style="
+                                    display:flex;
+                                    justify-content:center;
+                                    align-items:center;
+                                    gap:6px;
+                                    flex-wrap:wrap;
+                                ">
 
-                                    <i class="fas fa-eye"></i>
-                                    View
+                                    <a
+                                        href="{{ route('order.view', $order->id) }}"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        <i class="fas fa-eye"></i>
+                                        View
+                                    </a>
 
-                                </a>
+                                    <a
+                                        href="{{ route('order.invoice', $order->id) }}"
+                                        target="_blank"
+                                        class="btn btn-secondary btn-sm"
+                                        title="Print Invoice"
+                                    >
+                                        <i class="fas fa-print"></i>
+                                        Print
+                                    </a>
+
+                                </div>
 
                             </td>
 
