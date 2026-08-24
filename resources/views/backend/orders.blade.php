@@ -400,6 +400,10 @@
         font-size: 12px;
     }
 
+    a.btn.btn-secondary.btn-sm {
+    background: linear-gradient(135deg, #1872B5, #2596e1)!important;
+}
+    
     @media (max-width: 900px) {
         .stats-row {
             grid-template-columns: 1fr;
