@@ -10,6 +10,15 @@
         </li>
 
 
+        
+       <li class="nav-item">
+            <a class="nav-link" href="{{ url('/orders') }}" ">
+                <span class="menu-title">Orders </span>
+                <i class="mdi mdi-contacts menu-icon"></i>
+            </a>
+        </li>
+
+        
        <li class="nav-item">
             <a class="nav-link" href="{{ url('/announcement-bar') }}" ">
                 <span class="menu-title">Announcement Bar </span>
