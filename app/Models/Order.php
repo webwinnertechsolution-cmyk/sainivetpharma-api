@@ -12,7 +12,7 @@ class Order extends Model
     protected $table = 'orders';
 
     protected $fillable = [
-    'customer_id',
+        'customer_id',
         'order_number',
         'order_status',
         'email',
@@ -35,15 +35,30 @@ class Order extends Model
         'paid_at',
         'ip_address',
         'user_agent',
+
+        // Shiprocket
+        'shiprocket_order_id',
+        'shiprocket_shipment_id',
+        'awb_code',
+        'courier_name',
+        'shipping_status',
+        'label_url',
+        'pickup_scheduled_at',
+        'shipped_at',
+        'delivered_at',
+        'shiprocket_error',
     ];
 
     protected $casts = [
-        'subtotal' => 'decimal:2',
-        'shipping_cost' => 'decimal:2',
-        'total' => 'decimal:2',
-        'paid_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'subtotal'            => 'decimal:2',
+        'shipping_cost'       => 'decimal:2',
+        'total'               => 'decimal:2',
+        'paid_at'             => 'datetime',
+        'pickup_scheduled_at' => 'datetime',
+        'shipped_at'          => 'datetime',
+        'delivered_at'        => 'datetime',
+        'created_at'          => 'datetime',
+        'updated_at'          => 'datetime',
     ];
 
     // Relationships
@@ -51,10 +66,12 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class, 'order_id');
     }
-public function customer()
-{
-    return $this->belongsTo(Customer::class, 'customer_id');
-}
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
+
     // Generate Order Number: 1, 2, 3, 4, 5...
     public static function generateOrderNumber()
     {
