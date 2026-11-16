@@ -139,6 +139,11 @@ class ShiprocketService
                 $sku = $item->product_sku ?: ('SKU-' . $item->product_id . ($item->variant_id ? '-' . $item->variant_id : ''));
             }
 
+            // Free item (Buy X Get Y) ka SKU alag rakho, warna duplicate SKU ho jayega
+            if ((float) $item->unit_price <= 0) {
+                $sku .= '-FREE';
+            }
+
             $items[] = [
                 'name'          => $name,
                 'sku'           => $sku,
@@ -230,5 +235,98 @@ class ShiprocketService
         return $this->request('POST', '/orders/cancel', [
             'ids' => [$shiprocketOrderId],
         ]);
+    }
+
+    // ============================================
+    // 7. FULL FLOW: order → AWB → pickup → label
+    // Checkout aur admin button dono yahi use karte hain.
+    // Har step ke baad DB save hota hai, to beech mein fail ho
+    // to dobara chalane par wahi se aage badhega.
+    // ============================================
+    public function shipOrder(Order $order): array
+    {
+        $steps = [];
+
+        try {
+            // ── Step 1: Shiprocket par order banao ──
+            if (!$order->shiprocket_order_id) {
+                $res = $this->createOrder($order);
+
+                if (empty($res['order_id']) || empty($res['shipment_id'])) {
+                    throw new \Exception('Order create failed: ' . json_encode($res));
+                }
+
+                $order->update([
+                    'shiprocket_order_id'    => $res['order_id'],
+                    'shiprocket_shipment_id' => $res['shipment_id'],
+                    'shipping_status'        => 'created',
+                    'shiprocket_error'       => null,
+                ]);
+
+                $steps[] = 'order_created';
+            }
+
+            // Auto ship band hai to yahin ruk jao (client panel se khud ship karega)
+            if (!filter_var(config('services.shiprocket.auto_ship', true), FILTER_VALIDATE_BOOLEAN)) {
+                return ['success' => true, 'steps' => $steps];
+            }
+
+            $shipmentId = (int) $order->shiprocket_shipment_id;
+
+            // ── Step 2: Courier + AWB ──
+            if (!$order->awb_code) {
+                $res = $this->assignAwb($shipmentId);
+                $data = $res['response']['data'] ?? [];
+
+                if (empty($data['awb_code'])) {
+                    throw new \Exception('AWB assign failed: ' . ($res['message'] ?? json_encode($res)));
+                }
+
+                $order->update([
+                    'awb_code'         => $data['awb_code'],
+                    'courier_name'     => $data['courier_name'] ?? null,
+                    'shipping_status'  => 'awb_assigned',
+                    'shiprocket_error' => null,
+                ]);
+
+                $steps[] = 'awb_assigned';
+            }
+
+            // ── Step 3: Pickup request ──
+            if (!$order->pickup_scheduled_at) {
+                $this->generatePickup($shipmentId);
+
+                $order->update([
+                    'pickup_scheduled_at' => now(),
+                    'shipping_status'     => 'pickup_scheduled',
+                    'order_status'        => 'processing',
+                    'shiprocket_error'    => null,
+                ]);
+
+                $steps[] = 'pickup_scheduled';
+            }
+
+            // ── Step 4: Label PDF ──
+            if (!$order->label_url) {
+                $res = $this->generateLabel($shipmentId);
+
+                if (!empty($res['label_url'])) {
+                    $order->update(['label_url' => $res['label_url']]);
+                    $steps[] = 'label_generated';
+                }
+            }
+
+            return ['success' => true, 'steps' => $steps];
+
+        } catch (\Throwable $e) {
+            $order->update(['shiprocket_error' => $e->getMessage()]);
+
+            Log::error('Shiprocket shipOrder failed', [
+                'order_id' => $order->id,
+                'error'    => $e->getMessage(),
+            ]);
+
+            return ['success' => false, 'steps' => $steps, 'error' => $e->getMessage()];
+        }
     }
 }
