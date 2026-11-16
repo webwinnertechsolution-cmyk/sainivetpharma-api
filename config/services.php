@@ -34,9 +34,23 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+
     'razorpay' => [
         'key' => env('RAZORPAY_KEY_ID'),
         'secret' => env('RAZORPAY_KEY_SECRET'),
+    ],
+
+    'shiprocket' => [
+        'base_url'        => env('SHIPROCKET_BASE_URL', 'https://apiv2.shiprocket.in/v1/external'),
+        'email'           => env('SHIPROCKET_EMAIL'),
+        'password'        => env('SHIPROCKET_PASSWORD'),
+        'pickup_location' => env('SHIPROCKET_PICKUP_LOCATION', 'Primary'),
+        'auto_ship'       => env('SHIPROCKET_AUTO_SHIP', true),
+        'default_weight'  => env('SHIPROCKET_DEFAULT_WEIGHT', 0.5),
+        'default_length'  => env('SHIPROCKET_DEFAULT_LENGTH', 15),
+        'default_breadth' => env('SHIPROCKET_DEFAULT_BREADTH', 10),
+        'default_height'  => env('SHIPROCKET_DEFAULT_HEIGHT', 10),
+        'webhook_token'   => env('SHIPROCKET_WEBHOOK_TOKEN'),
     ],
 
 ];
