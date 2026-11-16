@@ -20,7 +20,11 @@ class Product extends Model
         'sale_price',
         'sku',
         'stock_quantity',
-		'compare_price',
+        'weight',
+        'length',
+        'breadth',
+        'height',
+        'compare_price',
         'status',
         'is_featured',
         'meta_title',
@@ -30,17 +34,21 @@ class Product extends Model
         'og_description',
         'og_image',
         'og_image_alt',
-		'extra_tabs',
-		'cta_button',
+        'extra_tabs',
+        'cta_button',
         'published_at',
     ];
 
     protected $casts = [
-        'is_featured' => 'boolean',
-        'published_at' => 'datetime',
-        'price' => 'decimal:2',
-		 'compare_price' => 'decimal:2',
-        'sale_price' => 'decimal:2',
+        'is_featured'   => 'boolean',
+        'published_at'  => 'datetime',
+        'price'         => 'decimal:2',
+        'compare_price' => 'decimal:2',
+        'sale_price'    => 'decimal:2',
+        'weight'        => 'decimal:3',
+        'length'        => 'decimal:2',
+        'breadth'       => 'decimal:2',
+        'height'        => 'decimal:2',
     ];
 
     protected static function boot()
