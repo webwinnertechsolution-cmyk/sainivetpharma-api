@@ -284,6 +284,12 @@
     .variant-img-preview { margin-top: 4px; display: none; }
     .variant-img-preview img { width: 48px; height: 48px; object-fit: cover; border: 1.5px solid #34d399; border-radius: 5px; display: block; }
 
+    /* Shipping dimensions (variant row) */
+    .dim-grid { display: grid; grid-template-columns: repeat(4, 62px); gap: 4px; }
+    .dim-grid .gen-input { padding: 4px 5px; text-align: center; }
+    .dim-label { font-size: 9px; color: #9ca3af; display: block; text-align: center; margin-top: 2px; }
+    .ship-note { background: #fff8e1; border: 1px solid #fde68a; border-radius: 6px; padding: 8px 12px; font-size: 11px; color: #92400e; margin-bottom: 12px; }
+
     /* Extra Tabs */
     .tab-item {
         background: #fff; border: 1.5px solid #d1fae5; border-radius: 10px;
@@ -569,6 +575,40 @@
                                min="0">
                     </div>
                 </div>
+
+                <hr>
+
+                <label class="form-label" style="margin-bottom:8px;"><i class="fas fa-box"></i> Shipping Box (Shiprocket)</label>
+                <div class="ship-note">
+                    <i class="fas fa-info-circle"></i>
+                    Packed box ka weight aur size bharo. Variant mein alag value na ho to yahi use hogi. Khaali chhoda to default size lagega.
+                </div>
+                <div class="form-row form-row-4">
+                    <div class="form-group">
+                        <label class="form-label">Weight <small>kg (e.g. 0.5)</small></label>
+                        <input type="number" class="form-control" name="weight"
+                               value="{{ old('weight', $editProduct->weight ?? '') }}"
+                               step="0.001" min="0" placeholder="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Length <small>cm</small></label>
+                        <input type="number" class="form-control" name="length"
+                               value="{{ old('length', $editProduct->length ?? '') }}"
+                               step="0.01" min="0" placeholder="15">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Breadth <small>cm</small></label>
+                        <input type="number" class="form-control" name="breadth"
+                               value="{{ old('breadth', $editProduct->breadth ?? '') }}"
+                               step="0.01" min="0" placeholder="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Height <small>cm</small></label>
+                        <input type="number" class="form-control" name="height"
+                               value="{{ old('height', $editProduct->height ?? '') }}"
+                               step="0.01" min="0" placeholder="10">
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -656,6 +696,7 @@
                                     <th style="min-width:100px;">Price (₹)</th>
                                     <th style="min-width:120px;">Compare Price (₹)</th>
                                     <th style="min-width:80px;">Stock</th>
+                                    <th style="min-width:270px;"><i class="fas fa-box me-1"></i>Box: Weight (kg) / L × B × H (cm)</th>
                                     <th style="min-width:130px;"><i class="fas fa-image me-1"></i>Image</th>
                                 </tr>
                             </thead>
@@ -676,6 +717,10 @@
                                 'price'         => $v->price ?? '',
                                 'compare_price' => $v->compare_price ?? '',
                                 'stock'         => $v->stock_quantity ?? 0,
+                                'weight'        => $v->weight ?? '',
+                                'length'        => $v->length ?? '',
+                                'breadth'       => $v->breadth ?? '',
+                                'height'        => $v->height ?? '',
                                 'image'         => $v->image ? asset('uploads/products/variants/'.$v->image) : ''
                             ]];
                         })) !!}
@@ -1068,21 +1113,45 @@ function regenerate() {
     const genWrap = document.getElementById('gen-wrap');
     const tbody = document.getElementById('gen-tbody');
     const badge = document.getElementById('gen-badge');
+
+    // Table rebuild se pehle jo values type ki hain unhe yaad rakho
+    const typed = {};
+    tbody.querySelectorAll('tr').forEach(row => {
+        const nameEl = row.querySelector('input[name="variant_names[]"]');
+        if (!nameEl) return;
+        const get = n => { const el = row.querySelector(`[name="${n}"]`); return el ? el.value : ''; };
+        typed[nameEl.value] = {
+            sku:           get('variant_skus[]'),
+            price:         get('variant_prices[]'),
+            compare_price: get('variant_compare_prices[]'),
+            stock:         get('variant_stocks[]'),
+            weight:        get('variant_weights[]'),
+            length:        get('variant_lengths[]'),
+            breadth:       get('variant_breadths[]'),
+            height:        get('variant_heights[]'),
+        };
+    });
+
     if (!groups.length) { genWrap.style.display='none'; tbody.innerHTML=''; return; }
     const optArrays = groups.map(g => g.opts.map(o => ({ type: g.typeName, val: o })));
     const combos = cartesian(optArrays);
     genWrap.style.display = 'block';
     badge.textContent = combos.length;
     tbody.innerHTML = '';
+
     combos.forEach(combo => {
         const label = combo.map(c => c.val).join(' / ');
         const attrObj = {};
         combo.forEach(c => { attrObj[c.type.toLowerCase()] = c.val; });
         const attrJson = JSON.stringify(attrObj);
-        const ex = existingVariantData[label] || {};
+        const saved = existingVariantData[label] || {};
+        const ex = Object.assign({}, saved, typed[label] || {});
+        ex.image = saved.image || '';
+
         const existingImgHtml = ex.image
             ? `<img src="${esc(ex.image)}" class="variant-img-existing" title="Current: ${esc(label)}">`
             : `<div class="variant-img-placeholder">🖼️</div>`;
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td class="gen-name">
@@ -1097,6 +1166,26 @@ function regenerate() {
                 <span class="compare-price-hint">MRP / Original</span>
             </td>
             <td><input type="number" class="gen-input" name="variant_stocks[]" value="${esc(ex.stock??0)}" placeholder="0" min="0"></td>
+            <td>
+                <div class="dim-grid">
+                    <div>
+                        <input type="number" class="gen-input" name="variant_weights[]" value="${esc(ex.weight??'')}" placeholder="kg" step="0.001" min="0">
+                        <span class="dim-label">Wt (kg)</span>
+                    </div>
+                    <div>
+                        <input type="number" class="gen-input" name="variant_lengths[]" value="${esc(ex.length??'')}" placeholder="L" step="0.01" min="0">
+                        <span class="dim-label">L (cm)</span>
+                    </div>
+                    <div>
+                        <input type="number" class="gen-input" name="variant_breadths[]" value="${esc(ex.breadth??'')}" placeholder="B" step="0.01" min="0">
+                        <span class="dim-label">B (cm)</span>
+                    </div>
+                    <div>
+                        <input type="number" class="gen-input" name="variant_heights[]" value="${esc(ex.height??'')}" placeholder="H" step="0.01" min="0">
+                        <span class="dim-label">H (cm)</span>
+                    </div>
+                </div>
+            </td>
             <td>
                 ${existingImgHtml}
                 <input type="file" class="gen-input variant-img-input" name="variant_images[]" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" onchange="previewVariantImg(this)" title="Upload for: ${esc(label)}">
