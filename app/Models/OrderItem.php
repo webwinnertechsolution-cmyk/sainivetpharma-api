@@ -14,7 +14,9 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'variant_id',
         'product_name',
+        'variant_name',
         'product_slug',
         'product_sku',
         'product_image',
@@ -24,10 +26,10 @@ class OrderItem extends Model
     ];
 
     protected $casts = [
-        'unit_price' => 'decimal:2',
+        'unit_price'  => 'decimal:2',
         'total_price' => 'decimal:2',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
     ];
 
     // Relationships
@@ -39,5 +41,10 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function variant()
+    {
+        return $this->belongsTo(ProductVariant::class, 'variant_id');
     }
 }
