@@ -4566,6 +4566,8 @@ public function productCreate()
     
     return view('backend.product-edit', compact('categories', 'tags'));
 }
+
+    
 public function productStore(Request $request)
 {
     if (!Session::has('user_id')) {
@@ -4583,6 +4585,14 @@ public function productStore(Request $request)
         'sale_price'         => 'nullable|numeric|min:0',
         'sku'                => 'nullable|string|max:100',
         'stock_quantity'     => 'nullable|integer|min:0',
+        'weight'             => 'nullable|numeric|min:0',
+        'length'             => 'nullable|numeric|min:0',
+        'breadth'            => 'nullable|numeric|min:0',
+        'height'             => 'nullable|numeric|min:0',
+        'variant_weights.*'  => 'nullable|numeric|min:0',
+        'variant_lengths.*'  => 'nullable|numeric|min:0',
+        'variant_breadths.*' => 'nullable|numeric|min:0',
+        'variant_heights.*'  => 'nullable|numeric|min:0',
         'status'             => 'required|in:draft,published',
         'gallery_images.*'   => 'nullable|max:102400',
         'categories'         => 'nullable|array',
@@ -4646,6 +4656,10 @@ public function productStore(Request $request)
             'sale_price'         => $request->sale_price,
             'sku'                => $request->sku,
             'stock_quantity'     => $request->stock_quantity ?? 0,
+            'weight'             => $this->numOrNull($request->weight),
+            'length'             => $this->numOrNull($request->length),
+            'breadth'            => $this->numOrNull($request->breadth),
+            'height'             => $this->numOrNull($request->height),
             'status'             => $request->status,
             'is_featured'        => $request->has('is_featured') ? 1 : 0,
             'meta_title'         => $request->meta_title ?: $request->title,
@@ -4691,7 +4705,6 @@ public function productStore(Request $request)
         if ($request->has('variant_names') && is_array($request->variant_names)) {
             $variantImagePath = public_path('uploads/products/variants');
             if (!file_exists($variantImagePath)) mkdir($variantImagePath, 0755, true);
-            $videoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
 
             foreach ($request->variant_names as $idx => $name) {
                 if (empty(trim($name))) continue;
@@ -4700,10 +4713,9 @@ public function productStore(Request $request)
                 $attrs = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
 
-                // ✅ Variant Image Upload - ONLY if file exists
                 $variantImageName = null;
                 $variantImages = $request->file('variant_images');
-                
+
                 if (!empty($variantImages) && isset($variantImages[$idx]) && $variantImages[$idx] instanceof \Illuminate\Http\UploadedFile) {
                     $vImg = $variantImages[$idx];
                     $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
@@ -4717,6 +4729,10 @@ public function productStore(Request $request)
                     'price'          => $request->variant_prices[$idx] ?? null,
                     'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
                     'stock_quantity' => $request->variant_stocks[$idx] ?? 0,
+                    'weight'         => $this->numOrNull($request->variant_weights[$idx] ?? null),
+                    'length'         => $this->numOrNull($request->variant_lengths[$idx] ?? null),
+                    'breadth'        => $this->numOrNull($request->variant_breadths[$idx] ?? null),
+                    'height'         => $this->numOrNull($request->variant_heights[$idx] ?? null),
                     'attributes'     => $attrs,
                     'image'          => $variantImageName,
                 ]);
@@ -4749,6 +4765,14 @@ public function productUpdate(Request $request, $id)
         'sale_price'         => 'nullable|numeric|min:0',
         'sku'                => 'nullable|string|max:100',
         'stock_quantity'     => 'nullable|integer|min:0',
+        'weight'             => 'nullable|numeric|min:0',
+        'length'             => 'nullable|numeric|min:0',
+        'breadth'            => 'nullable|numeric|min:0',
+        'height'             => 'nullable|numeric|min:0',
+        'variant_weights.*'  => 'nullable|numeric|min:0',
+        'variant_lengths.*'  => 'nullable|numeric|min:0',
+        'variant_breadths.*' => 'nullable|numeric|min:0',
+        'variant_heights.*'  => 'nullable|numeric|min:0',
         'status'             => 'required|in:draft,published',
         'gallery_images.*'   => 'nullable|max:102400',
         'categories'         => 'nullable|array',
@@ -4830,6 +4854,10 @@ public function productUpdate(Request $request, $id)
         $product->sale_price = $request->sale_price;
         $product->sku = $request->sku;
         $product->stock_quantity = $request->stock_quantity ?? 0;
+        $product->weight = $this->numOrNull($request->weight);
+        $product->length = $this->numOrNull($request->length);
+        $product->breadth = $this->numOrNull($request->breadth);
+        $product->height = $this->numOrNull($request->height);
         $product->status = $request->status;
         $product->is_featured = $request->has('is_featured') ? 1 : 0;
         $product->meta_title = $request->meta_title;
@@ -4887,7 +4915,6 @@ public function productUpdate(Request $request, $id)
                 $attrs = json_decode($attrRaw, true);
                 if (!is_array($attrs)) $attrs = [];
 
-                // Check if variant already exists
                 $existingVariant = ProductVariant::where('product_id', $product->id)
                                                   ->where('name', trim($name))
                                                   ->first();
@@ -4895,11 +4922,9 @@ public function productUpdate(Request $request, $id)
                 $variantImageName = null;
                 $variantImages = $request->file('variant_images');
 
-                // ✅ ONLY process if an actual file is uploaded for THIS variant
                 if (!empty($variantImages) && isset($variantImages[$idx]) && $variantImages[$idx] instanceof \Illuminate\Http\UploadedFile) {
                     $vImg = $variantImages[$idx];
 
-                    // Delete old image if exists
                     if ($existingVariant && $existingVariant->image && file_exists(public_path('uploads/products/variants/' . $existingVariant->image))) {
                         unlink(public_path('uploads/products/variants/' . $existingVariant->image));
                     }
@@ -4907,42 +4932,39 @@ public function productUpdate(Request $request, $id)
                     $variantImageName = time() . '_variant_' . $idx . '_' . uniqid() . '.' . $vImg->getClientOriginalExtension();
                     $vImg->move($variantImagePath, $variantImageName);
                 } else {
-                    // ✅ KEEP existing image if no new file uploaded
                     if ($existingVariant && $existingVariant->image) {
                         $variantImageName = $existingVariant->image;
                     }
                 }
 
+                $variantData = [
+                    'sku'            => $request->variant_skus[$idx] ?? null,
+                    'price'          => $request->variant_prices[$idx] ?? null,
+                    'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
+                    'stock_quantity' => $request->variant_stocks[$idx] ?? 0,
+                    'weight'         => $this->numOrNull($request->variant_weights[$idx] ?? null),
+                    'length'         => $this->numOrNull($request->variant_lengths[$idx] ?? null),
+                    'breadth'        => $this->numOrNull($request->variant_breadths[$idx] ?? null),
+                    'height'         => $this->numOrNull($request->variant_heights[$idx] ?? null),
+                    'attributes'     => $attrs,
+                    'image'          => $variantImageName,
+                ];
+
                 if ($existingVariant) {
-                    // UPDATE existing variant
-                    $existingVariant->update([
-                        'sku'            => $request->variant_skus[$idx] ?? null,
-                        'price'          => $request->variant_prices[$idx] ?? null,
-                        'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
-                        'stock_quantity' => $request->variant_stocks[$idx] ?? 0,
-                        'attributes'     => $attrs,
-                        'image'          => $variantImageName,
-                    ]);
-                    $existingVariantNames[] = trim($name);
+                    $existingVariant->update($variantData);
                 } else {
-                    // INSERT new variant
-                    ProductVariant::create([
-                        'product_id'     => $product->id,
-                        'name'           => trim($name),
-                        'sku'            => $request->variant_skus[$idx] ?? null,
-                        'price'          => $request->variant_prices[$idx] ?? null,
-                        'compare_price'  => $request->variant_compare_prices[$idx] ?? null,
-                        'stock_quantity' => $request->variant_stocks[$idx] ?? 0,
-                        'attributes'     => $attrs,
-                        'image'          => $variantImageName,
-                    ]);
-                    $existingVariantNames[] = trim($name);
+                    ProductVariant::create(array_merge($variantData, [
+                        'product_id' => $product->id,
+                        'name'       => trim($name),
+                    ]));
                 }
+
+                $existingVariantNames[] = trim($name);
             }
         }
 
-        // ✅ Delete ONLY those variants that were removed from the form
-        $product->variants()->whereNotIn('name', $existingVariantNames)->each(function($variant) {
+        // ── Delete ONLY those variants that were removed from the form ──
+        $product->variants()->whereNotIn('name', $existingVariantNames)->each(function ($variant) {
             if ($variant->image && file_exists(public_path('uploads/products/variants/' . $variant->image))) {
                 unlink(public_path('uploads/products/variants/' . $variant->image));
             }
@@ -7876,6 +7898,14 @@ public function orderDelete($id)
         Session::flush();
         return redirect('/admin');
     }
-	
+	    /**
+     * Khaali input ko NULL bana deta hai (weight/size ke liye)
+     */
+    private function numOrNull($value)
+    {
+        if ($value === null) return null;
+        $value = trim((string) $value);
+        return $value === '' ? null : (float) $value;
+    }
 	
 }
