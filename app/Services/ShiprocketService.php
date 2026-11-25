@@ -318,6 +318,30 @@ class ShiprocketService
         $steps = [];
 
         try {
+            // Re-quote against the actual order before any chargeable shipping action.
+            // No database migration: persist the quoted courier's name in existing courier_name.
+            $package = $this->packageDetails($order);
+            $quote = $this->getShippingQuote(
+                (string) $order->zip,
+                (float) $package['weight'],
+                $order->payment_method === 'cod',
+                (float) $order->subtotal
+            );
+            $chosen = null;
+            foreach ($quote['methods'] as $option) {
+                if (abs((float) $option['charge'] - (float) $order->shipping_cost) > 0.01) continue;
+                if ($order->courier_name && $option['courier_name'] !== $order->courier_name) continue;
+                $chosen = $option;
+                break;
+            }
+            if (!$chosen) {
+                throw new \RuntimeException('Quoted courier/rate is no longer available; review order shipping before dispatch.');
+            }
+            if (!$order->courier_name) {
+                $order->update(['courier_name' => $chosen['courier_name']]);
+            }
+            $courierId = (int) $chosen['courier_company_id'];
+
             // ── Step 1: Shiprocket par order banao ──
             if (!$order->shiprocket_order_id) {
                 $res = $this->createOrder($order);
@@ -345,7 +369,7 @@ class ShiprocketService
 
             // ── Step 2: Courier + AWB ──
             if (!$order->awb_code) {
-                $res = $this->assignAwb($shipmentId);
+                $res = $this->assignAwb($shipmentId, $courierId);
                 $data = $res['response']['data'] ?? [];
 
                 if (empty($data['awb_code'])) {
