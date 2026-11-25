@@ -73,50 +73,120 @@ class ShiprocketService
         return $json;
     }
 
-    // ============================================
-    // ITEM KA WEIGHT/SIZE: variant → product → default
-    // ============================================
+    // Selected variant ki measurement hi use hogi; product fallback nahi.
+    // No variant selected: product measurement use hogi. No defaults.
     protected function itemDimension($item, string $field): float
     {
-        $variantValue = $item->variant->{$field} ?? null;
-        if ($variantValue !== null && (float) $variantValue > 0) {
-            return (float) $variantValue;
+        if ($item->variant_id !== null) {
+            if (!$item->variant) {
+                throw new \InvalidArgumentException('Selected variant not found for order item ' . $item->id);
+            }
+            return max(0, (float) ($item->variant->{$field} ?? 0));
         }
 
-        $productValue = $item->product->{$field} ?? null;
-        if ($productValue !== null && (float) $productValue > 0) {
-            return (float) $productValue;
+        if (!$item->product) {
+            throw new \InvalidArgumentException('Product not found for order item ' . $item->id);
         }
-
-        return (float) config('services.shiprocket.default_' . $field);
+        return max(0, (float) ($item->product->{$field} ?? 0));
     }
 
-    // ============================================
-    // PACKAGE WEIGHT + DIMENSIONS (poore order ka box)
-    // ============================================
+    // Order ka physical parcel. Missing values ko invent nahi karenge.
     public function packageDetails(Order $order): array
     {
         $order->loadMissing('items.product', 'items.variant');
+        if ($order->items->isEmpty()) {
+            throw new \InvalidArgumentException('Order has no items.');
+        }
 
-        $weight = 0;
-        $length = 0;
-        $breadth = 0;
-        $height = 0;
+        $weight = 0.0;
+        $length = 0.0;
+        $breadth = 0.0;
+        $height = 0.0;
 
         foreach ($order->items as $item) {
-            $qty = max(1, (int) $item->quantity);
+            $qty = (int) $item->quantity;
+            if ($qty < 1) {
+                throw new \InvalidArgumentException('Invalid quantity for order item ' . $item->id);
+            }
 
-            $weight += $this->itemDimension($item, 'weight') * $qty;
-            $length = max($length, $this->itemDimension($item, 'length'));
-            $breadth = max($breadth, $this->itemDimension($item, 'breadth'));
-            $height += $this->itemDimension($item, 'height') * $qty;
+            $w = $this->itemDimension($item, 'weight');
+            $l = $this->itemDimension($item, 'length');
+            $b = $this->itemDimension($item, 'breadth');
+            $h = $this->itemDimension($item, 'height');
+
+            if (max($w, $l, $b, $h) <= 0) {
+                throw new \InvalidArgumentException('No physical measurement for order item ' . $item->id);
+            }
+            if ($w <= 0) {
+                throw new \InvalidArgumentException('Weight missing for order item ' . $item->id . '; Shiprocket quote cannot be calculated.');
+            }
+
+            $weight += $w * $qty;
+            $length = max($length, $l);
+            $breadth = max($breadth, $b);
+            $height += $h * $qty;
         }
 
         return [
-            'weight'  => round(max($weight, 0.1), 3),
-            'length'  => round(max($length, 1), 2),
-            'breadth' => round(max($breadth, 1), 2),
-            'height'  => round(max($height, 1), 2),
+            'weight' => round($weight, 3),
+            'length' => round($length, 2),
+            'breadth' => round($breadth, 2),
+            'height' => round($height, 2),
+        ];
+    }
+
+    // Read-only serviceability quote: does not create orders, AWB or pickup.
+    // Weight in kg; dimensions (if available) in cm.
+    public function getShippingQuote(string $deliveryPostcode, float $weight, bool $cod = false, ?float $declaredValue = null): array
+    {
+        $deliveryPostcode = trim($deliveryPostcode);
+        if (!preg_match('/^[1-9][0-9]{5}$/', $deliveryPostcode)) {
+            throw new \InvalidArgumentException('Valid 6-digit delivery PIN code required.');
+        }
+        if (!is_finite($weight) || $weight <= 0) {
+            throw new \InvalidArgumentException('Actual product weight is required; no default weight allowed.');
+        }
+
+        $pickup = (string) config('services.shiprocket.pickup_postcode', '140507');
+        $params = [
+            'pickup_postcode' => $pickup,
+            'delivery_postcode' => $deliveryPostcode,
+            'weight' => $weight,
+            'cod' => $cod ? 1 : 0,
+        ];
+        if ($declaredValue !== null && is_finite($declaredValue) && $declaredValue >= 0) {
+            $params['declared_value'] = $declaredValue;
+        }
+
+        $response = $this->request('GET', '/courier/serviceability/', $params);
+        $couriers = $response['data']['available_courier_companies'] ?? [];
+        $options = [];
+        foreach ($couriers as $courier) {
+            $rate = $courier['rate'] ?? null;
+            $id = $courier['courier_company_id'] ?? null;
+            if (!is_numeric($rate) || (float) $rate <= 0 || !$id) {
+                continue;
+            }
+            $options[] = [
+                'courier_company_id' => (int) $id,
+                'courier_name' => (string) ($courier['courier_name'] ?? 'Courier'),
+                'charge' => round((float) $rate, 2),
+                'estimated_delivery_days' => $courier['estimated_delivery_days'] ?? null,
+            ];
+        }
+        usort($options, fn ($a, $b) => $a['charge'] <=> $b['charge']);
+        if (!$options) {
+            throw new \RuntimeException('No Shiprocket courier available for this PIN and parcel weight.');
+        }
+
+        return [
+            'success' => true,
+            'pickup_postcode' => $pickup,
+            'delivery_postcode' => $deliveryPostcode,
+            'weight' => $weight,
+            'payment_method' => $cod ? 'cod' : 'prepaid',
+            'selected' => $options[0],
+            'methods' => $options,
         ];
     }
 
