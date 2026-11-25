@@ -1454,115 +1454,16 @@ public function apiCheckCartDiscount(Request $request)
 
 public function apiCalculateShipping(Request $request)
 {
-    $cartTotal = (float) $request->get('cart_total', 0);
-    $country   = strtolower(trim($request->get('country', 'India')));
-
-    // Free shipping discount check karo pehle
-    $now = now();
-    $freeDiscount = \App\Models\Discount::where('is_active', 1)
-        ->where('type', 'free_shipping')
-        ->where(function($q) use ($now) {
-            $q->whereNull('starts_at')->orWhere('starts_at', '<=', $now);
-        })
-        ->where(function($q) use ($now) {
-            $q->whereNull('ends_at')->orWhere('ends_at', '>=', $now);
-        })
-        ->with('rule')
-        ->first();
-
-    $freeShippingMin = $freeDiscount?->rule?->min_amount ?? 0;
-    $isFreeShipping  = $freeShippingMin > 0 && $cartTotal >= $freeShippingMin;
-
-    // Zone dhundho — case-insensitive country match
-    $zones = \App\Models\ShippingZone::where('is_active', 1)->get();
-    $matchedZone = null;
-
-    foreach ($zones as $zone) {
-        $countries = $zone->countries ?? [];
-        
-        // Countries lowercase karo comparison ke liye
-        $countriesLower = array_map('strtolower', array_map('trim', $countries));
-        
-        if (empty($countries)) {
-            // Empty = Rest of World fallback
-            if (!$matchedZone) $matchedZone = $zone;
-        } elseif (in_array($country, $countriesLower)) {
-            $matchedZone = $zone;
-            break;
-        }
-    }
-
-    if (!$matchedZone) {
-        return response()->json([
-            'success'  => true,
-            'methods'  => [],
-            'message'  => 'No shipping available for this location',
-        ]);
-    }
-
-    // Us zone ki active rates lo
-    $rates = \App\Models\ShippingRate::with('method')
-        ->where('zone_id', $matchedZone->id)
-        ->where('is_active', 1)
-        ->get();
-
-    $methods = [];
-
-    foreach ($rates as $rate) {
-        if (!$rate->method || !$rate->method->is_active) continue;
-
-        $charge   = 0;
-        $eligible = true;
-
-        switch ($rate->rate_type) {
-            case 'free':
-                $charge = 0;
-                break;
-
-            case 'flat_rate':
-                $charge = $isFreeShipping ? 0 : (float) $rate->base_rate;
-                break;
-
-            case 'cart_value':
-                if ($rate->min_cart_value && $cartTotal < $rate->min_cart_value) {
-                    $eligible = false;
-                } else {
-                    $charge = $isFreeShipping ? 0 : (float) $rate->base_rate;
-                }
-                break;
-
-            case 'weight_based':
-                $charge = $isFreeShipping ? 0 : (float) $rate->base_rate;
-                break;
-        }
-
-        if (!$eligible) continue;
-
-        $methods[] = [
-            'rate_id'       => $rate->id,
-            'method_id'     => $rate->method->id,
-            'name'          => $rate->method->name,
-            'description'   => $rate->method->description,
-            'delivery_time' => $rate->method->delivery_time,
-            'charge'        => $charge,
-            'rate_type'     => $rate->rate_type,
-            'cod_available' => $rate->cod_available,
-            'cod_charge'    => (float) $rate->cod_charge,
-            'is_free'       => $charge == 0,
-        ];
-    }
-
-    // Charge ke hisaab se sort karo
-    usort($methods, fn($a, $b) => $a['charge'] <=> $b['charge']);
-
+    // Legacy GET endpoint has no product, variant, PIN or payment-method context.
+    // Never return a guessed or free shipping rate.
     return response()->json([
-        'success'           => true,
-        'zone'              => $matchedZone->name,
-        'methods'           => $methods,
-        'free_shipping_min' => $freeShippingMin,
-        'is_free_shipping'  => $isFreeShipping,
-    ]);
+        'success' => false,
+        'methods' => [],
+        'is_free_shipping' => false,
+        'message' => 'Use POST /api/checkout/calculate with items, zip and payment_method for live Shiprocket shipping.',
+    ], 422);
 }
+
 public function apiContactUs()
 {
     $contactUs = \App\Models\ContactUs::first();
