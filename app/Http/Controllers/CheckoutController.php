@@ -28,36 +28,23 @@ class CheckoutController extends Controller
             'items' => 'required|array|min:1',
             'items.*.id' => 'required|integer',
             'items.*.quantity' => 'required|integer|min:1',
+            'items.*.variant' => 'nullable|string|max:255',
+            'items.*.is_free' => 'nullable|boolean',
+            'zip' => ['required', 'regex:/^[1-9][0-9]{5}$/'],
+            'payment_method' => 'required|in:cod,bank,razorpay',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
+        if ($validator->fails()) return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+        try {
+            $pricing = $this->calculateVerifiedQuote($request->items, $request->zip, $request->payment_method);
+            unset($pricing['resolved']);
+            return response()->json(['success' => true] + $pricing);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+        } catch (\Throwable $e) {
+            Log::warning('Shipping quote unavailable', ['error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Shipping quote unavailable. Please retry.'], 503);
         }
-
-        $subtotal = 0;
-
-        foreach ($request->items as $item) {
-            $product = Product::find($item['id']);
-
-            if ($product) {
-                $unitPrice = $product->sale_price ?? $product->price;
-                $subtotal += $unitPrice * $item['quantity'];
-            }
-        }
-
-        $shipping = $subtotal >= 999 ? 0 : 60;
-
-        return response()->json([
-            'success' => true,
-            'subtotal' => $subtotal,
-            'shipping' => $shipping,
-            'total' => $subtotal + $shipping,
-        ]);
     }
-
 
     // ============================================
     // 1. GET RAZORPAY KEY
@@ -97,9 +84,9 @@ class CheckoutController extends Controller
             'items.*.variant' => 'nullable|string|max:255',
             'items.*.is_free' => 'nullable|boolean',
 
-            'subtotal' => 'required|numeric|min:0',
+            'subtotal' => 'nullable|numeric|min:0',
             'shipping' => 'nullable|numeric|min:0',
-            'total' => 'required|numeric|min:0',
+            'total' => 'nullable|numeric|min:0',
 
             'payment_method' => 'required|string|in:cod,bank,razorpay',
         ]);
@@ -110,6 +97,16 @@ class CheckoutController extends Controller
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
             ], 422);
+        }
+
+        // Validate and quote BEFORE creating any customer/order/payment record.
+        try {
+            $pricing = $this->calculateVerifiedQuote($request->items, $request->zip, $request->payment_method);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 422);
+        } catch (\Throwable $e) {
+            Log::warning('Checkout quote unavailable', ['error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Shipping quote unavailable. Please retry.'], 503);
         }
 
         DB::beginTransaction();
@@ -184,9 +181,9 @@ class CheckoutController extends Controller
                 'country' => $request->country,
                 'zip' => $request->zip,
 
-                'subtotal' => $request->subtotal,
-                'shipping_cost' => $request->shipping ?? 0,
-                'total' => $request->total,
+                'subtotal' => $pricing['subtotal'],
+                'shipping_cost' => $pricing['shipping'],
+                'total' => $pricing['total'],
 
                 'currency' => 'INR',
 
@@ -201,57 +198,25 @@ class CheckoutController extends Controller
             // ============================================
             // CREATE ORDER ITEMS (variant ke saath)
             // ============================================
-            foreach ($request->items as $item) {
-
-                $product = Product::with('variants')->find($item['id']);
-
-                if (!$product) {
-                    throw new \Exception(
-                        "Product not found: {$item['id']}"
-                    );
-                }
-
-                $isFree = !empty($item['is_free']);
-                $variant = $this->findVariant($product, $item['variant'] ?? null);
-
-                // Price: free item = 0, variant ka price, warna product ka
-                if ($isFree) {
-                    $unitPrice = 0;
-                } elseif ($variant && (float) $variant->price > 0) {
-                    $unitPrice = (float) $variant->price;
-                } else {
-                    $unitPrice = (float) ($product->sale_price ?? $product->price);
-                }
-
-                $totalPrice = $unitPrice * $item['quantity'];
-
-                $variantName = $variant
-                    ? $variant->name
-                    : ($this->cleanVariantName($item['variant'] ?? null) ?: null);
-
-                if ($isFree) {
-                    $variantName = trim(($variantName ? $variantName . ' ' : '') . '(FREE)');
-                }
-
+            foreach ($pricing['resolved'] as $line) {
+                $product = $line['product'];
+                $variant = $line['variant'];
+                $unitPrice = $line['unit_price'];
+                $quantity = $line['quantity'];
                 OrderItem::create([
                     'order_id' => $order->id,
-
                     'product_id' => $product->id,
                     'variant_id' => $variant?->id,
-
                     'product_name' => $product->title,
-                    'variant_name' => $variantName,
-
+                    'variant_name' => $variant?->name,
                     'product_slug' => $product->slug,
                     'product_sku' => ($variant && $variant->sku) ? $variant->sku : $product->sku,
                     'product_image' => $product->featured_image,
-
                     'unit_price' => $unitPrice,
-                    'quantity' => $item['quantity'],
-                    'total_price' => $totalPrice,
+                    'quantity' => $quantity,
+                    'total_price' => round($unitPrice * $quantity, 2),
                 ]);
             }
-
 
             // ============================================
             // RAZORPAY ORDER
@@ -517,6 +482,53 @@ class CheckoutController extends Controller
     /**
      * Cart ka variant text saaf karo: "__FREE__2__5 L" -> "5 L"
      */
+    // Centralized server-side pricing and Shiprocket quote; no client totals trusted.
+    private function calculateVerifiedQuote(array $items, string $zip, string $paymentMethod): array
+    {
+        if (!preg_match('/^[1-9][0-9]{5}$/', trim($zip))) {
+            throw new \InvalidArgumentException('Valid Indian 6-digit delivery PIN required.');
+        }
+        $subtotal = 0.0;
+        $weight = 0.0;
+        $resolved = [];
+        foreach ($items as $item) {
+            $product = Product::with('variants')->where('status', 'published')->find($item['id']);
+            if (!$product) throw new \InvalidArgumentException('Product not available: ' . $item['id']);
+            $variantText = $item['variant'] ?? null;
+            $variant = $this->findVariant($product, $variantText);
+            if ($this->cleanVariantName($variantText) !== '' && !$variant) {
+                throw new \InvalidArgumentException('Selected variant not found for ' . $product->title);
+            }
+            $source = $variant ?: $product;
+            $dimensions = [];
+            foreach (['weight', 'length', 'breadth', 'height'] as $field) {
+                $value = $source->{$field} ?? null;
+                $dimensions[$field] = is_numeric($value) && (float)$value > 0 ? (float)$value : 0.0;
+            }
+            if (max($dimensions) <= 0) throw new \InvalidArgumentException('No measurements entered for ' . $product->title);
+            if ($dimensions['weight'] <= 0) throw new \InvalidArgumentException('Actual weight missing for ' . $product->title . '; shipping cannot be quoted.');
+            if (!empty($item['is_free'])) {
+                // Do not trust the browser to grant itself free products.
+                throw new \InvalidArgumentException('Free promotional items require server-side promotion verification.');
+            }
+            $price = $variant && (float)$variant->price > 0 ? (float)$variant->price : (float)($product->sale_price ?? $product->price);
+            if ($price < 0) throw new \InvalidArgumentException('Invalid product price.');
+            $qty = (int)$item['quantity'];
+            $subtotal += $price * $qty;
+            $weight += $dimensions['weight'] * $qty;
+            $resolved[] = ['product' => $product, 'variant' => $variant, 'quantity' => $qty, 'unit_price' => $price];
+        }
+        $subtotal = round($subtotal, 2);
+        $quote = app(ShiprocketService::class)->getShippingQuote(trim($zip), round($weight, 3), $paymentMethod === 'cod', $subtotal);
+        $selected = $quote['selected'];
+        $shipping = (float)$selected['charge'];
+        return [
+            'subtotal' => $subtotal, 'shipping' => $shipping,
+            'total' => round($subtotal + $shipping, 2),
+            'courier' => $selected, 'resolved' => $resolved,
+        ];
+    }
+
     private function cleanVariantName(?string $variant): string
     {
         if (!$variant) return '';
