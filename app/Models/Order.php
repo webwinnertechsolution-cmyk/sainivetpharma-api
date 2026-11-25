@@ -1,6 +1,5 @@
 
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -73,7 +72,7 @@ class Order extends Model
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    // Generate Order Number
+    // Generate sequential order number
     public static function generateOrderNumber()
     {
         $lastOrderNumber = self::whereRaw(
