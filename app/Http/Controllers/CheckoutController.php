@@ -183,6 +183,7 @@ class CheckoutController extends Controller
 
                 'subtotal' => $pricing['subtotal'],
                 'shipping_cost' => $pricing['shipping'],
+                'courier_name' => $pricing['courier']['courier_name'],
                 'total' => $pricing['total'],
 
                 'currency' => 'INR',
