@@ -955,15 +955,16 @@ public function apiAnnouncementBar()
 // SHOP API - Collections page ke liye
 public function apiShop(Request $request)
 {
-    $cacheKey = 'shop_' . md5($request->fullUrl());
+    $cacheKey = 'shop_v2_' . md5($request->fullUrl());
 
     $data = Cache::remember($cacheKey, 300, function () use ($request) {
-        
+
         $query = Product::with(['categories', 'variants', 'images'])
             ->where('status', 'published');
 
         if ($request->filled('category')) {
             $cat = ProductCategory::where('slug', $request->category)->first();
+
             if ($cat) {
                 $query->whereHas('categories', function ($q) use ($cat) {
                     $q->where('product_categories.id', $cat->id);
@@ -972,19 +973,33 @@ public function apiShop(Request $request)
         }
 
         $sort = $request->get('sort', 'latest');
-        if ($sort === 'price_low')  $query->orderByRaw("COALESCE(sale_price, price) ASC");
-        elseif ($sort === 'price_high') $query->orderByRaw("COALESCE(sale_price, price) DESC");
-        elseif ($sort === 'name_asc')   $query->orderBy('title', 'asc');
-        else $query->latest('published_at');
 
-        $products   = $query->paginate(16);
+        if ($sort === 'price_low')
+            $query->orderByRaw("COALESCE(sale_price, price) ASC");
+
+        elseif ($sort === 'price_high')
+            $query->orderByRaw("COALESCE(sale_price, price) DESC");
+
+        elseif ($sort === 'name_asc')
+            $query->orderBy('title', 'asc');
+
+        else
+            $query->latest('published_at');
+
+        // Pagination matching with Next.js
+        $perPage = max(1, min(100, (int) $request->get('per_page', 12)));
+
+        $products = $query->paginate($perPage);
+
         $categories = ProductCategory::withCount([
             'products' => fn($q) => $q->where('status', 'published')
         ])->where('is_active', 1)->orderBy('name')->get();
 
         return [
             'products'   => $products->items(),
+            'total'      => $products->total(),
             'categories' => $categories,
+
             'pagination' => [
                 'current_page' => $products->currentPage(),
                 'last_page'    => $products->lastPage(),
@@ -995,6 +1010,10 @@ public function apiShop(Request $request)
 
     return response()->json($data);
 }
+
+
+
+    
 // CATEGORIES - Sidebar ke liye
 public function apiCategories()
 {
