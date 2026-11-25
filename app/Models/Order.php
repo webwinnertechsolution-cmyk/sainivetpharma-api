@@ -41,6 +41,7 @@ class Order extends Model
         'shiprocket_shipment_id',
         'awb_code',
         'courier_name',
+        'courier_company_id',
         'shipping_status',
         'label_url',
         'pickup_scheduled_at',
@@ -53,6 +54,7 @@ class Order extends Model
         'subtotal'            => 'decimal:2',
         'shipping_cost'       => 'decimal:2',
         'total'               => 'decimal:2',
+        'courier_company_id'  => 'integer',
         'paid_at'             => 'datetime',
         'pickup_scheduled_at' => 'datetime',
         'shipped_at'          => 'datetime',
@@ -61,7 +63,6 @@ class Order extends Model
         'updated_at'          => 'datetime',
     ];
 
-    // Relationships
     public function items()
     {
         return $this->hasMany(OrderItem::class, 'order_id');
@@ -72,7 +73,6 @@ class Order extends Model
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    // Generate Order Number: 1, 2, 3, 4, 5...
     public static function generateOrderNumber()
     {
         $lastOrderNumber = self::whereRaw(
